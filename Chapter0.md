@@ -15,8 +15,7 @@ date: 2023年6月
 
 SlackのURL
 
-
-(https://bit.ly/linux-text)
+https://bit.ly/linux-text
 
   執筆者・制作者紹介
 ### 宮原 徹（バージョン4執筆担当）
