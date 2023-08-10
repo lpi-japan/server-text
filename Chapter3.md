@@ -1,6 +1,13 @@
 # VirtualBoxのインストール
+本教科書の実習では、仮想マシンソフトウェアである「VirtualBox」上にLinuxを導入して、その環境上に様々なサーバーを導入し実際に動作させます。
+
+VirutalBoxは、次のURLからダウンロードすることができます。
+https://www.virtualbox.org/
+
+このURLをクリックするとVirutalBoxのインストール先であるOSに合わせてダウンロードを行えます。
 
 # VirtualBoxの起動
+
 
 # 仮想マシンの作成
 
