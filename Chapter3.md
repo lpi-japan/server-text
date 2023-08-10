@@ -4,12 +4,13 @@
 VirutalBoxは、次のURLからダウンロードすることができます。
 https://www.virtualbox.org/
 
-このURLをクリックするとVirutalBoxのインストール先であるOSに合わせてダウンロードを行えます。
+VirutalBoxのインストール先であるOSに合わせてダウンロードを行えます。
 
 # VirtualBoxの起動
-
+インストールが完了したVirtualBoxの起動を行います。デフォルトでインストールを進めるとデスクトップ上にVirtualBoxのアイコンが追加されます。アイコンをダブルクリックすることで、VirtualBoxマネージャーを起動させます。
 
 # 仮想マシンの作成
+VirtualBoxを使用し、仮想マシンの作成を行います。
 
 # 仮想マシンの設定変更
 ## UEFIの有効化（確認）
