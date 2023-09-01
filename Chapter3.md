@@ -196,9 +196,14 @@ DNSキャッシュサーバーは、不正に利用されないように必ず�
 す）。 設定のために、次のような/etc/unbound/conf.d/stub.confファイルを作成します。
 
 # サービスの起動/停止と動作確認
+## サービスの再起動
+systemctl restart named
 
-※とりあえずこの辺まで？
+## サービスの自動起動設定
+ systemctl enable named
 
+## サービスの確認
+systemctl status named
 
 
 
