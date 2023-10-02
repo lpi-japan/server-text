@@ -13,13 +13,16 @@ on:
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
     steps:
       - uses: actions/checkout@v3
       - id: list-files
         run: echo "chapter=$(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//')" >> "$GITHUB_OUTPUT"
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker://ghcr.io/lpi-japan/server-text:latest
         with:
           args: >-
