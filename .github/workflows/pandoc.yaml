@@ -23,7 +23,7 @@ jobs:
       - id: list-files
         run: echo "chapter=$(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//')" >> "$GITHUB_OUTPUT"
         shell: bash
-      - run: pandoc -o guide.pdf -N --toc --toc-depth=3 -F pandoc-crossref -H listing.tex --listings --highlight-style=tango -V documentClass=ltjarticle -V mainfont=TakaoPGothic --pdf-engine=lualatex ${{ steps.list-files.outputs.chapter }}
+      - run: pandoc -o guide.pdf -d config.yaml ${{ steps.list-files.outputs.chapter }}
       - uses: actions/upload-artifact@v3
         with:
           name: guide.pdf

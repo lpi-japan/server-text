@@ -19,4 +19,4 @@ RUN apt-get update \
     && apt-get install -y fonts-takao fonts-ipafont \
     && rm -rf /var/lib/apt/lists/* \
     && tlmgr update --self --all \
-    && tlmgr install collection-langjapanese
+    && tlmgr install collection-langjapanese tocloft
