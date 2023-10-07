@@ -1,3 +1,4 @@
+\usepackage[japanese]{babel}
 \usepackage{luatexja}
 \usepackage[ipa]{luatexja-preset}
 \usepackage[a4paper,margin=2cm,truedimen]{geometry}
@@ -32,3 +33,14 @@
 }
 
 \setcounter{secnumdepth}{3}
+
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \fancyhead[LE,RO]{\textsl{\rightmark}}
+    \fancyhead[LO,RE]{\textsl{\leftmark}}
+    \fancyfoot[LO,RE]{LPI-Japan}
+    \fancyfoot[RO,LE]{https://linuc.org}
+    \fancyfoot[CE,CO]{\thepage}
+
+\renewcommand\contentsname{目次}
+

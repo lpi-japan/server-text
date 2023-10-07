@@ -10,12 +10,13 @@ RUN install -Dd fonts \
 
 FROM pandoc/extra:edge-ubuntu
 
-# ENV DEBIAN_FRONTEND noninteractive
+COPY --from=0 /tmp/fonts/ /usr/local/share/fonts
+
+RUN fc-cache -f
 
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y fonts-takao fonts-ipafont \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY --from=0 /tmp/fonts/ /usr/local/share/fonts
-RUN fc-cache -f
+    && rm -rf /var/lib/apt/lists/* \
+    && tlmgr update --self --all \
+    && tlmgr install collection-langjapanese
