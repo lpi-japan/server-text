@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - feature/*
     paths:
       - Dockerfile
       - .github/workflows/build-container.yaml
