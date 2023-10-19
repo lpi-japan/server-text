@@ -126,7 +126,7 @@ beta.jpゾーンを管理するDNSコンテンツサーバーとして設定し�
 | alpha.jp. | host1.alpha.jp. | 192.168.56.101 |
 | beta.jp. | host2.alpha.jp. | 192.168.56.102 |
 
-### アドレス解決の流れ
+## アドレス解決の流れ
 alpha.jpのマシン(192.168.56.101)がホストwww.beta.jpを解決するときの動きを追ってみましょう。
 
 WebブラウザーでWebページを表示させるとき、DNSキャッシュサーバーのことは特に意識せずWebサイトのアドレスを入力しています。ここではWebアドレスを入力してリクエストしてページが表示されるまでの流れを例に、DNSがどのように動くのか簡単に説明します。
@@ -140,40 +140,47 @@ WebブラウザーでWebページを表示させるとき、DNSキャッシュ�
 1. DNSキャッシュサーバーは、結果をalpha.jpマシンへ返します。
 1. Webブラウザーは、www.beta.jpにHTTPでアクセスし、Webページを受け取って表示します。
 
-実際のDNSの名前解決ではルートゾーンから順番に再帰問い合わせを行いますが、演習環境ではDNSキャッシュサーバー自身がjpゾーンの管理をしているDNSコンテンツサーバーでもあるため、すぐにbeta.jpのDNSコンテンツサーバーに関する情報を返す点が異なります。
+実際のインターネットでのDNSの名前解決ではルートゾーンから順番に再帰問い合わせを行いますが、演習環境ではDNSキャッシュサーバー自身がjpゾーンのDNSコンテンツサーバーでもあるため、すぐにbeta.jpのDNSコンテンツサーバーに関する情報を返す点が異なります。
 
-## 受講者マシンへのDNSコンテンツサーバーの設定
-受講者マシンは、DNSコンテンツサーバーとして設定します。DNSコンテンツサーバーのソフトウェアとしてBINDをインストールして設定します。
+## DNSコンテンツサーバーの設定
+DNSコンテンツサーバーのソフトウェアとしてBINDをインストールして、各ゾーンの設定を行います。
 
 ### chroot機能を利用したBINDのセキュリティ
-chroot機能はプログラムに対して特定のディレクトリ以外にはアクセスできないようにするための機能です。
+chroot機能はセキュリティを高めるために、プログラムに対して特定のディレクトリ以外にはアクセスできないようにするための機能です。
 
-chroot機能を使ってBINDを実行すると、bindプロセスは/var/named/chrootディレクトリを/（ルート）ディレクトリとして動作します。たとえば、bindプロセスが/etcディレクトリにアクセスしても、実際にアクセスされるのは/var/named/chroot/etcディレクトリになります。
+chroot機能を使ってBINDを実行すると、bindプロセスは/var/named/chrootディレクトリを/（ルート）ディレクトリとして動作します。たとえば、bindプロセスが/etcディレクトリにアクセスしても、実際にアクセスされるのは/var/named/chroot/etcディレクトリになるので、パスワードその他のセキュリティに関する情報にアクセスできません。
 
-DNSというサービスを提供している関係上、BINDはインターネット上の数多くのサーバーで実行されており、セキュリティの攻撃を受けやすくなっています。万が一、BINDがセキュリティ攻撃を受けて乗っ取られてしまったとしても、chroot機能のおかげでbindプロセスがアクセスできるディレクトリを限定することができるので、システムのその他のファイルへのアクセスを妨げ、被害を最小限に食い止めることができます。
+DNSという重要なサービスを提供している関係上、BINDはインターネット上の数多くのサーバーで実行されており、セキュリティの攻撃を受けやすくなっています。万が一、BINDがセキュリティ攻撃を受けて乗っ取られてしまったとしても、chroot機能のおかげでbindプロセスがアクセスできるディレクトリを限定することができるので、システムのその他のファイルへのアクセスを妨げ、被害を最小限に食い止めることができます。
 
-AlmaLinuxでは、シンボリックリンクやマウントなどのLinuxの機能を使って、chroot機能を使った場合でもほとんど管理方法が変わらないように工夫されています。そのため、本書でもchroot機能を有効にします。
+AlmaLinuxでは、シンボリックリンクやマウントなどのLinuxの機能を使って、chroot機能を使った場合でもほとんど管理方法が変わらないように工夫されています。そのため、本書でもchroot機能を有効にします。追加でbind-chrootパッケージのインストールが必要だったり、systemctlコマンドで扱うユニット名が異なる点に注意してください。
 
-### BINDのインストール
-DNSの機能を提供するプログラムとしてBINDをインストールします。bindパッケージとbind-chrootパッケージが必要です。DNSサーバーの構築に必要なパッケージがインストールされていないときは、yumコマンドでインストールをします。
+### ゾーンを設定する流れ
+ゾーンを設定するために必要な作業は以下のようになります。
+
+1. BINDのインストール
+1. named.confファイルにゾーンを追加
+1. ゾーンファイルを作成し、レコードなどを記述
+1. 設定ファイルに書式間違いが無いか確認
+1. BINDの起動
+1. BINDの自動起動の設定
+1. ファイアーウォールの設定を変更
+1. 名前解決の確認
+
+BINDの基本的な設定ファイルとして/etc/named.confファイルがあります。/etc/named.confにBINDの基本的な設定とゾーンの定義を追加します。さらにゾーンの詳細を定義するゾーンファイルを/var/namedディレクトリに作ります。
+
+## BINDのインストール
+BINDのインストールには、bindパッケージとbind-chrootパッケージが必要です。必要なパッケージがインストールされていないときには、dnfコマンドでインストールします。
 
 dnf install bind bind-chroot
 
-### ゾーンを設定する流れ
-ゾーンを追加するために必要な作業は次となります。
+## /etc/named.confの基本設定
+/etc/named.confファイルにBINDをDNSコンテンツサーバーとして動作させる基本設定を行います。
 
-- named.confファイルにゾーンを追加
-- ゾーンファイルを記述
+vi /etc/named.conf
+※コメントなどは省略しています。
 
-BINDの基本的な設定ファイルである/etc/named.confファイルがあります。/etc/named.conf に基本的な設定とゾーンの定義を追加します。さらにゾーンの詳細を定義するゾーンファイルを/var/namedディレクトリに作ります。
-
-### /etc/named.confの基本設定
-/etc/named.confファイルにDNSコンテンツサーバーとして動作する場合の基本設定を行います。
-
-# vi /etc/named.conf
-※コメントなどは省略しています
 options {
-	listen-on port 53 { 127.0.0.1; 192.168.56.101; };	←ホストのIPアドレスを追加
+	listen-on port 53 { 127.0.0.1; 192.168.56.101; };	←サーバー自身のIPアドレスを追加
 	listen-on-v6 port 53 { ::1; };
 	directory 	"/var/named";
 	dump-file 	"/var/named/data/cache_dump.db";
@@ -181,9 +188,9 @@ options {
 	memstatistics-file "/var/named/data/named_mem_stats.txt";
 	recursing-file  "/var/named/data/named.recursing";
 	secroots-file   "/var/named/data/named.secroots";
-	allow-query     { any; };	← localhostをanyに修正
+	allow-query     { any; };	← localhostをanyに変更
 
-	recursion no;	←yesをnoに修正
+	recursion no;	←yesをnoに変更
 
 	dnssec-validation yes;
 
@@ -208,20 +215,28 @@ zone "." IN {
 	file "named.ca";
 };
 
+zone "alpha.jp" IN {
+	type master;
+	file "alpha.jp.zone";
+	allow-update { none; };
+};	
+
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
 
-#### 問い合わせを受け付けるアドレスの設定
-デフォルトのnamed.confファイルは、127.0.0.1(ローカルループバックインターフェース)への問い合わせにしか返答しない設定なので、外部からの問い合わせを受けられるように自分自身のIPアドレスである「192.168.56.101;」をlisten-onに追加します。beta.jpマシンやjpマシンの場合にはそれぞれのIPアドレスを記述します。
+設定の内容は以下の通りです。
 
-#### 問い合わせを許可するアドレスの設定
-allow-queryにはデフォルトでは「localhost;」と設定されていて、ローカルからしかDNS問い合わせができないようになっています。DNSコンテンツサーバーは、インターネット上のすべての人から参照できなければならないので、この設定を「any」に変更します。
+### 問い合わせを受け付けるアドレスの設定
+デフォルトのnamed.confファイルは、127.0.0.1(ローカルループバックインターフェース)への問い合わせにしか返答しない設定なので、外部からの問い合わせを受けられるようにサーバー自身のIPアドレスである「192.168.56.101;」をlisten-onに追加します。後ほど設定するbeta.jpサーバーやjpサーバーの場合にはそれぞれのサーバーのIPアドレスを記述します。
 
-#### DNSコンテンツサーバーとしての設定
-DNSコンテンツサーバーでは、recursion（再帰問合せ）を禁止にしておく必要があります。そのため、recursionに「no」を設定します。jpマシンの場合にはDNSキャッシュサーバーとしても動作させるのでyesのままにしておく必要があります。
+### 問い合わせを許可するアドレスの設定
+allow-queryにはデフォルトでは「localhost;」と設定されていて、ローカルからしかDNS問い合わせができないようになっています。DNSコンテンツサーバーはインターネット上のすべての人から参照できなければならないので、この設定を「any」に変更します。
+
+### DNSコンテンツサーバーとしての設定
+DNSコンテンツサーバーでは、recursion（再帰問合せ）を禁止にしておく必要があります。そのため、recursionに「no」を設定します。ただし、jpサーバーの場合にはDNSキャッシュサーバーとしても動作させるのでyesのままにしておく必要があります。
 
 ### 正引きゾーンの追加
-次に、/etc/named.confの最後にゾーン定義を追加します。
+/etc/named.confにゾーン定義を追加します。上記例では以下のように設定しています。
 
 zone "alpha.jp" IN {
 	type master;
@@ -229,18 +244,18 @@ zone "alpha.jp" IN {
 	allow-update { none; };
 };	
 
-### ゾーンファイルの作成
+## ゾーンファイルの作成
 named.confで定義したゾーンの内容を記述するゾーンファイルの作成を行います。
 
-#### ゾーンファイルの準備
-ゾーンファイルのお手本となる/var/named/named.emptyファイルをコピーします。コピーする際のファイル名は、ゾーン定義のfile句で指定したファイル名（alpha.jp.zone）を指定します。また、コピー元と同じ所有権、パーミッションにするため、cpコマンドに-pオプションを付けて実行します。
+### ゾーンファイルの準備
+ゾーンファイルのテンプレートとなる/var/named/named.emptyファイルをコピーします。新たに作成するファイルのファイル名はゾーン定義のfile句で指定したファイル名を指定します。alpha.jpゾーンであればalpha.jp.zoneとなります。また、コピー元と同じ所有権、パーミッションにするため、cpコマンドに-pオプションを付けて実行します。
 
 cd /var/named
 cp -p named.empty alpha.jp.zone
 ls -l alpha.jp.zone
 -rw-r-----. 1 root named 152 Jul 18 16:51 alpha.jp.zone
 
-#### ゾーンファイルの修正
+### ゾーンファイルの修正
 コピーした/var/named/alpha.jp.zoneファイルを修正します。
 
 vi /var/named/alpha.jp.zone
@@ -261,64 +276,61 @@ www     A       192.168.56.101
 mail    A       192.168.56.101
 
 
+#### $TTL
 $TTLは、このゾーン定義ファイル内の記述のTTL（Time to Live・生存時間・有効期間）が3時間であることをデフォルト指定しています。
 
+#### $ORIGIN
 $ORIGINは、このゾーン定義が対象としているゾーン名を指定します。ゾーン定義内のホスト名はすべてFQDNで最後が「.」で終わる必要がありますが、省略された場合には$ORIGINで指定されたゾーン名で補完されます。たとえば、「www」という記述は「www.alpha.jp.」と補完されて扱われます。
 
+#### SOAレコード
 ＠から始まるゾーンファイルの最初のレコードはSOAレコードです。このゾーンの管理ポリシーについて設定します。SOAレコードの先頭には＠がありますが、これは$ORIGINで指定したゾーン（ここではalpha.jp.）に置き換えられます。host1はこのDNSコンテンツサーバーのホスト名、rootは管理者ユーザーです。どちらもゾーン名が補完されて、「host1.alpha.jp.」「root.alpha.jp.」となりますが、ユーザー名は最初の「.」を「@」にしてメールアドレスとして読み替えます。これらは単なる文字列なので、BINDの動作には影響を与えません。シリアルナンバー(serial)は、ゾーン定義を変更する毎に必ず変更する必要があります。西暦(4桁の年)と月日(2桁ずつ)の後に01から99までの数字(2桁)が付いた10桁の数字で指定します。日が異なる場合には日付を、同じ日に変更が複数回あった場合には最後の2桁を変更するのを忘れないようにしてください。
 
+#### NSレコード
 NSレコードは、このゾーンのDNSコンテンツサーバーである自分自身を定義します。
 
+#### MXレコード
 MXレコードは受講生ドメインのメールサーバーを定義します。
 
 NSレコードやMXレコードの定義では、右側にFQDNを入れるので、最後に必ず「.」を付けてください。また、先頭が空白になっていますが、これは前の行と同じ対象（この場合には＠）が省略されていることを示しています。
 
+#### Aレコード
 Aレコードで名前とIPアドレスの対応を定義する箇所は、左側にホスト名、右側にIPアドレスが入ります。マシンのホスト名であるhost1や、その他のサービスで使う名前であるwwwやmaiとIPアドレスへの対応を記述しました。最後に「.」が付かない名前には、$ORIGINで定義しているゾーン名(ここではalpha.jp.)が自動的に追加されます。
 
-#### ゾーンファイルの書式確認
-ゾーンファイルを編集時、よくあるミスとしては、括弧の不足、セミコロンの不足などがあります。編集後、BINDを起動する前に編集したゾーンファイルに間違いがないかよく確認しましょう。
-
-named-checkzone alpha.jp. /var/named/alpha.jp.zone 
-zone alpha.jp/IN: loaded serial 2023100901
-OK
-
-named-checkzoneの引数は、$ORIGINに指定したドメイン名と、ゾーンファイル名です。書式に問題がなければ、この例のように設定したシリアルナンバーが表示され、OKと表示されます。設定が間違っている場合には、次のように問題のある行番号が表示されます。
-
-# named-checkzone alpha.jp. /var/named/alpha.jp.zone 
-zone alpha.jp/IN: NS 'host1.alpha.jp.alpha.jp' has no address records (A or AAAA)
-zone alpha.jp/IN: not loaded due to errors.
-
-これは、NSレコードの右側に書いたホスト名がFQDNになっていないため、「host1.alpha.jp.alpha.jp」となってしまい、対応するAレコードが見つからないというエラーです。
-
 ### 設定ファイルの書式確認と注意点
-/etc/named.confファイルでも、括弧の不足やセミコロンの不足などは良くあるミスです。一通りの設定ができたら、/etc/named.confの初期確認をしておきましょう。次のように、named-checkconfを実行します。
+/etc/named.confファイルの編集時、括弧やセミコロンの不足などは良くある設定ミスです。named-checkconfコマンドで/etc/named.confに間違いがないか確認しましょう。
 
 named-checkconf
 
 この例のように、何も表示されなければ書式に問題がないということです。問題がある場合には、次のように問題がありそうな行番号が表示されます。
 
-# named-checkconf
+named-checkconf
 /etc/named.conf:11: missing ';' before '}'
 
-これは、listen-on portの{}にアドレスを追加するときにIPアドレスの後にセミコロンを記述するのを忘れたというエラーです。セミコロンを忘れたるミスが起こりがちです。エラー表示を見ながら、こうした問題を取り除きましょう。
+これは、listen-on portの{}にアドレスを追加するときにIPアドレスの後にセミコロンを記述するのを忘れたというエラーです。エラー表示を見ながら、こうした問題を取り除きましょう。
 
-### ファイアウォールの設定
-次に、DNSコンテンツサーバーへの問い合わせができるようにファイアウォールのサービス許可設定を行います。
+### ゾーンファイルの書式確認
+ゾーンファイルを編集時、よくあるミスとしては、FQDNで記述すべきところを最後の.が抜けているなどがあります。named-checkzoneコマンドを使ってゾーンファイルに間違いがないか確認しましょう。引数は$ORIGINに指定したゾーン名と、確認を行うゾーンファイル名です。
 
-firewall-cmd --add-service=dns
+named-checkzone alpha.jp. /var/named/alpha.jp.zone 
+zone alpha.jp/IN: loaded serial 2023100901
+OK
 
-さらに、設定を保存しておきます。
+書式に問題がなければ、この例のように設定したシリアルナンバーが表示され、OKと表示されます。設定が間違っている場合には、次のように問題のある行番号が表示されます。
 
-firewall-cmd --runtime-to-permanent
+named-checkzone alpha.jp. /var/named/alpha.jp.zone 
+zone alpha.jp/IN: NS 'host1.alpha.jp.alpha.jp' has no address records (A or AAAA)
+zone alpha.jp/IN: not loaded due to errors.
 
-### BINDの起動と確認
-各自のドメインを定義したらBINDを起動してみましょう。BINDの起動は、systemctlコマンドでnamed-chrootユニットを使います。
+この例では、NSレコードの右側に書いたホスト名がFQDNになっていないため、「host1.alpha.jp.alpha.jp」となってしまい、対応するAレコードが見つからないというエラーが発生しています。
 
-# systemctl start named-chroot
+## BINDの起動と確認
+BINDを起動してみましょう。BINDの起動は、systemctlコマンドでnamed-chrootユニットを使います。
+
+systemctl start named-chroot
 
 起動できたら、状態を確認します。
 
-# systemctl status named-chroot
+systemctl status named-chroot
 ● named-chroot.service - Berkeley Internet Name Domain (DNS)
      Loaded: loaded (/usr/lib/systemd/system/named-chroot.service; disabled; preset: disabled)
      Active: active (running) since Mon 2023-10-09 15:18:44 JST; 6s ago
@@ -342,31 +354,37 @@ Oct 09 15:18:44 localhost.localdomain systemd[1]: Started Berkeley Internet Name
 Oct 09 15:18:44 localhost.localdomain named[12419]: managed-keys-zone: Key 20326 for zone . is now trusted (a>
 Oct 09 15:18:44 localhost.localdomain named[12419]: resolver priming query complete
 
-Activeの欄に「active (running)」と表示されていることを確認します。また、下の方にはログが表示されます。ここでも、「Started Berkeley Internet Name Domain...」と表示されていて、BINDのサービスが起動していることが確認できます。
+Activeの欄に「active (running)」と表示されていることを確認します。また、下に表示されるログにも「Started Berkeley Internet Name Domain...」と表示されていて、BINDのサービスが起動していることが確認できます。
 
-#### BINDの再起動
-既にBINDを起動している状態で、設定変更などをした場合には、次のようにBINDを再起動します。
+## 自動起動の設定
+システム起動時にBINDが自動的に起動されるように設定しておきましょう。systemctl enableコマンドで設定します。
 
-# systemctl restart named-chroot
-
-### 自動起動の設定
-Linux起動時にBINDが必ず起動されるように設定しておきましょう。自動起動になっているかは、次のように確認できます。
-
-# systemctl is-enabled named-chroot
-disabled
-
-自動起動の設定がされている場合には、「enabled」と表示されます。この例のように「disabled」と表示される場合には、自動起動設定が行われていません。次のようにして、自動起動設定を行います。
-
-# systemctl enable named-chroot
+systemctl enable named-chroot
 Created symlink from /etc/systemd/system/multi-user.target.wants/named-chroot.service to /usr/lib/systemd/system/named-chroot.service.
 
-### 名前解決の確認
+自動起動になっているかは、次のように確認できます。
+
+systemctl is-enabled named-chroot
+enabled
+
+自動起動の設定がされている場合には、「enabled」と表示されます。
+
+## ファイアウォールの設定
+DNSコンテンツサーバーへの問い合わせができるようにファイアウォールのサービス許可設定を行います。以下のfirewall-cmdコマンドを実行します。
+
+firewall-cmd --add-service=dns
+
+さらに、設定を保存しておきます。
+
+firewall-cmd --runtime-to-permanent
+
+## 名前解決の確認
 BINDが起動したら、名前解決が正常に行われるかを確認します。名前解決の確認には、hostコマンドとdigコマンドが使用できます。
 
-#### hostコマンドで名前を確認
-hostコマンドで名前からIPアドレスを確認します。hostコマンドの最初の引数は調査するアドレス、２つめの引数は調査対象サーバーのアドレスです。さきほど設定したDNSサーバーのIPアドレスを指定します。
+### hostコマンドで名前を確認
+hostコマンドで名前からIPアドレスを確認します。hostコマンドの1つ目の引数は調査するホスト名、2つ目の引数は問い合わせを行うDNSサーバーのアドレスです。設定したサーバー自身のIPアドレスを指定します。
 
-# host host1.alpha.jp 192.168.56.101
+host host1.alpha.jp 192.168.56.101
 Using domain server:
 Name: 192.168.56.101
 Address: 192.168.56.101#53
@@ -374,8 +392,11 @@ Aliases:
 
 host1.alpha.jp has address 192.168.56.101
 
+host1.alpha.jpのAレコードが正しく設定されていることが確認できます。
 
-# host www.alpha.jp 192.168.56.101
+同様に、www.alpha.jpやmail.alpha.jpも確認してみます。
+
+host www.alpha.jp 192.168.56.101
 Using domain server:
 Name: 192.168.56.101
 Address: 192.168.56.101#53
@@ -384,7 +405,7 @@ Aliases:
 www.alpha.jp has address 192.168.56.101
 
 
-# host mail.alpha.jp 192.168.56.101
+host mail.alpha.jp 192.168.56.101
 Using domain server:
 Name: 192.168.56.101
 Address: 192.168.56.101#53
@@ -392,11 +413,10 @@ Aliases:
 
 mail.alpha.jp has address 192.168.56.101
 
+### digコマンドでドメインを確認
+digコマンドでゾーン情報を確認してみます。ドメイン名の後にaxfrを指定するとゾーンに登録されている全ての情報が表示されます。問い合わせをするDNSサーバーは@をつけて指定します。
 
-#### digコマンドでドメインを確認
-digコマンドでゾーン情報を確認してみてください。ドメイン名の後にaxfrを指定するとゾーンに登録されている全ての情報が表示されます。問い合わせをするサーバーは、@をつけて指定します。
-
-# dig alpha.jp axfr @192.168.56.101
+dig alpha.jp axfr @192.168.56.101
 
 ; <<>> DiG 9.16.23-RH <<>> alpha.jp axfr @192.168.56.101
 ;; global options: +cmd
@@ -413,10 +433,10 @@ alpha.jp.		10800	IN	SOA	host1.alpha.jp. root.alpha.jp. 2023100901 86400 3600 604
 ;; XFR size: 7 records (messages 1, bytes 235)
 
 
+### digコマンドでNSレコードを確認
+ドメイン名の後にnsを指定すると、ドメインに登録されているNSレコード(ネームサーバーの情報)が表示されます。
 
-ドメイン名の後にnsを指定するとドメインに登録されているNSレコード(ネームサーバーの情報)が表示されます。
-
-# dig alpha.jp ns @192.168.56.101
+dig alpha.jp ns @192.168.56.101
 
 ; <<>> DiG 9.16.23-RH <<>> alpha.jp ns @192.168.56.101
 ;; global options: +cmd
@@ -441,12 +461,12 @@ host1.alpha.jp.		10800	IN	A	192.168.56.101
 ;; WHEN: Mon Oct 09 14:55:49 JST 2023
 ;; MSG SIZE  rcvd: 101
 
-
 digコマンドの結果に、ANSWER SECTIONがあれば正常であり、ANSWER SECTIONが無ければ結果が返らない状態のエラーです。
 
-ドメイン名の後にmxを指定するとドメインに登録されているMXレコード(メールサーバーの情報)が表示されます。
+### digコマンドでMXレコードを確認
+ドメイン名の後にmxを指定すると、ドメインに登録されているMXレコード(メールサーバーの情報)が表示されます。
 
-# dig alpha.jp mx @192.168.56.101
+dig alpha.jp mx @192.168.56.101
 
 ; <<>> DiG 9.16.23-RH <<>> alpha.jp mx @192.168.56.101
 ;; global options: +cmd
@@ -471,31 +491,42 @@ mail.alpha.jp.		10800	IN	A	192.168.56.101
 ;; WHEN: Mon Oct 09 14:56:29 JST 2023
 ;; MSG SIZE  rcvd: 102
 
+## beta.jpサーバーとjpサーバーの追加
+alpha.jpドメインの設定ができたので、相互に名前解決ができるように仮想マシンを2台追加し、それぞれbeta.jpドメイン、jpドメインを管理するDNSサーバーとして設定します。
 
-## マシンの追加
-alpha.jpドメインの設定ができたので、beta.jpドメインと相互に名前解決ができるように仮想マシンを2台追加します。
+★このあたりから未検証で書いてるので、後で検証の上変更する可能性大
 
 ### 仮想マシンの作成
 VirtualBoxで仮想マシンを2台作成します。既に作成している仮想マシンと同じように作成しますが、区別が付くように仮想マシン名をドメイン名に合わせてください。仮想マシンはホストオンリーネットワークで相互に通信を行いますので、ネットワークアダプターの追加を忘れないようにしてください。
 
 ### OSのインストール
-作成した仮想マシンにOSをインストールします。ホスト名とIPアドレスをそれぞれに合わせて変更します。
+作成した仮想マシンにOSをインストールします。ホスト名とIPアドレスをそれぞれのサーバーに合わせて設定します。
 
 |ドメイン名|ホスト名|IPアドレス|
 |---|---|---|
-|jp.|host0.jp|192.168.56.100|
-|alpha.jp.|host1.alpha.jp|192.168.56.101|
-|beta.jp.|host2.alpha.jp|192.168.56.102|
+| jp. | host0.jp | 192.168.56.100 |
+| alpha.jp. | host1.alpha.jp | 192.168.56.101 |
+| beta.jp. | host2.alpha.jp | 192.168.56.102 |
 
 ### 相互通信の確認
-OSが起動したら、仮想マシン感で相互に通信ができることを確認してください。
-
+OSが起動したら、仮想マシン間で相互に通信ができることをpingコマンドを使って確認してください。
 
 ## beta.jpゾーンの設定
-まず、beta.jpゾーンの設定を行います。以下、alpha.jpゾーンの設定と異なるポイントです。
+まず、beta.jpゾーンの設定を行います。手順はalpha.jpゾーンを設定した以下の手順と同じです。
+
+1. BINDのインストール
+1. named.confファイルにゾーンを追加
+1. ゾーンファイルを作成し、レコードなどを記述
+1. 設定ファイルに書式間違いが無いか確認
+1. BINDの起動
+1. BINDの自動起動の設定
+1. ファイアーウォールの設定を変更
+1. 名前解決の確認
+
+以下、alpha.jpゾーンの設定と異なるポイントです。
 
 ### named.confの設定
-named.confを設定します。listen-onに設定するIPアドレス、ゾーン名が異なります。
+named.confを設定します。listen-onに設定するIPアドレスが192.168.56.102になる点と、定義するゾーン名がbeta.jpになる点が異なります。
 
 options {
 	listen-on port 53 { 127.0.0.1; 192.168.56.102; };	←ホストのIPアドレスを追加
@@ -506,9 +537,9 @@ options {
 	memstatistics-file "/var/named/data/named_mem_stats.txt";
 	recursing-file  "/var/named/data/named.recursing";
 	secroots-file   "/var/named/data/named.secroots";
-	allow-query     { any; };	← localhostをanyに修正
+	allow-query     { any; };	← localhostをanyに変更
 
-	recursion no;	←yesをnoに修正
+	recursion no;	←yesをnoに変更
 
 	dnssec-validation yes;
 
@@ -543,14 +574,14 @@ include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
 
 ### ゾーン定義ファイルの作成
-ゾーン定義ファイルを作成します。alpha.jp.zoneをbeta.jp.zoneとしてコピーします。
+ゾーン定義ファイルを作成します。alpha.jp.zoneをbeta.jp.zoneとしてコピーします。-pオプションを忘れないようにしてください。
 
 cd /var/named
 cp -p alpha.jp.zone beta.jp.zone
 ls -l beta.jp.zone
 -rw-r-----. 1 root named 257 Oct  9 14:47 beta.jp.zone
 
-#### ゾーンファイルの修正
+### ゾーンファイルの修正
 コピーした/var/named/beta.jp.zoneファイルを修正します。ゾーン名がbeta.jp、ホスト名がhost2、IPアドレスが192.168.56.102になっている点に注意が必要です。
 
 vi /var/named/beta.jp.zone
@@ -573,14 +604,28 @@ mail    A       192.168.56.102
 ### BINDの起動と動作確認
 beta.jpゾーンの設定が完了したら、BINDを起動して動作を確認します。動作確認方法はalpha.jpゾーンを設定した際に行ったhostコマンド、digコマンドと同様です。ゾーン名やホスト名、問い合わせを行うDNSコンテンツサーバーのIPアドレスが変わる点に注意してください。
 
-### 
+host host2.beta.jp 192.168.56.102
 
+dig beta.jp NS @192.168.56.102
+
+自動起動の設定や、ファイアーウォールの設定の変更も忘れず行っておきましょう。
 
 ## 上位ゾーンのDNSコンテンツサーバーの設定
-alpha.jpゾーン、beta.jpゾーンの設定が完了したら、上位ゾーンにあたるjpゾーンの設定を行います。
+alpha.jpゾーン、beta.jpゾーンの設定が完了したら、上位ゾーンにあたるjpゾーンの設定を行います。手順はalpha.jpゾーンやbeta.jpゾーンを設定した以下の手順と同じです。
+
+1. BINDのインストール
+1. named.confファイルにゾーンを追加
+1. ゾーンファイルを作成し、レコードなどを記述
+1. 設定ファイルに書式間違いが無いか確認
+1. BINDの起動
+1. BINDの自動起動の設定
+1. ファイアーウォールの設定を変更
+1. 名前解決の確認
+
+以下、alpha.jpゾーンの設定と異なるポイントです。
 
 ### named.confの設定
-named.confを設定します。listen-onに設定するIPアドレス、ゾーン名が異なります。また、このDNSサーバーはDNSキャッシュサーバーとしても動作させるので、recursionの設定を「yes;」のままにしておきます。
+named.confを設定します。listen-onに設定するIPアドレスが192.168.56.10になる点と、定義するゾーン名が.jpになる点が異なります。また、このDNSサーバーはDNSキャッシュサーバーとしても動作させるので、recursionの設定を「yes;」のままにしておきます。
 
 options {
 	listen-on port 53 { 127.0.0.1; 192.168.56.10; };	←ホストのIPアドレスを追加
@@ -591,7 +636,7 @@ options {
 	memstatistics-file "/var/named/data/named_mem_stats.txt";
 	recursing-file  "/var/named/data/named.recursing";
 	secroots-file   "/var/named/data/named.secroots";
-	allow-query     { any; };	← localhostをanyに修正
+	allow-query     { any; };	← localhostをanyに変更
 
 	recursion yes;	←yesのままにすること
 
@@ -620,23 +665,22 @@ zone "." IN {
 
 zone "jp" IN {	←jpゾーンを指定
 	type master;
-	file "jp.zone";	←beta.jp用のゾーン定義ファイル名を指定
+	file "jp.zone";	←jp用のゾーン定義ファイル名を指定
 	allow-update { none; };
 };	
 
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
 
-
 ### ゾーン定義ファイルの作成
-ゾーン定義ファイルを作成します。alpha.jp.zoneをjp.zoneとしてコピーします。
+ゾーン定義ファイルを作成します。alpha.jp.zoneをjp.zoneとしてコピーします。-pオプションを忘れないようにしてください。
 
 cd /var/named
 cp -p alpha.jp.zone jp.zone
 ls -l beta.jp.zone
 -rw-r-----. 1 root named 257 Oct  9 14:47 beta.jp.zone
 
-#### ゾーンファイルの修正
+### ゾーンファイルの修正
 コピーした/var/named/jp.zoneファイルを修正します。ゾーン名がjp、ホスト名がhost0、IPアドレスが192.168.56.10になっている点に注意が必要です。メールやWebなどには作成しないので、MXレコードやwww、mailなどのAレコードは作成しません。
 
 サブドメインとして権限の委譲を行ったalpha.jpゾーンとbeta.jpゾーンのNSレコード、それぞれのゾーンを管理するDNSコンテンツサーバーを指定するAレコードをグルーレコードとして記述します。
@@ -660,30 +704,39 @@ host1.alpha.jp.     A       192.168.56.101
 host2.beta.jp.     A       192.168.56.102
 
 ### BINDの起動と動作確認
-beta.jpゾーンの設定が完了したら、BINDを起動して動作を確認します。alpha.jpゾーンとbeta.jpゾーンのDNSコンテンツサーバーを示すグルーレコードが名前解決できるかを確認するため、それぞれのNSレコードを問い合わせます。
+jpゾーンの設定が完了したら、BINDを起動して動作を確認します。alpha.jpゾーンとbeta.jpゾーンのDNSコンテンツサーバーを示すグルーレコードが名前解決できるかを確認するため、それぞれのNSレコードを問い合わせます。
 
-### 自動起動設定、ファイアウォールの設定
+dig alpha.jp NS @192.168.56.10
 
+dig beta.jp NS @192.168.56.10
 
-## 参照するDNSサーバーの変更
-alpha.jpゾーンとbeta.jpゾーンを相互に参照できるようにするには、各マシンが名前解決のために参照するDNSサーバーをhost0.jp（192.168.56.10）に設定しておく必要があります。
+自動起動の設定や、ファイアーウォールの設定の変更も忘れず行っておきましょう。
 
-GNOMEのデスクトップのアプリケーションメニューから「システムツール」→「設定」を選択します。表示された設定画面の左側のメニューから「ネットワーク」を選択します。
+## 相互に名前解決できることを確認
+3台のDNSサーバーが設定できたので、alpha.jpとbeta.jpを相互に名前解決できることを確認します。
 
-「有線」の欄にある歯車のボタンをクリックすると、接続プロファイルの設定画面が表示されます。「IPv4」のタブをクリックすると、次のような画面になります。
+### 参照するDNSサーバーの変更
+alpha.jpゾーンとbeta.jpゾーンを相互に参照できるようにするには、各マシンが名前解決のために参照するDNSサーバーをhost0.jp（192.168.56.10）に設定しておく必要があります。以下の手順で、alpha.jpサーバーとbeta.jpサーバーの設定をそれぞれ変更します。
 
-DNSサーバーのアドレスを講師マシンのIPアドレス「192.168.56.10」に変更します。変更したら、「適用」ボタンを押して元の画面に戻ります。「有線」の項目にあるスイッチを、一旦「オフ」に変えます。再度、「オン」に変えるとDNS設定が変更されます。
+1. GNOMEのデスクトップのアプリケーションメニューから「システムツール」→「設定」を選択します
+1. 表示された設定画面の左側のメニューから「ネットワーク」を選択します
+1. 「有線」の欄にある歯車のボタンをクリックすると、接続プロファイルの設定画面が表示されます
+1. 「IPv4」のタブをクリックすると、次のような画面になります
+1. DNSサーバーのアドレスを講師マシンのIPアドレス「192.168.56.10」に変更します
+1. 「適用」ボタンを押して元の画面に戻ります
+1. 「有線」の項目にあるスイッチを一旦「オフ」に変えます
+1. 再度「オン」に変えるとDNS設定が変更されます
 
 ### 名前解決の確認
-リゾルバの変更ができたら、DNSサーバーを指定しなくてもDNSの問い合わせができるようになります。hostコマンドで、自分のドメインのNSレコードやMXレコードを問い合わせてみます。hostコマンドでは、-tオプションを使うことで、問い合わせるレコードを指定することができます。
+hostコマンドやdigコマンドで、他のドメインのNSレコードやMXレコードを問い合わせてみます。hostコマンドでは、-tオプションを使うことで、問い合わせるレコードを指定することができます。
 
-# host -t ns alpha.jp
-alpha.jp name server host1.alpha.jp.
-# host -t mx alpha.jp
-alpha.jp mail is handled by 10 host1.alpha.jp.
+host -t ns beta.jp
+alpha.jp name server host2.beta.jp.
+
+dig beta.jp MX
 
 ## DNSコンテンツサーバーのセキュリティ
-動作確認のため、digのaxfrを使ってゾーンを転送する例を紹介しました。しかし、インターネット上の見知らぬサイトに、すべてのゾーンデータを教えるのは懸命ではありません。
+動作確認のため、digのaxfrを使ってゾーンを転送する例を紹介しました。しかし、インターネット上の見知らぬサイトに、すべてのゾーンデータを教えるのは賢明ではありません。
 BINDのデフォルトでは、すべてのホストへのゾーン転送が許可されます。zoneステートにallow-transferオプションが記述された場合、optionsステートメントの設定を上書きできます。下記のように設定することで、ゾーン転送をlocalhostとネットワークアドレス192.168.56.0以下にある端末からのみ許可できます。
 
 options {
