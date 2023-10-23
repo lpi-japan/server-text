@@ -122,7 +122,7 @@ beta.jpゾーンを管理するDNSコンテンツサーバーとして設定し�
 
 |ドメイン名|ホスト名|IPアドレス|
 |---|---|---|
-| jp. | host0.jp. | 192.168.56.10 |
+| jp. | host0.jp. | 192.168.56.100 |
 | alpha.jp. | host1.alpha.jp. | 192.168.56.101 |
 | beta.jp. | host2.alpha.jp. | 192.168.56.102 |
 
@@ -133,7 +133,7 @@ WebブラウザーでWebページを表示させるとき、DNSキャッシュ�
 
 1. alpha.jpマシンは、Webブラウザーにアドレスとしてwww.beta.jpを入力します。
 1. Webブラウザーは、Linuxのリゾルバに問い合わせます。
-1. リゾルバは、/etc/resolv.confファイルで指定されているDNSキャッシュサーバー（192.168.56.10）へ問い合わせます。
+1. リゾルバは、/etc/resolv.confファイルで指定されているDNSキャッシュサーバー（192.168.56.100）へ問い合わせます。
 1. DNSキャッシュサーバーは、jpゾーンのDNSコンテンツサーバーを参照し、beta.jpゾーンのDNSコンテンツサーバーのIPアドレス（192.168.56.102）を返します。
 1. DNSキャッシュサーバーは、beta.jpゾーンのDNSコンテンツサーバーに問い合わせします。
 1. beta.jpゾーンのDNSコンテンツサーバーは、www.beta.jpホストのIPアドレス（192.168.56.102）を返します。
@@ -423,7 +423,7 @@ dig alpha.jp axfr @192.168.56.101
 alpha.jp.		10800	IN	SOA	host1.alpha.jp. root.alpha.jp. 2023100901 86400 3600 604800 10800
 alpha.jp.		10800	IN	NS	host1.alpha.jp.
 alpha.jp.		10800	IN	MX	10 mail.alpha.jp.
-host1.alpha.jp.		10800	IN	A	192.168.56.1018
+host1.alpha.jp.		10800	IN	A	192.168.56.101
 mail.alpha.jp.		10800	IN	A	192.168.56.101
 www.alpha.jp.		10800	IN	A	192.168.56.101
 alpha.jp.		10800	IN	SOA	host1.alpha.jp. root.alpha.jp. 2023100901 86400 3600 604800 10800
