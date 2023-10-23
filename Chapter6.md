@@ -96,9 +96,9 @@ MTAの設定ができたら、mailコマンドを使ってメールのやり取�
 Thunderbirdをメールクライアントとして設定し、SMTP認証によるメール送信や、DovecotによるIMAPサーバーからのメール受信を行います。
 
 ## Postfixのインストール
-Postfixをdnfコマンドでインストールをします。また、SMTP認証で使用するCyrus-SASLも一緒にインストールしておきます。
+Postfixをdnfコマンドでインストールをします。また、SMTP認証で使用するCyrus-SASL（cyrus-saslパッケージ）とmailコマンドが含まれているs-nailパッケージも一緒にインストールしておきます。
 
-dnf install postfix cyrus-sasl
+dnf install postfix cyrus-sasl s-nail
 Last metadata expiration check: 3:46:14 ago on Sun Oct 22 19:14:35 2023.
 Dependencies resolved.
 ================================================================================
