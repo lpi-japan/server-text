@@ -159,6 +159,12 @@ host1.example1.jp.
 host2.example2.jp.  
 host0.jp.  
 
+| マシン | 設定値 |
+| ---- | ---- |
+| 1台目 | host1.example1.jp. |
+| 2台目 | host2.example2.jp. |
+| 3台目 | host0.jp. |
+
 #### ホスト名の大文字小文字の区別
 Linuxではホスト名の大文字小文字の区別はありません。
 
