@@ -58,10 +58,10 @@ https://bit.ly/linux-text
 その場合も含め、LPI-Japan事務局までお気軽にお問い合わせください。
 
 ## 本教科書の使用に関するお問合せ先
-特定非営利活動法人エルピーアイジャパン（LPI-Japan）事務局
-〒00-0011 東京都千代田区内幸町2-1-1　飯野ビルディング9階
-TEL：03-6205-7025
-E-Mail：info@lpi.or.jp
+特定非営利活動法人エルピーアイジャパン（LPI-Japan）事務局 
+〒00-0011 東京都千代田区内幸町2-1-1　飯野ビルディング9階 
+TEL：03-6205-7025 
+E-Mail：info@lpi.or.jp 
 
 ## 本教科書の目的
 本教科書の目的は、LinuCレベル2の201試験と202試験の学習範囲に含まれるサーバー構築の知識を、構築の実習を通しながら学習することにあります。
@@ -76,7 +76,15 @@ E-Mail：info@lpi.or.jp
 ### 仮想マシンを利用
 仮想マシンを利用して学習環境を構築します。仮想マシンを利用すると、WindowsやLinux、macOS上の仮想マシンにLinuxをインストールし、動作させることができます。仮想マシンは複数同時に動作させることができるので、複数のサーバーをネットワークで接続して行うDNSやメールの実習も1台の物理マシンで行えます。
 
-仮想マシン環境を実現するソフトウェアとして、たとえばVMware社のVMware Workstation(Windows)やVMware Fusion(macOS)、Parallels社のParallels Desktop(macOS)やOracle社のVirtualBox（Windows、Linux、macOS）などが挙げられます。Linuxで動作するKVMを利用することもできます。本教科書では、Windows上で動作するVirtualBoxを利用して解説を進めます。
+仮想マシン環境を実現するソフトウェアとして、以下のようなものがあげられます。
+
+- VirtualBox（Windows、Linux、macOS）
+- VMware Workstation(Windows)
+- VMware Fusion(macOS)
+- Parallels Desktop(macOS)
+- Linux KVM（Linux）
+
+本教科書では、VirtualBoxをWindows上で利用して解説を進めます。
 
 ### OS
 本教科書では、LinuxディストリビューションとしてAlmaLinuxのバージョン9.2（64ビット版）を利用します。
