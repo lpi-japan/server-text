@@ -144,55 +144,64 @@ Installed:
 
 Complete!
 
-### main.cfの設定
+## Postfixの設定ファイル main.cfの設定
 Postfixの設定ファイルは、/etc/postfix/main.cfです。次のパラメータを探して設定します。
 
-パラメータによっては、コメントアウトされた形で記述されているので、コメントアウトを外して設定を有効にします。smtpd_sasl_auth_enableとsmtpd_recipient_restrictionsは、main.cfに記述されていないので、ファイルの最後に追加しておきます。
+パラメータによっては、デフォルト値が設定されているので、その場合には書き換えます。コメントアウトされた形で記述されている場合には、コメントアウトを外して設定を有効にした上で値を記述します。
 
-#### myhostname
+smtpd_sasl_auth_enableとsmtpd_recipient_restrictionsは、main.cfに記述されていないので、ファイルの最後に追加しておきます。
+
+### myhostname
 メールサーバーのホスト名を設定します。
 
-myhostname = mail.alpha.jp
+myhostname = mail.example1.jp
 
-#### mydomain
+### mydomain
 メールサーバーのドメイン名を設定します。
 
-mydomain = alpha.jp
+mydomain = example1.jp
 
-#### inet_interfaces
-メールを受け付けるネットワークインターフェースのIPアドレスを設定します。
+### inet_interfaces
+メールを受け付けるネットワークインターフェースのIPアドレスを設定します。localhostの記述を忘れると、自分自身からのメールを受け付けなくなるので
 
 inet_interfaces = localhost, 192.168.56.101
 
-#### mydestination
+### mydestination
 メールを受信するドメイン名を設定します。このドメイン名宛以外のメール転送は受け付けません。
 
-mydestination = alpha.jp
+mydestination = example1.jp
 
-#### mynetworks
+### mynetworks
 信頼するクライアントのIPアドレスを設定します。このIPアドレスからのメール送信は、認証無しでリレーして宛先の受信用メールサーバーに転送されます。
 
 mynetworks = 192.168.56.101
 
-#### smtpd_sasl_auth_enable
+### smtpd_sasl_auth_enable
 SMTP認証用のSASL認証連携を有効にします。
 
 smtpd_sasl_auth_enable = yes
 
-#### smtpd_recipient_restrictions
+### smtpd_recipient_restrictions
 SMTP認証でSASL認証されたクライアントからのメール送信を許可するように設定します。
 
 smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition
 
-### 書式のチェック
+これら2つの設定の意味は後述します。
+
+## 書式のチェック
 /etc/postfix/main.cfの修正ができたら、書式チェックを行っておきます。
 
 # postfix check
 
 書式が正しい場合には、何も表示されません。エラーが表示された場合には、エラー内容をよく見て修正します。
 
+## Postfixの再起動
+postfixサービスを再起動します。
+
+# systemctl restart postfix.service
+
 ## ファイアウォールの設定
-Postfixの再起動の前に、メールサーバーでメールの受信ができるようにファイアウォールのサービス許可設定を行います。
+Postfixでメールの受信ができるようにファイアウォールのサービス許可設定を行います。
 
 # firewall-cmd --add-service=smtp
 
@@ -200,14 +209,7 @@ Postfixの再起動の前に、メールサーバーでメールの受信がで�
 
 # firewall-cmd --runtime-to-permanent
 
-### Postfixの再起動
-postfixサービスを再起動します。
-
-# systemctl restart postfix.service
-
-### Postfixの自動起動の設定
-
-
+## Postfixの自動起動の設定
 postfixサービスの自動起動を設定します。
 
 # systemctl enable postfix.service
@@ -218,42 +220,75 @@ Created symlink /etc/systemd/system/multi-user.target.wants/postfix.service → 
 # systemctl is-enabled postfix.service
 enabled
 
-#### SASL認証連携の設定
-PostfixはSMTP認証をSASL認証と連携して行います。Postfixの設定ファイルであるmain.cfでSASL認証を有効にし、SMTP認証の
-SASL認証は、SMTP認証の認証機構です。Postfixは設定ファイルでSMTP認証の機能を有効にできますが、Postfix自体は認証の機能を持っていません。設定ファイルでSMTP認証の機能を有効にすると、Postfixはsaslauthdに認証を依頼してその結果を受け取ります。
+### Postfixの起動順の設定（任意）
+上記systemctl enableコマンドでPostfixの自動起動を設定しても、システムを再起動するとPostfixが起動していないことがあります。これはシステム起動時のサービスの起動順の設定が正しくないためです。
 
+具体的には、ネットワークサービスの起動完了を待たずにPostfixを起動しようとしているのが原因です。正しい動作をさせるためにはsystemdが参照している設定ファイルを修正する必要があります。
+
+本教科書の実習では頻繁にシステム再起動を行うことはないので、起動していない場合にはその都度Postfixを起動すればよいですが、連続稼働させるシステムでPostfixを動作させる場合には、以下の修正を行ってください。
+
+#### systemctl editコマンドで修正
+systemctl editコマンドを使うと、対象となるサービスの設定ファイルを編集することができます。ただし、起動するエディタがnanoになるので、vimと使い勝手が若干異なる点に注意が必要です。
+
+#### vimで設定ファイルを修正
+vimで設定ファイルを直接開いて修正しても構いません。設定ファイルは/usr/lib/systemd/system/postfix.serviceです。
+
+# vi /usr/lib/systemd/system/postfix.service
+
+[Unit]
+Description=Postfix Mail Transport Agent
+After=syslog.target network-online.target ← network.targetをnetwork-online.targetに変更
+Conflicts=sendmail.service exim.service
+（略）
+
+After=network.targetは、ネットワークサービスの起動の後にPostfixを起動しますが、ネットワークが使えるようになったことは確認しません。After=network-online.targetにすることで、ネットワークが使えるようになったことまで確認した後にPostfixを起動します。
+
+変更が適用されたことを確認するため、システムを再起動し、Postfixが自動的に起動していることを確認してください。
+
+## SMTP認証（SASL認証連携）の設定
+SMTP認証は、メール送信時に認証を行う仕組みです。Postfix自体は認証の機能を持っていませんので、SASL認証との連携を行います。SASL認証連携を行うには、Postfixへの設定とsaslauthdサービスの起動が必要です。
+
+### Postfixの設定の確認
+Postfixの設定ファイルであるmain.cfでSASL認証を有効にします。既に以下の2つのパラメータを追加で設定しています。
+
+- smtpd_sasl_auth_enable
+- smtpd_recipient_restrictions
+
+SMTP認証の機能を有効にすると、Postfixはsaslauthdに認証を依頼してその結果を受け取ります。
 
 ### saslauthdサービスの起動
-SMTP 認証用のsaslauthdサービスを起動します。
+SMTP認証用のsaslauthdサービスを起動します。
 
 # systemctl start saslauthd.service
 
-sasluauthdの自動起動設定も行っておきます。
+saslauthdの自動起動設定も行っておきます。
 
 # systemctl enable saslauthd.service
 Created symlink from /etc/systemd/system/multi-user.target.wants/saslauthd.service to /usr/lib/systemd/system/saslauthd.service.
 
+これでPostfixの設定は完了です。
+
 ## アカウントの作成
-それでは、実際にメールを送信する前に、宛先となるアカウントを作成します。
+メールのやり取りを行うためのアカウントを作成します。アカウントはhost1とhost2の双方で行います。
 
-### host1.alpha.jpにuseraを作成
-host1.alpha.jpでuseraというアカウントを作成します。このアカウントはusera@alpha.jpというメールアドレスになります。ユーザーは、mailグループに参加させるように設定します。
+### host1にuser1を作成
+host1でuser1というアカウントを作成します。このアカウントはuser1@example1.jpというメールアドレスになります。
 
-[root@host1 postfix]# useradd -G mail usera
-[root@host1 postfix]# passwd usera
-ユーザー usera のパスワードを変更。
-新しいパスワード: userapass	← 入力文字は非表示
-新しいパスワードを再入力してください: userapass	← 入力文字は非表示
+[root@host1 ~]# user1dd -user1
+[root@host1 ~]# passwd user1
+ユーザー user1 のパスワードを変更。
+新しいパスワード: user1pass	← 入力文字は非表示
+新しいパスワードを再入力してください: user1pass	← 入力文字は非表示
 passwd: すべての認証トークンが正しく更新できました。
 
-### host2.beta.jpにuserbを作成
-host2.beta.jpでuserbというアカウントを作成します。このアカウントはuserb@beta.jpというメールアドレスになります。ユーザーは、mailグループに参加させるように設定します。
+### host2にuser2を作成
+host2でuser2というアカウントを作成します。このアカウントはuser2@example2.jpというメールアドレスになります。
 
-[root@host2 postfix]# useradd -G mail userb
-[root@host2 postfix]# passwd userb
-ユーザー userb のパスワードを変更。
-新しいパスワード: userbpass	← 入力文字は非表示
-新しいパスワードを再入力してください: userbpass	← 入力文字は非表示
+[root@host2 ~]# user1dduser2
+[root@host2 ~]# passwd user2
+ユーザー user2 のパスワードを変更。
+新しいパスワード: user2pass	← 入力文字は非表示
+新しいパスワードを再入力してください: user2pass	← 入力文字は非表示
 passwd: すべての認証トークンが正しく更新できました。
 
 ## メールの送受信
@@ -272,130 +307,85 @@ passwd: すべての認証トークンが正しく更新できました。
 1. 「端末」を起動します
 2. suコマンドでユーザーを切り替えます
 
-#### host1.alpha.jpでuseraに切り替え
+#### host1でuser1に切り替え
 
-[root@host1 ~]# su - usera
-[usera@host1 ~]$  id
-uid=1003(usera) gid=1003(usera) groups=1003(usera),12(mail) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+[root@host1 ~]# su - user1
+[user1@host1 ~]$  id
+uid=1003(user1) gid=1003(user1) groups=1003(user1),12(mail) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
 
-#### host2.beta.jpでuserbに切り替え
+#### host2でuser2に切り替え
 
-# su - userb
-[userb@host2 ~]$  id
-uid=1001(userb) gid=1001(userb) groups=1001(userb),12(mail) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+# su - user2
+[user2@host2 ~]$  id
+uid=1001(user2) gid=1001(user2) groups=1001(user2),12(mail) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
 
-### usera@alpha.jpからuserb@beta.jpへメール送信
-mailコマンドを使って、host1.alpha.jpのuseraからuserb@beta.jpへメールを送信します。
+### user1@example1.jpからuser2@example2.jpへメール送信
+mailコマンドを使って、host1のuser1からuser2@example2.jpへメールを送信します。
 
 
-[usera@host1 ~]$ mail userb@beta.jp	← mailコマンドの引数に宛先のアドレスを指定
-Subject: Test mail from usera		← Subjectを入力
-This is Test Mail from usera		← メッセージ本文を入力
-.	← メッセージ本文の入力が終わったらピリオドを入力
-EOT
+[user1@host1 ~]$ mail user2@example2.jp	← mailコマンドの引数に宛先のアドレスを指定
+Subject: Test mail from user1		← Subjectを入力
+This is Test Mail from user1		← メッセージ本文を入力
+^D ← メッセージ本文の入力が終わったらCtrl+dを入力
+-------
+(Preliminary) Envelope contains:
+To: user2@example2.jp
+Subject: Test mail from user1
+Send this message [yes/no, empty: recompose]? yes.	← yesと入力するとメールが送信される
 
-### userbのメール着信確認
-mailコマンドを使って、host2.beta.jpのuserbにメールが届いているかを確認します。
+### user2のメール着信確認
+mailコマンドを使って、host2.example2.jpのuser2にメールが届いているかを確認します。
 
-[userb@host2 ~]$ mail
+[user2@host2 ~]$ mail
 Heirloom Mail version 12.5 7/5/10.  Type ? for help.
-"/var/spool/mail/userb": 1 message 1 new
->N  1 usera@mail.alpha.jp   Tue Feb 19 13:38  21/751   "Test mail from usera"
+"/var/spool/mail/user2": 1 message 1 new
+>N  1 user1@mail.example1.jp   Tue Feb 19 13:38  21/751   "Test mail from user1"
 & 1	← 1を入力
 Message  1:
-From usera@mail.alpha.jp  Tue Feb 19 13:38:31 2019
-Return-Path: <usera@mail.alpha.jp>
-X-Original-To: userb@beta.jp
-Delivered-To: userb@beta.jp
+From user1@mail.example1.jp  Tue Feb 19 13:38:31 2019
+Return-Path: <user1@mail.example1.jp>
+X-Original-To: user2@example2.jp
+Delivered-To: user2@example2.jp
 Date: Tue, 19 Feb 2019 13:38:31 +0900
-To: userb@beta.jp
-Subject: Test mail from usera
+To: user2@example2.jp
+Subject: Test mail from user1
 User-Agent: Heirloom mailx 12.5 7/5/10
 Content-Type: text/plain; charset=us-ascii
-From: usera@mail.alpha.jp
+From: user1@mail.example1.jp
 Status: R
 
-This is Test Mail from usera
+This is Test Mail from user1
 
 & q	← qを入力
-Held 1 message in /var/spool/mail/userb
+Held 1 message in /var/spool/mail/user2
 
-このように、host1.alpha.jpからhost2.beta.jpにメールが送られていることがわかります。
-以上で、Aさんによる演習が終了です。次に、今度はBさんがAさんに対してメールを送ってみましょう。
+このように、host1.example1.jpからhost2.example2.jpにメールが送られていることがわかります。
+
+反対にuser2@example2.jpからuser1@example1.jpへのメールも送信できることを確認してみましょう。
 
 ## メールクライアントソフトでのメールの送受信
 通常のメールサーバーの運用では、メールの利用者はメールクライアントを使用してメールの送受信を行います。送信はSMTP、受信はIMAPやPOP3をプロトコルとして使用します。
-IMAPサーバーを利用してメールを受信できるよう、IMAPサーバーであるDevecotと、メールクライアントとしてThunderbirdをインストールしてメールを送受信してみます。
 
+IMAPサーバーを利用してメールを受信できるよう、IMAPサーバーであるDevecotと、メールクライアントとしてThunderbirdをインストールして、メールを送受信してみます。
 
 ### Dovecotパッケージの追加
 それでは早速、必要なパッケージを追加して、クライアントでメールを送受信できるように設定してみましょう。まずはIMAPサーバーであるDovecotをインストールします。インターネットに接続できない環境では、GUIからadminでログインし、インストールメディアが自動マウントされた状態でインストール作業を進めます。
 
-# yum install dovecot
-読み込んだプラグイン:fastestmirror, langpacks
-Loading mirror speeds from cached hostfile
- * base: ftp.riken.jp
-依存性の解決をしています
---> トランザクションの確認を実行しています。
----> パッケージ dovecot.x86_64 1:2.2.36-3.el7 を インストール
---> 依存性の処理をしています: libclucene-shared.so.1()(64bit) のパッケージ: 1:dovecot-2.2.36-3.el7.x86_64
---> 依存性の処理をしています: libclucene-core.so.1()(64bit) のパッケージ: 1:dovecot-2.2.36-3.el7.x86_64
---> トランザクションの確認を実行しています。
----> パッケージ clucene-core.x86_64 0:2.3.3.4-11.el7 を インストール
---> 依存性解決を終了しました。
+# dnf install dovecot
 
-依存性を解決しました
-
-================================================================================
- Package              アーキテクチャー
-                                     バージョン              リポジトリー  容量
-================================================================================
-インストール中:
- dovecot              x86_64         1:2.2.36-3.el7          base         4.4 M
-依存性関連でのインストールをします:
- clucene-core         x86_64         2.3.3.4-11.el7          base         528 k
-
-トランザクションの要約
-================================================================================
-インストール  1 パッケージ (+1 個の依存関係のパッケージ)
-
-総ダウンロード容量: 4.9 M
-インストール容量: 16 M
-Is this ok [y/d/N]: y	← 確認してyを入力
-Downloading packages:
-(1/2): clucene-core-2.3.3.4-11.el7.x86_64.rpm              | 528 kB   00:15     
-(2/2): dovecot-2.2.36-3.el7.x86_64.rpm                     | 4.4 MB   00:15     
---------------------------------------------------------------------------------
-合計                                               317 kB/s | 4.9 MB  00:15     
-Running transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  インストール中          : clucene-core-2.3.3.4-11.el7.x86_64              1/2 
-  インストール中          : 1:dovecot-2.2.36-3.el7.x86_64                   2/2 
-  検証中                  : clucene-core-2.3.3.4-11.el7.x86_64              1/2 
-  検証中                  : 1:dovecot-2.2.36-3.el7.x86_64                   2/2 
-
-インストール:
-  dovecot.x86_64 1:2.2.36-3.el7                                                 
-
-依存性関連をインストールしました:
-  clucene-core.x86_64 0:2.3.3.4-11.el7                                          
-
-完了しました!
 
 ### Dovecotの設定
 
 次に、IMAPサーバーであるDovecotの設定を行います。設定ファイルは/etc/dovecot/dovecot.confと/etc/dovecot/conf.dディレクトリ以下に分かれています。
 
-##### /etc/dovecot/dovecot.conf
+#### /etc/dovecot/dovecot.conf
 全体的な設定ファイルです。デフォルトの設定がコメントアウトで記述されています。特に変更は必要ありません。
 
 # vi /etc/dovecot/dovecot.conf
 
 （略）
 # Protocols we want to be serving.
-#protocols = imap pop3 lmtp	← IMAP/POP3/LMTPが使用可能
+#protocols = imap pop3 lmtp submission	← IMAP/POP3/LMTP/SMTP submissionが使用可能
 
 # A comma separated list of IPs or hosts where to listen in for connections.
 # "*" listens in all IPv4 interfaces, "::" listens in all IPv6 interfaces.
@@ -404,10 +394,9 @@ Running transaction
 #listen = *, ::	← ホストのすべてのIPアドレスで接続を受け付ける
 
 #### /etc/dovecot/conf.d/10-mail.conf
-メールボックスの位置などを設定するファイルです。今回はmbox形式のメールボックスを指定します。
+メールボックスの位置などを設定するファイルです。今回はmbox形式のメールボックスを指定します。また、メールボックスへのアクセス権限を設定します。
 
 # vi /etc/dovecot/conf.d/10-mail.conf
-
 （略）
 #   mail_location = maildir:~/Maildir
 #   mail_location = mbox:~/mail:INBOX=/var/mail/%u
@@ -415,7 +404,23 @@ Running transaction
 #
 # <doc/wiki/MailLocation.txt>
 #
-mail_location = mbox:~/mail:INBOX=/var/mail/%u	←　修正
+mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 修正
+
+（略）
+
+# Group to enable temporarily for privileged operations. Currently this is
+# used only with INBOX when either its initial creation or dotlocking fails.
+# Typically this is set to "mail" to give access to /var/mail.
+#mail_privileged_group =
+mail_privileged_group = mail ← 権限が必要な動作はmailグループとして行う
+
+# Grant access to these supplementary groups for mail processes. Typically
+# these are used to set up access to shared mailboxes. Note that it may be
+# dangerous to set these if users can create symlinks (e.g. if "mail" group is
+# set here, ln -s /var/mail ~/mail/var could allow a user to delete others'
+# mailboxes, or ln -s /secret/shared/box ~/mail/mybox would allow reading it).
+#mail_access_groups =
+mail_access_groups = mail ← mailグループにアクセス権限を与える
 
 #### /etc/dovecot/conf.d/10-auth.conf
 認証を設定するファイルです。今回は暗号化していない平文での認証を許可し、Linuxのログイン情報を認証に利用できるように設定します。
@@ -432,7 +437,7 @@ mail_location = mbox:~/mail:INBOX=/var/mail/%u	←　修正
 # connection is considered secure and plaintext authentication is allowed.
 # See also ssl=required setting.
 #disable_plaintext_auth = yes
-disable_plaintext_auth = no	← 追加
+disable_plaintext_auth = no	← noに変更
 
 #### /etc/dovecot/conf.d/10-ssl.conf
 SSL/TLSを設定するファイルです。今回はSSL/TLS暗号化をしませんので、SSLの利用を停止しておきます。
@@ -462,17 +467,17 @@ Dovecotの起動の前に、POP3とIMAP4でメールの受信ができるよう�
 ### Dovecotの再起動
 dovecotサービスを再起動します。
 
-# systemctl start dovecot.service
+# systemctl start dovecot
 
 自動起動設定も行っておきます。
 
-# systemctl enable dovecot.service
+# systemctl enable dovecot
 Created symlink from /etc/systemd/system/multi-user.target.wants/dovecot.service to /usr/lib/systemd/system/dovecot.service.
 
 ### Thunderbirdのインストール
 メールクライアントとしてThunderbirdをインストールします。インターネットに接続できない環境では、GUIからadminでログインし、インストールメディアが自動マウントされた状態でインストール作業を進めます。
 
-# yum install thunderbird
+# dnf install thunderbird
 読み込んだプラグイン:fastestmirror, langpacks
 Loading mirror speeds from cached hostfile
  * base: mirrors.cat.net
@@ -517,7 +522,7 @@ Running transaction
 
 1. adminでログインしている場合にはログアウトします。ログアウトは、GNOMEメニューバーの電源アイコン付近をクリックし、「admin」をクリックすると表示される「ログアウト」をクリックします。  
    ![ログアウトする](image/logout.png){width=70%}  
-1. メールの送受信テスト用に作成したユーザーアカウントuseraでログインします。パスワードはuserapassです。正しく設定されていない場合には、再度adminでログインし、rootユーザになってpasswdコマンドで設定し直して下さい。このパスワードがメールの送受信にも使用されます。
+1. メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。パスワードはuser1passです。正しく設定されていない場合には、再度adminでログインし、rootユーザになってpasswdコマンドで設定し直して下さい。このパスワードがメールの送受信にも使用されます。
 1. 「アプリケーション」メニューから「インターネット」→「Thunderbird」を選択します。  
    ![Thunderbirdを起動する](image/thunderbird-menu.png){width=70%}  
 1. Thunderbirdが起動すると「Thunderbirdのご利用ありがとうございます」の画面が表示されます。  
@@ -531,8 +536,8 @@ Running transaction
    |設定項目                | 値           |
    |-----------------------|--------------|
    |あなたの名前		|UserA         |
-   |メールアドレス		|usera@alpha.jp|
-   |パスワード		|userapass     |
+   |メールアドレス		|user1@example1.jp|
+   |パスワード		|user1pass     |
    |パスワードを記憶する	|チェックしておく     |  
     	
    すると、「アカウント設定をMozilla ISPデータベースから検索しています。」と表示されます。検索はしばらく時間がかかります。
@@ -546,13 +551,13 @@ Running transaction
    
    |カテゴリ       | 項目	     	| 設定値         |
    |------------|---------------|---------------|
-   |ユーザ名	             	||usera         |
-   |受信サーバー  |サーバーのホスト名	|mail.alpha.jp  |
+   |ユーザ名	             	||user1         |
+   |受信サーバー  |サーバーのホスト名	|mail.example1.jp  |
                ||プロトコル	|IMAP           |
                ||受信ポート番号	|143            |
                ||SSL		|接続の保護なし    |
                ||認証方式	|通常のパスワード   |
-   |送信サーバー  |サーバーのホスト名	|mail.alpha.jp  |
+   |送信サーバー  |サーバーのホスト名	|mail.example1.jp  |
                ||送信ポート番号	|25             |
                ||SSL	        |接続の保護なし    |
                ||認証方式	|通常のパスワード   |
@@ -566,9 +571,9 @@ Running transaction
 ### メールの送信
 メールを送信するには、「作成」ボタンをクリックしてメール作成ウインドウを呼び出します。
 
-1. 宛先に自分のメールアドレス（usera@alpha.jp）を指定して、メールを作成、送信してみます。
+1. 宛先に自分のメールアドレス（user1@example1.jp）を指定して、メールを作成、送信してみます。
 1. 「受信」ボタンをクリックして、メールが受信できることを確認します。
-1. 宛先に他の受講生のメールアドレス（userb@beta.jp）を指定して、メールを作成、送信してみます。
+1. 宛先に他の受講生のメールアドレス（user2@example2.jp）を指定して、メールを作成、送信してみます。
 1. 相手がメールを受信できたこと、相手からのメールを受信できることを確認します。
 
 ### 起動時のスタートページの設定
