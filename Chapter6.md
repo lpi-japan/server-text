@@ -277,8 +277,8 @@ host1でuser1というアカウントを作成します。このアカウント�
 [root@host1 ~]# user1dd -user1
 [root@host1 ~]# passwd user1
 ユーザー user1 のパスワードを変更。
-新しいパスワード: user1pass	← 入力文字は非表示
-新しいパスワードを再入力してください: user1pass	← 入力文字は非表示
+新しいパスワード: userpass	← 入力文字は非表示
+新しいパスワードを再入力してください: userpass	← 入力文字は非表示
 passwd: すべての認証トークンが正しく更新できました。
 
 ### host2にuser2を作成
@@ -287,8 +287,8 @@ host2でuser2というアカウントを作成します。このアカウント�
 [root@host2 ~]# user1dduser2
 [root@host2 ~]# passwd user2
 ユーザー user2 のパスワードを変更。
-新しいパスワード: user2pass	← 入力文字は非表示
-新しいパスワードを再入力してください: user2pass	← 入力文字は非表示
+新しいパスワード: userpass	← 入力文字は非表示
+新しいパスワードを再入力してください: userpass	← 入力文字は非表示
 passwd: すべての認証トークンが正しく更新できました。
 
 ## メールの送受信
@@ -364,21 +364,21 @@ Held 1 message in /var/spool/mail/user2
 反対にuser2@example2.jpからuser1@example1.jpへのメールも送信できることを確認してみましょう。
 
 ## メールクライアントソフトでのメールの送受信
-通常のメールサーバーの運用では、メールの利用者はメールクライアントを使用してメールの送受信を行います。送信はSMTP、受信はIMAPやPOP3をプロトコルとして使用します。
+通常のメールサーバーの運用では、メールの利用者はメールクライアントを使用してメールの送受信を行います。送信はSMTP、受信はIMAP4やPOP3をプロトコルとして使用します。
 
 IMAPサーバーを利用してメールを受信できるよう、IMAPサーバーであるDevecotと、メールクライアントとしてThunderbirdをインストールして、メールを送受信してみます。
 
-### Dovecotパッケージの追加
-それでは早速、必要なパッケージを追加して、クライアントでメールを送受信できるように設定してみましょう。まずはIMAPサーバーであるDovecotをインストールします。インターネットに接続できない環境では、GUIからadminでログインし、インストールメディアが自動マウントされた状態でインストール作業を進めます。
+## Dovecotのインストール
+まずはIMAPサーバーであるDovecotをインストールします。
 
 # dnf install dovecot
 
+## Dovecotの設定
+次に、IMAPサーバーであるDovecotの設定を行います。
 
-### Dovecotの設定
+設定ファイルは/etc/dovecot/dovecot.confと/etc/dovecot/conf.dディレクトリ以下に分かれています。
 
-次に、IMAPサーバーであるDovecotの設定を行います。設定ファイルは/etc/dovecot/dovecot.confと/etc/dovecot/conf.dディレクトリ以下に分かれています。
-
-#### /etc/dovecot/dovecot.conf
+### /etc/dovecot/dovecot.conf
 全体的な設定ファイルです。デフォルトの設定がコメントアウトで記述されています。特に変更は必要ありません。
 
 # vi /etc/dovecot/dovecot.conf
@@ -393,8 +393,10 @@ IMAPサーバーを利用してメールを受信できるよう、IMAPサーバ
 # edit conf.d/master.conf.
 #listen = *, ::	← ホストのすべてのIPアドレスで接続を受け付ける
 
-#### /etc/dovecot/conf.d/10-mail.conf
-メールボックスの位置などを設定するファイルです。今回はmbox形式のメールボックスを指定します。また、メールボックスへのアクセス権限を設定します。
+### /etc/dovecot/conf.d/10-mail.conf
+メールボックスの位置などを設定するファイルです。
+
+今回はmbox形式のメールボックスを指定します。また、メールボックスへのアクセス権限を設定します。
 
 # vi /etc/dovecot/conf.d/10-mail.conf
 （略）
@@ -404,7 +406,7 @@ IMAPサーバーを利用してメールを受信できるよう、IMAPサーバ
 #
 # <doc/wiki/MailLocation.txt>
 #
-mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 修正
+mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 上にある例を参考に修正
 
 （略）
 
@@ -422,8 +424,10 @@ mail_privileged_group = mail ← 権限が必要な動作はmailグループと�
 #mail_access_groups =
 mail_access_groups = mail ← mailグループにアクセス権限を与える
 
-#### /etc/dovecot/conf.d/10-auth.conf
-認証を設定するファイルです。今回は暗号化していない平文での認証を許可し、Linuxのログイン情報を認証に利用できるように設定します。
+### /etc/dovecot/conf.d/10-auth.conf
+認証を設定するファイルです。
+
+今回は暗号化していない平文での認証を許可し、Linuxのログイン情報を認証に利用できるように設定します。
 
 # vi /etc/dovecot/conf.d/10-auth.conf
 
@@ -439,8 +443,10 @@ mail_access_groups = mail ← mailグループにアクセス権限を与える
 #disable_plaintext_auth = yes
 disable_plaintext_auth = no	← noに変更
 
-#### /etc/dovecot/conf.d/10-ssl.conf
-SSL/TLSを設定するファイルです。今回はSSL/TLS暗号化をしませんので、SSLの利用を停止しておきます。
+### /etc/dovecot/conf.d/10-ssl.conf
+SSL/TLSを設定するファイルです。
+
+今回はSSL/TLS暗号化をしませんので、SSLの利用を停止しておきます。
 
 # vi /etc/dovecot/conf.d/10-ssl.conf
 
@@ -451,21 +457,20 @@ SSL/TLSを設定するファイルです。今回はSSL/TLS暗号化をしませ
 # SSL/TLS support: yes, no, required. <doc/wiki/SSL.txt>
 # disable plain pop3 and imap, allowed are only pop3+TLS, pop3s, imap+TLS and imaps
 # plain imap and pop3 are still allowed for local connections
-#ssl = required	←　コメントアウト
-ssl = no	← 追加
+ssl = no	← requiredをnoに変更
 
-### ファイアウォールの設定
+## ファイアウォールの設定
 Dovecotの起動の前に、POP3とIMAP4でメールの受信ができるようにファイアウォールのサービス許可設定を行います。
 
 # firewall-cmd --add-service=pop3
 # firewall-cmd --add-service=imap
 
-さらに、設定を保存しておきます。
+設定を保存しておきます。
 
 # firewall-cmd --runtime-to-permanent
 
-### Dovecotの再起動
-dovecotサービスを再起動します。
+## Dovecotの起動
+dovecotサービスを起動します。
 
 # systemctl start dovecot
 
@@ -474,8 +479,8 @@ dovecotサービスを再起動します。
 # systemctl enable dovecot
 Created symlink from /etc/systemd/system/multi-user.target.wants/dovecot.service to /usr/lib/systemd/system/dovecot.service.
 
-### Thunderbirdのインストール
-メールクライアントとしてThunderbirdをインストールします。インターネットに接続できない環境では、GUIからadminでログインし、インストールメディアが自動マウントされた状態でインストール作業を進めます。
+## Thunderbirdのインストール
+メールクライアントとしてThunderbirdをインストールします。
 
 # dnf install thunderbird
 読み込んだプラグイン:fastestmirror, langpacks
@@ -517,62 +522,59 @@ Running transaction
 
 完了しました!
 
-### Thunderbirdの起動
-次にThunderbirdの設定を行います。以下の手順は受講者Aの場合です。
+## Thunderbirdの起動
+次にThunderbirdの設定を行います。
 
-1. adminでログインしている場合にはログアウトします。ログアウトは、GNOMEメニューバーの電源アイコン付近をクリックし、「admin」をクリックすると表示される「ログアウト」をクリックします。  
+1. その他のユーザーでログインしている場合にはログアウトします。ログアウトは、画面右上にあるメニューバーの電源アイコンをクリックし、「電源オフ/ログアウト」をクリックすると表示される「ログアウト」をクリックします。  
    ![ログアウトする](image/logout.png){width=70%}  
-1. メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。パスワードはuser1passです。正しく設定されていない場合には、再度adminでログインし、rootユーザになってpasswdコマンドで設定し直して下さい。このパスワードがメールの送受信にも使用されます。
-1. 「アプリケーション」メニューから「インターネット」→「Thunderbird」を選択します。  
+1. メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。パスワードはuserpassです。正しく設定されていない場合には、再度初期ユーザーでログインし、rootユーザになってpasswdコマンドで設定し直して下さい。このパスワードがThunderbirdの設定にも使用されます。
+1. Thunderbirdを起動します。画面左上にある「アクティビティ」をクリックし、画面下に表示されるアイコンドックから一番右にある「アプリケーションを表示する」をクリックします。表示されるアプリケーションアイコンから「Thunderbird」をクリックします。
    ![Thunderbirdを起動する](image/thunderbird-menu.png){width=70%}  
-1. Thunderbirdが起動すると「Thunderbirdのご利用ありがとうございます」の画面が表示されます。  
-   ![Thunderbirdを起動する](image/thunderbird1.png){width=70%}  
-1. 「メールアカウントを設定する」をクリックすると、「メールアカウント設定」ダイアログが表示されます。
-   ![メールアカウント画面](image/mail-account.png){width=70%}  
-1. 以下のように設定して「続ける」をクリックします。  
-   
-   : アカウント設定の設定値 {#tbl:アカウント設定}  
-   
+1. Thunderbirdが起動すると別途Webブラウザが開いてThunderbirdのWebページが表示されますが、Webブラウザごと閉じて構いません。
+1. Thunderbirdのアプリケーションウインドウを表示し、「既存のメールアドレスのセットアップ」タブが表示されていることを確認します。
+
+1. 各設定項目の値を以下のように入力します。
+
    |設定項目                | 値           |
    |-----------------------|--------------|
-   |あなたの名前		|UserA         |
+   |あなたの名前		|User1         |
    |メールアドレス		|user1@example1.jp|
-   |パスワード		|user1pass     |
+   |パスワード		|userpass     |
    |パスワードを記憶する	|チェックしておく     |  
-    	
-   すると、「アカウント設定をMozilla ISPデータベースから検索しています。」と表示されます。検索はしばらく時間がかかります。
-1. 「アカウント設定が、一般的なサーバー名で検索したことにより見つかりました。」と表示されます。  
-   
-   ![メールアカウント画面](image/mail-account2.png){width=50%}  
-   
-   もし、アカウントの検索時「Thunderbirdはあなたのアカウント設定を見つけられませんでした。」のように表示された場合には、次のような設定になるように手動設定をし、「再テスト」ボタンをクリックします。  
-   
-   : メールアカウント設定の設定値 {#tbl:メールアカウント設定}  
-   
-   |カテゴリ       | 項目	     	| 設定値         |
-   |------------|---------------|---------------|
-   |ユーザ名	             	||user1         |
-   |受信サーバー  |サーバーのホスト名	|mail.example1.jp  |
-               ||プロトコル	|IMAP           |
-               ||受信ポート番号	|143            |
-               ||SSL		|接続の保護なし    |
-               ||認証方式	|通常のパスワード   |
-   |送信サーバー  |サーバーのホスト名	|mail.example1.jp  |
-               ||送信ポート番号	|25             |
-               ||SSL	        |接続の保護なし    |
-               ||認証方式	|通常のパスワード   |
-   		
-1. 「完了」をクリックします。すると、接続が暗号化されないため、警告が表示されます。  
-   
-   ![警告画面](image/thunderbird-warn.png){width=70%}
 
-   「接続する上での危険性を理解しました」をチェックし、「完了」ボタンをクリックします。  
+1. 「手動設定」をクリックします。
+1. 「受信サーバー」と「送信サーバー」が表示されるので、各設定項目を以下のように入力します。
 
-### メールの送信
+| 項目 | 設定値 |
+|------------|---------------|
+|プロトコル	|IMAP |
+| ホスト名 | mail.example1.jp |
+| ポート番号 | 143 |
+| 接続の保護 | なし |
+| 認証方式 | 通常のパスワード認証 |
+|ユーザ名 | user1 |
+
+| 項目 | 設定値 |
+|------------|---------------|
+|プロトコル	|IMAP |
+| ホスト名 | mail.example1.jp |
+| ポート番号 | 25 |
+| 接続の保護 | なし |
+| 認証方式 | 通常のパスワード認証 |
+|ユーザ名 | user1 |
+
+1. 「完了」ボタンをクリックします。
+1. 「警告！」ダイアログが表示されます。左下の「接続する上での危険性を理解しました」をチェックし、「確認」ボタンをクリックします。
+1. 「リンクしたサービスへの接続」の「完了」ボタンをクリックします。
+
+## メールの送信
 メールを送信するには、「作成」ボタンをクリックしてメール作成ウインドウを呼び出します。
 
+### 自分宛のメール送信
 1. 宛先に自分のメールアドレス（user1@example1.jp）を指定して、メールを作成、送信してみます。
 1. 「受信」ボタンをクリックして、メールが受信できることを確認します。
+
+### 別サーバー宛のメール送信
 1. 宛先に他の受講生のメールアドレス（user2@example2.jp）を指定して、メールを作成、送信してみます。
 1. 相手がメールを受信できたこと、相手からのメールを受信できることを確認します。
 
@@ -589,5 +591,6 @@ Running transaction
 
 ## まとめ
 本章では、電子メールに関する学習を行いました。また、実際にメールサーバーを設定し、mailコマンドやThunderbirdを利用してメールの送受信の確認を行いました。
-メールサーバーの設定は、メールサーバーが正しく設定され起動していたとしても、DNSサーバーが正しく動いていなければ利用できないなどの理由から難しかったと思います。設定ファイルの記述に問題がないのに、メールがどうしても送れない、受信できない場合は、まずDNSが正しく動いているか、hostコマンドやdigコマンドを実行して確認します。また、ログ（/var/log/mail）を見て、エラーが出ていないか確認することも大切です。
+
+メールサーバーの設定は、メールサーバーが正しく設定され起動していたとしても、DNSサーバーが正しく動いていなければ利用できないなどの理由から難しかったと思います。設定ファイルの記述に問題がないのに、メールがどうしても送れない、受信できない場合は、まずDNSが正しく動いているかdigコマンドを実行して確認します。また、ログ（/var/log/mail）を見て、エラーが出ていないか確認することも大切です。
 
