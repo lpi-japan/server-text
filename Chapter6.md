@@ -96,6 +96,7 @@ Thunderbirdをメールクライアントとして設定し、SMTP認証によ�
 ## Postfixのインストール
 Postfixをdnfコマンドでインストールをします。また、SMTP認証で使用するCyrus-SASL（cyrus-saslパッケージ）とmailコマンドが含まれているs-nailパッケージも一緒にインストールしておきます。
 
+```
 dnf install postfix cyrus-sasl s-nail
 Last metadata expiration check: 3:46:14 ago on Sun Oct 22 19:14:35 2023.
 Dependencies resolved.
@@ -143,6 +144,7 @@ Installed:
   postfix-2:3.5.9-19.el9.aarch64
 
 Complete!
+```
 
 ## Postfixの設定ファイル main.cfの設定
 Postfixの設定ファイルは、/etc/postfix/main.cfです。次のパラメータを探して設定します。
@@ -577,17 +579,6 @@ Running transaction
 ### 別サーバー宛のメール送信
 1. 宛先に他の受講生のメールアドレス（user2@example2.jp）を指定して、メールを作成、送信してみます。
 1. 相手がメールを受信できたこと、相手からのメールを受信できることを確認します。
-
-### 起動時のスタートページの設定
-インターネットに接続できない環境で演習をしている場合には、起動時に「サーバーが見つかりませんでした」のエラーが表示されることがあります。エラーが表示されないようにするには、以下の手順で設定を修正します。
-
-1.三本線のボタンからメニューを表示し、「設定」→「設定」を選択します。
-	
-   ![メニューから設定を選ぶ](image/thunderbird-setup.png){width=70%}
-   
-1. 「Thunderbird スタートページ」の「起動時にメッセージペインにスタートページを表示する」のチェックを外して、「閉じる」をクリックします。
-
-   ![メニューから設定を選ぶ](image/thunderbird-setup-edit.png){width=70%}	 
 
 ## まとめ
 本章では、電子メールに関する学習を行いました。また、実際にメールサーバーを設定し、mailコマンドやThunderbirdを利用してメールの送受信の確認を行いました。
