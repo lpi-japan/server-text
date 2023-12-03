@@ -173,14 +173,18 @@ BINDの基本的な設定ファイルとして/etc/named.confファイルがあ�
 ## BINDのインストール
 BINDのインストールには、bindパッケージとbind-chrootパッケージが必要です。必要なパッケージがインストールされていないときには、dnfコマンドでインストールします。
 
-dnf install bind bind-chroot
+```
+$ sudo dnf install bind bind-chroot
+```
 
 ## /etc/named.confの基本設定
 /etc/named.confファイルにBINDをDNSコンテンツサーバーとして動作させる基本設定を行います。
 
-vi /etc/named.conf
-※コメントなどは省略しています。
+```
+$ sudo vi /etc/named.conf
+```
 
+```
 options {
 	listen-on port 53 { 127.0.0.1; 192.168.56.101; };	←サーバー自身のIPアドレスを追加
 	listen-on-v6 port 53 { ::1; };
@@ -225,6 +229,7 @@ zone "example1.jp" IN {
 
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
+```
 
 設定の内容は以下の通りです。
 
@@ -240,11 +245,13 @@ DNSコンテンツサーバーでは、recursion（再帰問合せ）を禁止�
 ### 正引きゾーンの追加
 /etc/named.confにゾーン定義を追加します。上記例では以下のように設定しています。
 
+```
 zone "example1.jp" IN {
 	type master;
 	file "example1.jp.zone";
 	allow-update { none; };
 };	
+```
 
 ## ゾーンファイルの作成
 named.confで定義したゾーンの内容を記述するゾーンファイルの作成を行います。
@@ -252,16 +259,21 @@ named.confで定義したゾーンの内容を記述するゾーンファイル�
 ### ゾーンファイルの準備
 ゾーンファイルのテンプレートとなる/var/named/named.emptyファイルをコピーします。新たに作成するファイルのファイル名はゾーン定義のfile句で指定したファイル名を指定します。example1.jpゾーンであればexample1.jp.zoneとなります。また、コピー元と同じ所有権、パーミッションにするため、cpコマンドに-pオプションを付けて実行します。
 
-cd /var/named
-cp -p named.empty example1.jp.zone
-ls -l example1.jp.zone
+```
+$ cd /var/named
+$ sudo cp -p named.empty example1.jp.zone
+$ ls -l example1.jp.zone
 -rw-r-----. 1 root named 152 Jul 18 16:51 example1.jp.zone
+```
 
 ### ゾーンファイルの修正
 コピーした/var/named/example1.jp.zoneファイルを修正します。
 
-vi /var/named/example1.jp.zone
+```
+$ sudo vi /var/named/example1.jp.zone
+```
 
+```
 $TTL 3H
 $ORIGIN example1.jp.
 @       IN SOA  host1 root (
@@ -276,7 +288,7 @@ $ORIGIN example1.jp.
 host1   A       192.168.56.101
 www     A       192.168.56.101
 mail    A       192.168.56.101
-
+```
 
 #### $TTL
 $TTLは、このゾーン定義ファイル内の記述のTTL（Time to Live・生存時間・有効期間）が3時間であることをデフォルト指定しています。
@@ -301,38 +313,49 @@ Aレコードで名前とIPアドレスの対応を定義する箇所は、左�
 ### 設定ファイルの書式確認と注意点
 /etc/named.confファイルの編集時、括弧やセミコロンの不足などは良くある設定ミスです。named-checkconfコマンドで/etc/named.confに間違いがないか確認しましょう。
 
-named-checkconf
+```
+$ sudo named-checkconf
+```
 
 この例のように、何も表示されなければ書式に問題がないということです。問題がある場合には、次のように問題がありそうな行番号が表示されます。
 
-named-checkconf
+```
+$ sudo named-checkconf
 /etc/named.conf:11: missing ';' before '}'
+```
 
 これは、listen-on portの{}にアドレスを追加するときにIPアドレスの後にセミコロンを記述するのを忘れたというエラーです。エラー表示を見ながら、こうした問題を取り除きましょう。
 
 ### ゾーンファイルの書式確認
 ゾーンファイルを編集時、よくあるミスとしては、FQDNで記述すべきところを最後の.が抜けているなどがあります。named-checkzoneコマンドを使ってゾーンファイルに間違いがないか確認しましょう。引数は$ORIGINに指定したゾーン名と、確認を行うゾーンファイル名です。
 
-named-checkzone example1.jp. /var/named/example1.jp.zone 
+```
+$ sudo named-checkzone example1.jp. /var/named/example1.jp.zone 
 zone example1.jp/IN: loaded serial 2023100901
 OK
+```
 
 書式に問題がなければ、この例のように設定したシリアルナンバーが表示され、OKと表示されます。設定が間違っている場合には、次のように問題のある行番号が表示されます。
 
-named-checkzone example1.jp. /var/named/example1.jp.zone 
+```
+$ sudo named-checkzone example1.jp. /var/named/example1.jp.zone 
 zone example1.jp/IN: NS 'host1.example1.jp.example1.jp' has no address records (A or AAAA)
 zone example1.jp/IN: not loaded due to errors.
+```
 
 この例では、NSレコードの右側に書いたホスト名がFQDNになっていないため、「host1.example1.jp.example1.jp」となってしまい、対応するAレコードが見つからないというエラーが発生しています。
 
 ## BINDの起動と確認
 BINDを起動してみましょう。BINDの起動は、systemctlコマンドでnamed-chrootユニットを使います。
 
-systemctl start named-chroot
+```
+$ sudo systemctl start named-chroot
+```
 
 起動できたら、状態を確認します。
 
-systemctl status named-chroot
+```
+$ sudo systemctl status named-chroot
 ● named-chroot.service - Berkeley Internet Name Domain (DNS)
      Loaded: loaded (/usr/lib/systemd/system/named-chroot.service; disabled; preset: disabled)
      Active: active (running) since Mon 2023-10-09 15:18:44 JST; 6s ago
@@ -355,90 +378,63 @@ Oct 09 15:18:44 localhost.localdomain named[12419]: running
 Oct 09 15:18:44 localhost.localdomain systemd[1]: Started Berkeley Internet Name Domain (DNS).
 Oct 09 15:18:44 localhost.localdomain named[12419]: managed-keys-zone: Key 20326 for zone . is now trusted (a>
 Oct 09 15:18:44 localhost.localdomain named[12419]: resolver priming query complete
+```
 
 Activeの欄に「active (running)」と表示されていることを確認します。また、下に表示されるログにも「Started Berkeley Internet Name Domain...」と表示されていて、BINDのサービスが起動していることが確認できます。
 
 ## 自動起動の設定
 システム起動時にBINDが自動的に起動されるように設定しておきましょう。systemctl enableコマンドで設定します。
 
-systemctl enable named-chroot
+```
+$ sudo systemctl enable named-chroot
 Created symlink from /etc/systemd/system/multi-user.target.wants/named-chroot.service to /usr/lib/systemd/system/named-chroot.service.
+```
 
 自動起動になっているかは、次のように確認できます。
 
-systemctl is-enabled named-chroot
+```
+$ sudo systemctl is-enabled named-chroot
 enabled
+```
 
 自動起動の設定がされている場合には、「enabled」と表示されます。
 
 ## ファイアウォールの設定
 DNSコンテンツサーバーへの問い合わせができるようにファイアウォールのサービス許可設定を行います。以下のfirewall-cmdコマンドを実行します。
 
-firewall-cmd --add-service=dns
+```
+$ sudo firewall-cmd --add-service=dns --zone=public --permanent
+$ sudo firewall-cmd --reload
+```
 
-さらに、設定を保存しておきます。
-
-firewall-cmd --runtime-to-permanent
 
 ## 名前解決の確認
 BINDが起動したら、名前解決が正常に行われるかを確認します。名前解決の確認には、hostコマンドとdigコマンドが使用できます。
 
-### hostコマンドで名前を確認
-hostコマンドで名前からIPアドレスを確認します。hostコマンドの1つ目の引数は調査するホスト名、2つ目の引数は問い合わせを行うDNSサーバーのアドレスです。設定したサーバー自身のIPアドレスを指定します。
+### digコマンドでホストの名前解決を確認
+digコマンドでホスト名からIPアドレスが解決されることを確認します。digコマンドの引数に名前解決するホスト名を指定して実行します。
 
-host host1.example1.jp 192.168.56.101
-Using domain server:
-Name: 192.168.56.101
-Address: 192.168.56.101#53
-Aliases:
-
-host1.example1.jp has address 192.168.56.101
+```
+$ dig host1.example1.jp
+```
 
 host1.example1.jpのAレコードが正しく設定されていることが確認できます。
 
 同様に、www.example1.jpやmail.example1.jpも確認してみます。
 
-host www.example1.jp 192.168.56.101
-Using domain server:
-Name: 192.168.56.101
-Address: 192.168.56.101#53
-Aliases:
+```
+$ dig www.example1.jp
+```
 
-www.example1.jp has address 192.168.56.101
-
-
-host mail.example1.jp 192.168.56.101
-Using domain server:
-Name: 192.168.56.101
-Address: 192.168.56.101#53
-Aliases:
-
-mail.example1.jp has address 192.168.56.101
-
-### digコマンドでドメインを確認
-digコマンドでゾーン情報を確認してみます。ドメイン名の後にaxfrを指定するとゾーンに登録されている全ての情報が表示されます。問い合わせをするDNSサーバーは@をつけて指定します。
-
-dig example1.jp axfr @192.168.56.101
-
-; <<>> DiG 9.16.23-RH <<>> example1.jp axfr @192.168.56.101
-;; global options: +cmd
-example1.jp.		10800	IN	SOA	host1.example1.jp. root.example1.jp. 2023100901 86400 3600 604800 10800
-example1.jp.		10800	IN	NS	host1.example1.jp.
-example1.jp.		10800	IN	MX	10 mail.example1.jp.
-host1.example1.jp.		10800	IN	A	192.168.56.1018
-mail.example1.jp.		10800	IN	A	192.168.56.101
-www.example1.jp.		10800	IN	A	192.168.56.101
-example1.jp.		10800	IN	SOA	host1.example1.jp. root.example1.jp. 2023100901 86400 3600 604800 10800
-;; Query time: 0 msec
-;; SERVER: 192.168.56.101#53(192.168.56.101)
-;; WHEN: Mon Oct 09 14:54:46 JST 2023
-;; XFR size: 7 records (messages 1, bytes 235)
-
+```
+$ dig mail.example1.jp 192.168.56.101
+```
 
 ### digコマンドでNSレコードを確認
 ドメイン名の後にnsを指定すると、ドメインに登録されているNSレコード(ネームサーバーの情報)が表示されます。
 
-dig example1.jp ns @192.168.56.101
+```
+$ dig example1.jp ns
 
 ; <<>> DiG 9.16.23-RH <<>> example1.jp ns @192.168.56.101
 ;; global options: +cmd
@@ -462,13 +458,15 @@ host1.example1.jp.		10800	IN	A	192.168.56.101
 ;; SERVER: 192.168.56.101#53(192.168.56.101)
 ;; WHEN: Mon Oct 09 14:55:49 JST 2023
 ;; MSG SIZE  rcvd: 101
+```
 
 digコマンドの結果に、ANSWER SECTIONがあれば正常であり、ANSWER SECTIONが無ければ結果が返らない状態のエラーです。
 
 ### digコマンドでMXレコードを確認
 ドメイン名の後にmxを指定すると、ドメインに登録されているMXレコード(メールサーバーの情報)が表示されます。
 
-dig example1.jp mx @192.168.56.101
+```
+$ dig example1.jp mx
 
 ; <<>> DiG 9.16.23-RH <<>> example1.jp mx @192.168.56.101
 ;; global options: +cmd
@@ -492,26 +490,44 @@ mail.example1.jp.		10800	IN	A	192.168.56.101
 ;; SERVER: 192.168.56.101#53(192.168.56.101)
 ;; WHEN: Mon Oct 09 14:56:29 JST 2023
 ;; MSG SIZE  rcvd: 102
+```
 
 ## example2.jpサーバーとjpサーバーの追加
 example1.jpドメインの設定ができたので、相互に名前解決ができるように仮想マシンを2台追加し、それぞれexample2.jpドメイン、jpドメインを管理するDNSサーバーとして設定します。
 
-★このあたりから未検証で書いてるので、後で検証の上変更する可能性大
+追加の手順は、以下の情報を参考に、第2章および第3章の手順を繰り返し行ってください。
 
-### 仮想マシンの作成
-VirtualBoxで仮想マシンを2台作成します。既に作成している仮想マシンと同じように作成しますが、区別が付くように仮想マシン名をドメイン名に合わせてください。仮想マシンはホストオンリーネットワークで相互に通信を行いますので、ネットワークアダプターの追加を忘れないようにしてください。
+### 仮想マシン作成の留意事項
+VirtualBoxで仮想マシンを追加で2台作成します。
+
+既に作成している仮想マシンと同じように作成しますが、区別が付くように仮想マシンの名前をホスト名に合わせてください。
+
+| 名前 |
+|------------|
+| host2.example2.jp |
+| host0.jp |
+
+#### ネットワークアダプターの追加を忘れずに
+仮想マシンはホストオンリーネットワークで相互に通信を行いますので、ネットワークアダプターの追加を忘れないようにしてください。
 
 ### OSのインストール
-作成した仮想マシンにOSをインストールします。ホスト名とIPアドレスをそれぞれのサーバーに合わせて設定します。
+作成した仮想マシンにOSをインストールします。
 
-|ドメイン名|ホスト名|IPアドレス|
+ホスト名とIPアドレスをそれぞれのサーバーに合わせて設定します。
+
+| ホスト名 | IPアドレス | DNS |
 |---|---|---|
-| jp. | host0.jp | 192.168.56.100 |
-| example1.jp. | host1.example1.jp | 192.168.56.101 |
-| example2.jp. | host2.example1.jp | 192.168.56.102 |
+| host2.example2.jp | 192.168.56.102 | 192.168.56.100 |
+| host0.jp | 192.168.56.100 | 192.168.56.100 |
 
 ### 相互通信の確認
 OSが起動したら、仮想マシン間で相互に通信ができることをpingコマンドを使って確認してください。
+
+以下のように、各マシンから既に動作しているhost1.example1.jpに向けてpingコマンドを実行してみます。
+
+```
+$ ping 192.168.56.101
+```
 
 ## example2.jpゾーンの設定
 まず、example2.jpゾーンの設定を行います。手順はexample1.jpゾーンを設定した以下の手順と同じです。
@@ -530,6 +546,7 @@ OSが起動したら、仮想マシン間で相互に通信ができることを
 ### named.confの設定
 named.confを設定します。listen-onに設定するIPアドレスが192.168.56.102になる点と、定義するゾーン名がexample2.jpになる点が異なります。
 
+```
 options {
 	listen-on port 53 { 127.0.0.1; 192.168.56.102; };	←ホストのIPアドレスを追加
 	listen-on-v6 port 53 { ::1; };
@@ -574,20 +591,26 @@ zone "example2.jp" IN {	←example2.jpゾーンを指定
 
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
+```
 
 ### ゾーン定義ファイルの作成
 ゾーン定義ファイルを作成します。example1.jp.zoneをexample2.jp.zoneとしてコピーします。-pオプションを忘れないようにしてください。
 
-cd /var/named
-cp -p example1.jp.zone example2.jp.zone
-ls -l example2.jp.zone
+```
+$ cd /var/named
+$ sudo cp -p example1.jp.zone example2.jp.zone
+$ ls -l example2.jp.zone
 -rw-r-----. 1 root named 257 Oct  9 14:47 example2.jp.zone
+```
 
 ### ゾーンファイルの修正
 コピーした/var/named/example2.jp.zoneファイルを修正します。ゾーン名がexample2.jp、ホスト名がhost2、IPアドレスが192.168.56.102になっている点に注意が必要です。
 
-vi /var/named/example2.jp.zone
+```
+$ sudo vi /var/named/example2.jp.zone
+```
 
+```
 $TTL 3H
 $ORIGIN example2.jp.
 @       IN SOA  host2 root (
@@ -602,15 +625,31 @@ $ORIGIN example2.jp.
 host2   A       192.168.56.102
 www     A       192.168.56.102
 mail    A       192.168.56.102
+```
 
 ### BINDの起動と動作確認
 example2.jpゾーンの設定が完了したら、BINDを起動して動作を確認します。動作確認方法はexample1.jpゾーンを設定した際に行ったhostコマンド、digコマンドと同様です。ゾーン名やホスト名、問い合わせを行うDNSコンテンツサーバーのIPアドレスが変わる点に注意してください。
 
-host host2.example2.jp 192.168.56.102
+```
+$ dig host2.example2.jp
+```
 
-dig example2.jp NS @192.168.56.102
+```
+$ dig example2.jp ns
+```
 
+```
+$ dig example2.jp mx
+```
+
+### 自動起動とファイアーウォールの設定
 自動起動の設定や、ファイアーウォールの設定の変更も忘れず行っておきましょう。
+
+```
+$ sudo systemctl enable named-chroot
+$ sudo firewall-cmd --add-service=dns --zone=public --permanent
+$ sudo firewall-cmd --reload
+```
 
 ## 上位ゾーンのDNSコンテンツサーバーの設定
 example1.jpゾーン、example2.jpゾーンの設定が完了したら、上位ゾーンにあたるjpゾーンの設定を行います。手順はexample1.jpゾーンやexample2.jpゾーンを設定した以下の手順と同じです。
@@ -629,6 +668,7 @@ example1.jpゾーン、example2.jpゾーンの設定が完了したら、上位�
 ### named.confの設定
 named.confを設定します。listen-onに設定するIPアドレスが192.168.56.100になる点と、定義するゾーン名が.jpになる点が異なります。また、このDNSサーバーはDNSキャッシュサーバーとしても動作させるので、recursionの設定を「yes;」のままにしておきます。
 
+```
 options {
 	listen-on port 53 { 127.0.0.1; 192.168.56.100; };	←ホストのIPアドレスを追加
 	listen-on-v6 port 53 { ::1; };
@@ -673,22 +713,28 @@ zone "jp" IN {	←jpゾーンを指定
 
 include "/etc/named.rfc1912.zones";
 include "/etc/named.root.key";
+```
 
 ### ゾーン定義ファイルの作成
 ゾーン定義ファイルを作成します。example1.jp.zoneをjp.zoneとしてコピーします。-pオプションを忘れないようにしてください。
 
-cd /var/named
-cp -p example1.jp.zone jp.zone
-ls -l example2.jp.zone
+```
+$ cd /var/named
+$ sudo cp -p example1.jp.zone jp.zone
+$ ls -l example2.jp.zone
 -rw-r-----. 1 root named 257 Oct  9 14:47 example2.jp.zone
+```
 
 ### ゾーンファイルの修正
 コピーした/var/named/jp.zoneファイルを修正します。ゾーン名がjp、ホスト名がhost0、IPアドレスが192.168.56.100になっている点に注意が必要です。メールやWebなどには作成しないので、MXレコードやwww、mailなどのAレコードは作成しません。
 
 サブドメインとして権限の委譲を行ったexample1.jpゾーンとexample2.jpゾーンのNSレコード、それぞれのゾーンを管理するDNSコンテンツサーバーを指定するAレコードをグルーレコードとして記述します。
 
-vi /var/named/jp.zone
+```
+$ sudo vi /var/named/jp.zone
+```
 
+```
 $TTL 3H
 $ORIGIN jp.
 @       IN SOA  host0 root (
@@ -704,21 +750,35 @@ example2.jp. NS      host2.example2.jp.
 host0   A       192.168.56.100
 host1.example1.jp.     A       192.168.56.101
 host2.example2.jp.     A       192.168.56.102
+```
 
 ### BINDの起動と動作確認
 jpゾーンの設定が完了したら、BINDを起動して動作を確認します。example1.jpゾーンとexample2.jpゾーンのDNSコンテンツサーバーを示すグルーレコードが名前解決できるかを確認するため、それぞれのNSレコードを問い合わせます。
 
-dig example1.jp NS @192.168.56.100
+```
+$ dig example1.jp ns
+```
 
-dig example2.jp NS @192.168.56.100
+```
+$ dig example2.jp ns
+```
 
+### 自動起動とファイアーウォールの設定
 自動起動の設定や、ファイアーウォールの設定の変更も忘れず行っておきましょう。
+
+```
+$ sudo systemctl enable named-chroot
+$ sudo firewall-cmd --add-service=dns --zone=public --permanent
+$ sudo firewall-cmd --reload
+```
 
 ## 相互に名前解決できることを確認
 3台のDNSサーバーが設定できたので、example1.jpとexample2.jpを相互に名前解決できることを確認します。
 
 ### 参照するDNSサーバーの変更
-example1.jpゾーンとexample2.jpゾーンを相互に参照できるようにするには、各マシンが名前解決のために参照するDNSサーバーをhost0.jp（192.168.56.100）に設定しておく必要があります。以下の手順で、example1.jpサーバーとexample2.jpサーバーの設定をそれぞれ変更します。
+example1.jpゾーンとexample2.jpゾーンを相互に参照できるようにするには、各マシンが名前解決のために参照するDNSサーバーをhost0.jp（192.168.56.100）に設定しておく必要があります。
+
+以下の手順で、example1.jpサーバーとexample2.jpサーバーの設定をそれぞれ変更します。
 
 1. GNOMEのデスクトップのアプリケーションメニューから「システムツール」→「設定」を選択します
 1. 表示された設定画面の左側のメニューから「ネットワーク」を選択します
@@ -730,20 +790,14 @@ example1.jpゾーンとexample2.jpゾーンを相互に参照できるように�
 1. 再度「オン」に変えるとDNS設定が変更されます
 
 ### 名前解決の確認
-hostコマンドやdigコマンドで、他のドメインのNSレコードやMXレコードを問い合わせてみます。hostコマンドでは、-tオプションを使うことで、問い合わせるレコードを指定することができます。
+digコマンドで、他のドメインのNSレコードやMXレコードを問い合わせてみます。
 
-host -t ns example2.jp
-example1.jp name server host2.example2.jp.
+以下は、host1上で実行して、example2.jpドメインのレコードが名前解決できるかを確認しています。
 
-dig example2.jp MX
+```
+$ dig example2.jp ns
+```
 
-## DNSコンテンツサーバーのセキュリティ
-動作確認のため、digのaxfrを使ってゾーンを転送する例を紹介しました。しかし、インターネット上の見知らぬサイトに、すべてのゾーンデータを教えるのは賢明ではありません。
-BINDのデフォルトでは、すべてのホストへのゾーン転送が許可されます。zoneステートにallow-transferオプションが記述された場合、optionsステートメントの設定を上書きできます。下記のように設定することで、ゾーン転送をlocalhostとネットワークアドレス192.168.56.0以下にある端末からのみ許可できます。
-
-options {
-（略）
-        allow-transfer  { localhost; 192.168.56.0/24; };
-（略）
-};
-
+```
+$ dig example2.jp mx
+```
