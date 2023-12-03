@@ -588,7 +588,7 @@ Running transaction
 
 完了しました!
 ```
-f
+
 ## Thunderbirdの起動
 次にThunderbirdの設定を行います。
 
