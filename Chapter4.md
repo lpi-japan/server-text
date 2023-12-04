@@ -194,14 +194,18 @@ firewall-cmdコマンドでhttpサービスの接続を許可します。
 
 ```
 $ sudo firewall-cmd --add-service=http --zone=public
-★実行例は後ほど
+success
 ```
 
 再度ファイアーウォールの設定を確認します。
 
 ```
 $ sudo firewall-cmd --list-all
-★実行例は後ほど
+public (active)
+  target: default
+（略）
+  services: cockpit dhcpv6-client http ssh
+（略）
 ```
 
 services行にhttpが追加され、接続が許可されました。
@@ -243,11 +247,12 @@ $ sudo systemctl enable httpd
 ```
 
 ### ファイアーウォールの自動設定
-OS起動時にファイアウォールを自動的に設定するようにするにはfirewall-cmdに--permanentオプションを付けて実行します。
+OS起動時にファイアウォールを自動的に設定するようにするにはfirewall-cmdに--permanentオプションを付けて実行します。--permanentオプションを付けて実行した場合、ファイアーウォールの設定に即座には反映されないので、firewall-cmdコマンドを--reloadオプションをつけて実行し、変更を反映させる必要があります。
 
 ```
 $ sudo firewall-cmd --add-service=http --zone=public --permanent
-★実行例は後ほど
+$ sudo firewall-cmd --reload
+$ sudo firewall-cmd --list-all
 ```
 
 ### OS再起動と確認
@@ -315,7 +320,7 @@ $ sudo cat /var/log/httpd/error_log
 
 エラーログの中に以下のようなエラーがあります。
 
-※エラーログ、あとでコピペ
+★エラーログ、あとでコピペ
 
 これは、/var/www/htmlディレクトリにindex.htmlが存在しない、というエラーです。実はテストページとして表示されていたのは、エラー404が発生した時にWebサーバーが返すHTMLの内容がテストページのように見えていただけで、実際には必要なファイルが見つからないエラーが発生していたわけです。このエラーを解決してみましょう。
 
