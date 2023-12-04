@@ -82,7 +82,7 @@ DNSやメールの実習では3台の仮想マシンを使って実習を行う�
 
 https://almalinux.org/ja/
 
-	![AlmaLinuxのWebサイト](image/AlmaLinuxOrg.png){width=70%}
+![AlmaLinuxのWebサイト](image/AlmaLinuxOrg.png)
 
 AlmaLinuxは、商用ディストリビューションであるRed Hat Enterprise Linuxをベースにしたディストリビューションとして提供されています。利用に際し費用が発生しない、無償で提供されているディストリビューションです。
 
