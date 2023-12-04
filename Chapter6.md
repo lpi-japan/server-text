@@ -175,10 +175,10 @@ inet_interfaces = localhost, 192.168.56.101
 ```
 
 ### mydestination
-メールを受信するドメイン名を設定します。このドメイン名宛以外のメール転送は受け付けません。
+メールを受信するドメイン名を設定します。自分のドメイン名宛以外のメール転送は受け付けません。
 
 ```
-mydestination = example1.jp
+mydestination = $mydomain
 ```
 
 ### mynetworks
@@ -224,13 +224,9 @@ postfixサービスを再起動します。
 Postfixでメールの受信ができるようにファイアウォールのサービス許可設定を行います。
 
 ```
-# firewall-cmd --add-service=smtp
-```
-
-さらに、設定を保存しておきます。
-
-```
-# firewall-cmd --runtime-to-permanent
+$ sudo firewall-cmd --add-service=smtp --zone=public --permanent
+$ sudo firewall-cmd --reload
+$ sudo firewall-cmd --list-all
 ```
 
 ## Postfixの自動起動の設定
@@ -309,7 +305,7 @@ Created symlink from /etc/systemd/system/multi-user.target.wants/saslauthd.servi
 host1でuser1というアカウントを作成します。このアカウントはuser1@example1.jpというメールアドレスになります。
 
 ```
-[root@host1 ~]# user1dd -user1
+[root@host1 ~]# useradd user1
 [root@host1 ~]# passwd user1
 ユーザー user1 のパスワードを変更。
 新しいパスワード: userpass	← 入力文字は非表示
@@ -321,7 +317,7 @@ passwd: すべての認証トークンが正しく更新できました。
 host2でuser2というアカウントを作成します。このアカウントはuser2@example2.jpというメールアドレスになります。
 
 ```
-[root@host2 ~]# user1dduser2
+[root@host2 ~]# useradd user2
 [root@host2 ~]# passwd user2
 ユーザー user2 のパスワードを変更。
 新しいパスワード: userpass	← 入力文字は非表示
@@ -592,11 +588,9 @@ Running transaction
 ## Thunderbirdの起動
 次にThunderbirdの設定を行います。
 
-1. その他のユーザーでログインしている場合にはログアウトします。ログアウトは、画面右上にあるメニューバーの電源アイコンをクリックし、「電源オフ/ログアウト」をクリックすると表示される「ログアウト」をクリックします。  
-   ![ログアウトする](image/logout.png){width=70%}  
+1. その他のユーザーでログインしている場合にはログアウトします。
 1. メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。パスワードはuserpassです。正しく設定されていない場合には、再度初期ユーザーでログインし、rootユーザになってpasswdコマンドで設定し直して下さい。このパスワードがThunderbirdの設定にも使用されます。
 1. Thunderbirdを起動します。画面左上にある「アクティビティ」をクリックし、画面下に表示されるアイコンドックから一番右にある「アプリケーションを表示する」をクリックします。表示されるアプリケーションアイコンから「Thunderbird」をクリックします。
-   ![Thunderbirdを起動する](image/thunderbird-menu.png){width=70%}  
 1. Thunderbirdが起動すると別途Webブラウザが開いてThunderbirdのWebページが表示されますが、Webブラウザごと閉じて構いません。
 1. Thunderbirdのアプリケーションウインドウを表示し、「既存のメールアドレスのセットアップ」タブが表示されていることを確認します。
 
