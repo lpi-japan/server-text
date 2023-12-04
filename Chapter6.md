@@ -153,6 +153,9 @@ Postfixの設定ファイルは、/etc/postfix/main.cfです。次のパラメ�
 
 smtpd_sasl_auth_enableとsmtpd_recipient_restrictionsは、main.cfに記述されていないので、ファイルの最後に追加しておきます。
 
+host1とhost2に、それぞれ以下のように設定します。
+
+host1の設定
 | 項目 | 設定値 |
 |------------|---------------|
 | myhostname | mail.example1.jp |
@@ -163,30 +166,60 @@ smtpd_sasl_auth_enableとsmtpd_recipient_restrictionsは、main.cfに記述さ�
 | smtpd_sasl_auth_enable | yes |
 | smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition |
 
+host2の設定
+| 項目 | 設定値 |
+|------------|---------------|
+| myhostname | mail.example2.jp |
+| mydomain | example2.jp |
+| inet_interfaces | localhost, 192.168.56.102 |
+| mydestination | $mydomain |
+| mynetworks | 192.168.56.102 |
+| smtpd_sasl_auth_enable | yes |
+| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition |
+
 ### myhostname
 メールサーバーのホスト名を設定します。
 
+host1の設定
 ```
 myhostname = mail.example1.jp
+```
+
+host2の設定
+```
+myhostname = mail.example2.jp
 ```
 
 ### mydomain
 メールサーバーのドメイン名を設定します。
 
+host1の設定
 ```
 mydomain = example1.jp
+```
+
+host2の設定
+```
+mydomain = example2.jp
 ```
 
 ### inet_interfaces
 メールを受け付けるネットワークインターフェースのIPアドレスを設定します。localhostの記述を忘れると、自分自身からのメールを受け付けなくなるので
 
+host1の設定
 ```
 inet_interfaces = localhost, 192.168.56.101
+```
+
+host2の設定
+```
+inet_interfaces = localhost, 192.168.56.102
 ```
 
 ### mydestination
 メールを受信するドメイン名を設定します。自分のドメイン名宛以外のメール転送は受け付けません。
 
+host1とhost2共通の設定
 ```
 mydestination = $mydomain
 ```
@@ -194,6 +227,12 @@ mydestination = $mydomain
 ### mynetworks
 信頼するクライアントのIPアドレスを設定します。このIPアドレスからのメール送信は、認証無しでリレーして宛先の受信用メールサーバーに転送されます。
 
+host1の設定
+```
+mynetworks = 192.168.56.101
+```
+
+host2の設定
 ```
 mynetworks = 192.168.56.101
 ```
@@ -201,6 +240,7 @@ mynetworks = 192.168.56.101
 ### smtpd_sasl_auth_enable
 SMTP認証用のSASL認証連携を有効にします。
 
+host1とhost2共通の設定
 ```
 smtpd_sasl_auth_enable = yes
 ```
@@ -208,6 +248,7 @@ smtpd_sasl_auth_enable = yes
 ### smtpd_recipient_restrictions
 SMTP認証でSASL認証されたクライアントからのメール送信を許可するように設定します。
 
+host1とhost2共通の設定
 ```
 smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition
 ```
@@ -218,7 +259,7 @@ smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, rej
 /etc/postfix/main.cfの修正ができたら、書式チェックを行っておきます。
 
 ```
-$ sudo  postfix check
+$ sudo postfix check
 ```
 
 書式が正しい場合には、何も表示されません。エラーが表示された場合には、エラー内容をよく見て修正します。
@@ -227,30 +268,21 @@ $ sudo  postfix check
 postfixサービスを再起動します。
 
 ```
-$ sudo  systemctl restart postfix.service
-```
-
-## ファイアウォールの設定
-Postfixでメールの受信ができるようにファイアウォールのサービス許可設定を行います。
-
-```
-$ sudo firewall-cmd --add-service=smtp --zone=public --permanent
-$ sudo firewall-cmd --reload
-$ sudo firewall-cmd --list-all
+$ sudo systemctl restart postfix.service
 ```
 
 ## Postfixの自動起動の設定
 postfixサービスの自動起動を設定します。
 
 ```
-$ sudo  systemctl enable postfix.service
+$ sudo systemctl enable postfix.service
 Created symlink /etc/systemd/system/multi-user.target.wants/postfix.service → /usr/lib/systemd/system/postfix.service.
 ```
 
 自動起動の設定を確認します。
 
 ```
-$ sudo  systemctl is-enabled postfix.service
+$ sudo systemctl is-enabled postfix.service
 enabled
 ```
 
@@ -268,8 +300,10 @@ systemctl editコマンドを使うと、対象となるサービスの設定フ
 vimで設定ファイルを直接開いて修正しても構いません。設定ファイルは/usr/lib/systemd/system/postfix.serviceです。
 
 ```
-$ sudo  vi /usr/lib/systemd/system/postfix.service
+$ sudo vi /usr/lib/systemd/system/postfix.service
+```
 
+```
 [Unit]
 Description=Postfix Mail Transport Agent
 After=syslog.target network-online.target ← network.targetをnetwork-online.targetに変更
@@ -280,6 +314,15 @@ Conflicts=sendmail.service exim.service
 After=network.targetは、ネットワークサービスの起動の後にPostfixを起動しますが、ネットワークが使えるようになったことは確認しません。After=network-online.targetにすることで、ネットワークが使えるようになったことまで確認した後にPostfixを起動します。
 
 変更が適用されたことを確認するため、システムを再起動し、Postfixが自動的に起動していることを確認してください。
+
+## ファイアウォールの設定
+Postfixでメールの受信ができるようにファイアウォールのサービス許可設定を行います。
+
+```
+$ sudo firewall-cmd --add-service=smtp --zone=public --permanent
+$ sudo firewall-cmd --reload
+$ sudo firewall-cmd --list-all
+```
 
 ## SMTP認証（SASL認証連携）の設定
 SMTP認証は、メール送信時に認証を行う仕組みです。Postfix自体は認証の機能を持っていませんので、SASL認証との連携を行います。SASL認証連携を行うには、Postfixへの設定とsaslauthdサービスの起動が必要です。
@@ -296,7 +339,7 @@ SMTP認証の機能を有効にすると、Postfixはsaslauthdに認証を依頼
 SMTP認証用のsaslauthdサービスを起動します。
 
 ```
-$ sudo  systemctl start saslauthd.service
+$ sudo systemctl start saslauthd.service
 ```
 
 saslauthdの自動起動設定も行っておきます。
@@ -335,33 +378,38 @@ host2でuser2というアカウントを作成します。このアカウント�
 passwd: すべての認証トークンが正しく更新できました。
 ```
 
-## メールの送受信
+## mailコマンドを使ったメール送受信のテスト
 次にメールを送信します。メールの送受信は作成した一般ユーザーで行います。一般ユーザーで操作できるよう別の端末を起動し、suコマンドを使ってユーザーを切り替えます。メールの送信はmailコマンドを使用します。
 
 ### ログの確認用端末の設定
+メールサーバーはバックグラウンドで動作するため、どのように動いているのか確認するためにはログを参照する必要があります。
 
-1. 「端末」を起動します
-1. tailコマンドを実行して、/var/log/maillogを表示します。-fオプションを付けて実行すると、ログが書き込まれる毎に再読み込みされて最新のログを閲覧できます。
+tailコマンドに-fオプションを付けて実行すると、ログが書き込まれる毎に再読み込みされて最新のログを閲覧できます。
+
+1. 「端末」を起動します。
+1. tailコマンドを実行して/var/log/maillogを表示します。
 
 ```
 $ sudo tail -f /var/log/maillog
 ```
 
 ### メール送受信用端末の起動とユーザー切り替え
-メール送受信用の端末を起動し、suコマンドでユーザーの切り替えを行います。
+メール送受信用の端末を起動し、suコマンドでユーザーの切り替えを行います。ユーザーを完全に切り替えるために「su - ユーザー名」と「-」（ハイフン）を付けて実行してください。
 
-1. 「端末」を起動します
-2. suコマンドでユーザーを切り替えます
+1. 「端末」を起動します。
+2. suコマンドでユーザーを切り替えます。
 
 #### host1でuser1に切り替え
+host1はuser1で操作を行います。
 
 ```
 [admin@host1 ~]$ sudo su - user1
 [user1@host1 ~]$ id
-uid=1003(user1) gid=1003(user1) groups=1003(user1) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+uid=1003(user1) gid=1001(user1) groups=1001(user1) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
 ```
 
 #### host2でuser2に切り替え
+host2はuser2で操作を行います。
 
 ```
 [admin@host1 ~]$ sudo su - user2
@@ -429,7 +477,7 @@ $ sudo dnf install dovecot
 ```
 
 ## Dovecotの設定
-次に、IMAPサーバーであるDovecotの設定を行います。
+次に、Dovecotの設定を行います。
 
 設定ファイルは/etc/dovecot/dovecot.confと/etc/dovecot/conf.dディレクトリ以下に分かれています。
 
@@ -534,7 +582,8 @@ Dovecotの起動の前に、IMAP4でメールの受信ができるようにフ�
 ```
 $ sudo firewall-cmd --add-service=imap --zone=public --permanent
 $ sudo firewall-cmd --reload
-$ sudo firewall-cmd --list-all```
+$ sudo firewall-cmd --list-all
+```
 
 ## Dovecotの起動
 dovecotサービスを起動します。
