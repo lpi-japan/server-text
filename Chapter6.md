@@ -79,7 +79,7 @@ IMAP4もPOP3同様、メールを受信するときに利用するプロトコ�
 
 - 1台のマシンで、メールサーバーとメールクライアントの1台2役とします
 - MTAとしてPostfixをインストールし、送信用メールサーバーおよび受信用メールサーバーとして設定します
-- POP3/IMAP4サーバーとしてDovecotをインストールし、設定します
+- IMAP4サーバーとしてDovecotをインストールし、設定します
 - それぞれのメールサーバーにメールアカウントを作成します
 - メールクライアントとしてThunderbirdをインストールし、サーバー自身を送受信用サーバーとして設定します
 
@@ -97,7 +97,7 @@ Thunderbirdをメールクライアントとして設定し、SMTP認証によ�
 Postfixをdnfコマンドでインストールをします。また、SMTP認証で使用するCyrus-SASL（cyrus-saslパッケージ）とmailコマンドが含まれているs-nailパッケージも一緒にインストールしておきます。
 
 ```
-dnf install postfix cyrus-sasl s-nail
+$ sudo dnf install postfix cyrus-sasl s-nail
 Last metadata expiration check: 3:46:14 ago on Sun Oct 22 19:14:35 2023.
 Dependencies resolved.
 ================================================================================
@@ -153,6 +153,16 @@ Postfixの設定ファイルは、/etc/postfix/main.cfです。次のパラメ�
 
 smtpd_sasl_auth_enableとsmtpd_recipient_restrictionsは、main.cfに記述されていないので、ファイルの最後に追加しておきます。
 
+| 項目 | 設定値 |
+|------------|---------------|
+| myhostname | mail.example1.jp |
+| mydomain | example1.jp |
+| inet_interfaces | localhost, 192.168.56.101 |
+| mydestination | $mydomain |
+| mynetworks | 192.168.56.101 |
+| smtpd_sasl_auth_enable | yes |
+| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition |
+
 ### myhostname
 メールサーバーのホスト名を設定します。
 
@@ -202,13 +212,13 @@ SMTP認証でSASL認証されたクライアントからのメール送信を許
 smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition
 ```
 
-これら2つの設定の意味は後述します。
+これら2つの設定は後述するSMTP認証（SASL認証連携）に関係する設定ですが、先に設定しておきます。
 
 ## 書式のチェック
 /etc/postfix/main.cfの修正ができたら、書式チェックを行っておきます。
 
 ```
-# postfix check
+$ sudo  postfix check
 ```
 
 書式が正しい場合には、何も表示されません。エラーが表示された場合には、エラー内容をよく見て修正します。
@@ -217,7 +227,7 @@ smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, rej
 postfixサービスを再起動します。
 
 ```
-# systemctl restart postfix.service
+$ sudo  systemctl restart postfix.service
 ```
 
 ## ファイアウォールの設定
@@ -233,14 +243,14 @@ $ sudo firewall-cmd --list-all
 postfixサービスの自動起動を設定します。
 
 ```
-# systemctl enable postfix.service
+$ sudo  systemctl enable postfix.service
 Created symlink /etc/systemd/system/multi-user.target.wants/postfix.service → /usr/lib/systemd/system/postfix.service.
 ```
 
 自動起動の設定を確認します。
 
 ```
-# systemctl is-enabled postfix.service
+$ sudo  systemctl is-enabled postfix.service
 enabled
 ```
 
@@ -258,7 +268,7 @@ systemctl editコマンドを使うと、対象となるサービスの設定フ
 vimで設定ファイルを直接開いて修正しても構いません。設定ファイルは/usr/lib/systemd/system/postfix.serviceです。
 
 ```
-# vi /usr/lib/systemd/system/postfix.service
+$ sudo  vi /usr/lib/systemd/system/postfix.service
 
 [Unit]
 Description=Postfix Mail Transport Agent
@@ -286,13 +296,13 @@ SMTP認証の機能を有効にすると、Postfixはsaslauthdに認証を依頼
 SMTP認証用のsaslauthdサービスを起動します。
 
 ```
-# systemctl start saslauthd.service
+$ sudo  systemctl start saslauthd.service
 ```
 
 saslauthdの自動起動設定も行っておきます。
 
 ```
-# systemctl enable saslauthd.service
+$ sudo systemctl enable saslauthd.service
 Created symlink from /etc/systemd/system/multi-user.target.wants/saslauthd.service to /usr/lib/systemd/system/saslauthd.service.
 ```
 
@@ -305,8 +315,8 @@ Created symlink from /etc/systemd/system/multi-user.target.wants/saslauthd.servi
 host1でuser1というアカウントを作成します。このアカウントはuser1@example1.jpというメールアドレスになります。
 
 ```
-[root@host1 ~]# useradd user1
-[root@host1 ~]# passwd user1
+[admin@host1 ~]$ sudo useradd user1
+[admin@host1 ~]$ sudo passwd user1
 ユーザー user1 のパスワードを変更。
 新しいパスワード: userpass	← 入力文字は非表示
 新しいパスワードを再入力してください: userpass	← 入力文字は非表示
@@ -317,8 +327,8 @@ passwd: すべての認証トークンが正しく更新できました。
 host2でuser2というアカウントを作成します。このアカウントはuser2@example2.jpというメールアドレスになります。
 
 ```
-[root@host2 ~]# useradd user2
-[root@host2 ~]# passwd user2
+[admin@host2 ~]$ sudo useradd user2
+[admin@host2 ~]$ sudo passwd user2
 ユーザー user2 のパスワードを変更。
 新しいパスワード: userpass	← 入力文字は非表示
 新しいパスワードを再入力してください: userpass	← 入力文字は非表示
@@ -334,7 +344,7 @@ passwd: すべての認証トークンが正しく更新できました。
 1. tailコマンドを実行して、/var/log/maillogを表示します。-fオプションを付けて実行すると、ログが書き込まれる毎に再読み込みされて最新のログを閲覧できます。
 
 ```
-# tail -f /var/log/maillog
+$ sudo tail -f /var/log/maillog
 ```
 
 ### メール送受信用端末の起動とユーザー切り替え
@@ -346,22 +356,21 @@ passwd: すべての認証トークンが正しく更新できました。
 #### host1でuser1に切り替え
 
 ```
-[root@host1 ~]# su - user1
-[user1@host1 ~]$  id
-uid=1003(user1) gid=1003(user1) groups=1003(user1),12(mail) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+[admin@host1 ~]$ sudo su - user1
+[user1@host1 ~]$ id
+uid=1003(user1) gid=1003(user1) groups=1003(user1) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
 ```
 
 #### host2でuser2に切り替え
 
 ```
-# su - user2
-[user2@host2 ~]$  id
-uid=1001(user2) gid=1001(user2) groups=1001(user2),12(mail) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+[admin@host1 ~]$ sudo su - user2
+[user2@host2 ~]$ id
+uid=1001(user2) gid=1001(user2) groups=1001(user2) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
 ```
 
 ### user1@example1.jpからuser2@example2.jpへメール送信
 mailコマンドを使って、host1のuser1からuser2@example2.jpへメールを送信します。
-
 
 ```
 [user1@host1 ~]$ mail user2@example2.jp	← mailコマンドの引数に宛先のアドレスを指定
@@ -416,7 +425,7 @@ IMAPサーバーを利用してメールを受信できるよう、IMAPサーバ
 まずはIMAPサーバーであるDovecotをインストールします。
 
 ```
-# dnf install dovecot
+$ sudo dnf install dovecot
 ```
 
 ## Dovecotの設定
@@ -428,7 +437,7 @@ IMAPサーバーを利用してメールを受信できるよう、IMAPサーバ
 全体的な設定ファイルです。デフォルトの設定がコメントアウトで記述されています。特に変更は必要ありません。
 
 ```
-# vi /etc/dovecot/dovecot.conf
+$ sudo vi /etc/dovecot/dovecot.conf
 （略）
 # Protocols we want to be serving.
 #protocols = imap pop3 lmtp submission	← IMAP/POP3/LMTP/SMTP submissionが使用可能
@@ -446,7 +455,10 @@ IMAPサーバーを利用してメールを受信できるよう、IMAPサーバ
 今回はmbox形式のメールボックスを指定します。また、メールボックスへのアクセス権限を設定します。
 
 ```
-# vi /etc/dovecot/conf.d/10-mail.conf
+$ sudo vi /etc/dovecot/conf.d/10-mail.conf
+```
+
+```
 （略）
 #   mail_location = maildir:~/Maildir
 #   mail_location = mbox:~/mail:INBOX=/var/mail/%u
@@ -479,8 +491,10 @@ mail_access_groups = mail ← mailグループにアクセス権限を与える
 今回は暗号化していない平文での認証を許可し、Linuxのログイン情報を認証に利用できるように設定します。
 
 ```
-# vi /etc/dovecot/conf.d/10-auth.conf
+$ sudo vi /etc/dovecot/conf.d/10-auth.conf
+```
 
+```
 ##
 ## Authentication processes
 ##
@@ -500,8 +514,10 @@ SSL/TLSを設定するファイルです。
 今回はSSL/TLS暗号化をしませんので、SSLの利用を停止しておきます。
 
 ```
-# vi /etc/dovecot/conf.d/10-ssl.conf
+$ sudo vi /etc/dovecot/conf.d/10-ssl.conf
+```
 
+```
 ##
 ## SSL settings
 ##
@@ -513,30 +529,24 @@ ssl = no	← requiredをnoに変更
 ```
 
 ## ファイアウォールの設定
-Dovecotの起動の前に、POP3とIMAP4でメールの受信ができるようにファイアウォールのサービス許可設定を行います。
+Dovecotの起動の前に、IMAP4でメールの受信ができるようにファイアウォールのサービス許可設定を行います。
 
 ```
-# firewall-cmd --add-service=pop3
-# firewall-cmd --add-service=imap
-```
-
-設定を保存しておきます。
-
-```
-# firewall-cmd --runtime-to-permanent
-```
+$ sudo firewall-cmd --add-service=imap --zone=public --permanent
+$ sudo firewall-cmd --reload
+$ sudo firewall-cmd --list-all```
 
 ## Dovecotの起動
 dovecotサービスを起動します。
 
 ```
-# systemctl start dovecot
+$ sudo systemctl start dovecot
 ```
 
 自動起動設定も行っておきます。
 
 ```
-# systemctl enable dovecot
+$ sudo systemctl enable dovecot
 Created symlink from /etc/systemd/system/multi-user.target.wants/dovecot.service to /usr/lib/systemd/system/dovecot.service.
 ```
 
@@ -544,7 +554,7 @@ Created symlink from /etc/systemd/system/multi-user.target.wants/dovecot.service
 メールクライアントとしてThunderbirdをインストールします。
 
 ```
-# dnf install thunderbird
+$ sudo dnf install thunderbird
 読み込んだプラグイン:fastestmirror, langpacks
 Loading mirror speeds from cached hostfile
  * base: mirrors.cat.net
