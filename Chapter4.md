@@ -60,7 +60,61 @@ Apache Webサーバーのパッケージ名はhttpdです。インストール�
 
 ```
 $ sudo dnf install httpd
-★実行例は後ほど
+メタデータの期限切れの最終確認: 1:41:14 前の 2023年12月05日 08時09分38秒 に実施 しました。
+依存関係が解決しました。
+================================================================================
+ パッケージ                Arch       バージョン            リポジトリー  サイズ
+================================================================================
+インストール:
+ httpd                     x86_64     2.4.57-5.el9          appstream      46 k
+依存関係のインストール:
+ almalinux-logos-httpd     noarch     90.5.1-1.1.el9        appstream      18 k
+弱い依存関係のインストール:
+ mod_http2                 x86_64     1.15.19-5.el9         appstream     148 k
+ mod_lua                   x86_64     2.4.57-5.el9          appstream      60 k
+
+トランザクションの概要
+================================================================================
+インストール  4 パッケージ
+
+ダウンロードサイズの合計: 272 k
+インストール後のサイズ: 601 k
+これでよろしいですか? [y/N]: y
+パッケージのダウンロード:
+(1/4): almalinux-logos-httpd-90.5.1-1.1.el9.noa  33 kB/s |  18 kB     00:00
+(2/4): httpd-2.4.57-5.el9.x86_64.rpm             82 kB/s |  46 kB     00:00
+(3/4): mod_http2-1.15.19-5.el9.x86_64.rpm       209 kB/s | 148 kB     00:00
+(4/4): mod_lua-2.4.57-5.el9.x86_64.rpm          253 kB/s |  60 kB     00:00
+--------------------------------------------------------------------------------
+合計                                            169 kB/s | 272 kB     00:01
+AlmaLinux 9 - AppStream                         3.0 MB/s | 3.1 kB     00:00
+GPG 鍵 0xB86B3716 をインポート中:
+ Userid     : "AlmaLinux OS 9 <packager@almalinux.org>"
+ Fingerprint: BF18 AC28 7617 8908 D6E7 1267 D36C B86C B86B 3716
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux-9
+これでよろしいですか? [y/N]: y
+鍵のインポートに成功しました
+トランザクションの確認を実行中
+トランザクションの確認に成功しました。
+トランザクションのテストを実行中
+トランザクションのテストに成功しました。
+トランザクションを実行中
+  準備             :                                                        1/1
+  インストール中   : mod_lua-2.4.57-5.el9.x86_64                            1/4
+  インストール中   : almalinux-logos-httpd-90.5.1-1.1.el9.noarch            2/4
+  インストール中   : mod_http2-1.15.19-5.el9.x86_64                         3/4
+  インストール中   : httpd-2.4.57-5.el9.x86_64                              4/4
+  scriptletの実行中: httpd-2.4.57-5.el9.x86_64                              4/4
+  検証             : almalinux-logos-httpd-90.5.1-1.1.el9.noarch            1/4
+  検証             : httpd-2.4.57-5.el9.x86_64                              2/4
+  検証             : mod_http2-1.15.19-5.el9.x86_64                         3/4
+  検証             : mod_lua-2.4.57-5.el9.x86_64                            4/4
+
+インストール済み:
+  almalinux-logos-httpd-90.5.1-1.1.el9.noarch    httpd-2.4.57-5.el9.x86_64
+  mod_http2-1.15.19-5.el9.x86_64                 mod_lua-2.4.57-5.el9.x86_64
+
+完了しました!
 ```
 
 sudoコマンドを初めて実行する際には、実行しているユーザーのパスワードが要求されます。sudoコマンド実行後、しばらくの間は再度実行する際にはパスワードが要求されませんが、一定時間経過後は再度要求されます。
@@ -95,7 +149,26 @@ systemctl statusコマンドで、管理対象となるユニットの状態や�
 
 ```
 $ sudo systemctl status httpd
-★実行例は後ほど
+● httpd.service - The Apache HTTP Server
+     Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; preset: d>
+     Active: active (running) since Tue 2023-12-05 09:52:55 JST; 1s ago
+       Docs: man:httpd.service(8)
+   Main PID: 37780 (httpd)
+     Status: "Started, listening on: port 443, port 80"
+      Tasks: 214 (limit: 10786)
+     Memory: 30.3M
+        CPU: 46ms
+     CGroup: /system.slice/httpd.service
+             tq37780 /usr/sbin/httpd -DFOREGROUND
+             tq37781 /usr/sbin/httpd -DFOREGROUND
+             tq37782 /usr/sbin/httpd -DFOREGROUND
+             tq37783 /usr/sbin/httpd -DFOREGROUND
+             tq37784 /usr/sbin/httpd -DFOREGROUND
+             mq37785 /usr/sbin/httpd -DFOREGROUND
+
+12月 05 09:52:55 host1.example1.jp systemd[1]: Starting The Apache HTTP Server.>
+12月 05 09:52:55 host1.example1.jp systemd[1]: Started The Apache HTTP Server.
+12月 05 09:52:55 host1.example1.jp httpd[37780]: Server configured, listening o>
 ```
 
 #### Loaded
@@ -111,7 +184,21 @@ Webサーバーが動作していることを確認します。curlコマンド�
 
 ```
 $ curl localhost
-★実行例は後ほど
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+        <head>
+                <title>Test Page for the HTTP Server on AlmaLinux</title>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+                <div class="footer">
+                        <a href="https://apache.org">Apache&trade;</a> is a registered trademark of <a href="https://apache.org">the Apache Software Foundation</a> in the United States and/or other countries.<br />
+                        <a href="https://nginx.com">NGINX&trade;</a> is a registered trademark of <a href="https://www.f5.com">F5 Networks, Inc.</a>.
+                </div>
+        </body>
+</html>
+
 ```
 
 Webサーバーが実行されているので、サンプルページのHTMLが返ってきます。
@@ -132,7 +219,6 @@ Webサーバーを停止してみます。停止にはsystelctl stopコマンド
 
 ```
 $ sudo systemctl stop httpd
-★実行例は後ほど
 ```
 
 ### systemctl statusコマンドによる動作状態の確認
@@ -140,7 +226,17 @@ systemctl statusコマンドを実行して、動作状態を確認します。
 
 ```
 $ sudo systemctl status httpd
-★実行例は後ほど
+○ httpd.service - The Apache HTTP Server
+     Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; preset: d>
+     Active: inactive (dead)
+       Docs: man:httpd.service(8)
+
+12月 05 09:52:55 host1.example1.jp systemd[1]: Starting The Apache HTTP Server.>
+12月 05 09:52:55 host1.example1.jp systemd[1]: Started The Apache HTTP Server.
+12月 05 09:52:55 host1.example1.jp httpd[37780]: Server configured, listening o>
+12月 05 09:57:37 host1.example1.jp systemd[1]: Stopping The Apache HTTP Server.>
+12月 05 09:57:38 host1.example1.jp systemd[1]: httpd.service: Deactivated succe>
+12月 05 09:57:38 host1.example1.jp systemd[1]: Stopped The Apache HTTP Server.
 ```
 
 Active行が inactive (dead)になっており、プロセス関係の情報が表示されなくなり、Webサーバーが停止しているのが分かります。
@@ -150,7 +246,7 @@ Webサーバーが停止している状態で、curlコマンドを実行して�
 
 ```
 $ curl localhost
-★実行例は後ほど
+curl: (7) Failed to connect to localhost port 80: 接続を拒否されました
 ```
 
 即座にエラーが表示されて、Webサーバーにアクセスできないのが分かります。
@@ -160,11 +256,9 @@ Webサーバーを再度起動し、正常にアクセスできるように復�
 
 ```
 $ sudo systemctl start httpd
-★実行例は後ほど
 ```
 ```
 $ curl localhost
-★実行例は後ほど
 ```
 
 ## ファイアーウォールの設定とリモート接続確認
@@ -178,7 +272,20 @@ $ curl localhost
 
 ```
 $ sudo firewall-cmd --list-all
-★実行例は後ほど
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: enp0s3 enp0s8
+  sources:
+  services: cockpit dhcpv6-client ssh
+  ports:
+  protocols:
+  forward: yes
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
 ```
 
 services行にhttpが含まれていないので、接続が許可されていません。
@@ -231,12 +338,10 @@ Webサーバーが自動的に起動していないこと、ファイアーウ�
 
 ```
 $ sudo systemctl status httpd
-★実行例は後ほど
 ```
 
 ```
 $ sudo firewall-cmd --list-all
-★実行例は後ほど
 ```
 
 ### Webサーバーの自動起動設定
@@ -244,6 +349,7 @@ WebサーバーをOS起動時に自動的に起動するようにするにはsys
 
 ```
 $ sudo systemctl enable httpd
+Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
 ```
 
 ### ファイアーウォールの自動設定
@@ -260,12 +366,10 @@ $ sudo firewall-cmd --list-all
 
 ```
 $ sudo systemctl status httpd
-★実行例は後ほど
 ```
 
 ```
 $ sudo firewall-cmd --list-all
-★実行例は後ほど
 ```
 
 ## ログの確認
@@ -278,7 +382,7 @@ Webサーバーのログは/var/log/httpdディレクトリに記録されてい
 
 ```
 $ sudo ls /var/log/httpd
-★実行例は後ほど
+access_log  error_log
 ```
 
 access_logとerror_logの2つのログファイルが確認できます。
@@ -288,7 +392,8 @@ access_logとerror_logの2つのログファイルが確認できます。
 
 ```
 $ sudo cat /var/log/httpd/access_log
-★実行例は後ほど
+::1 - - [05/Dec/2023:10:12:37 +0900] "GET / HTTP/1.1" 403 4681 "-" "curl/7.76.1"
+192.168.56.1 - - [05/Dec/2023:10:12:45 +0900] "GET / HTTP/1.1" 403 4681 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0"
 ```
 
 アクセスログには、以下のような情報が記録されています。
@@ -313,14 +418,23 @@ $ sudo cat /var/log/httpd/access_log
 
 ```
 $ sudo cat /var/log/httpd/error_log
-★実行例は後ほど
+[Tue Dec 05 10:10:15.601798 2023] [core:notice] [pid 38902:tid 38902] SELinux policy enabled; httpd running as context system_u:system_r:httpd_t:s0
+[Tue Dec 05 10:10:15.602587 2023] [suexec:notice] [pid 38902:tid 38902] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Tue Dec 05 10:10:15.620801 2023] [lbmethod_heartbeat:notice] [pid 38902:tid 38902] AH02282: No slotmem from mod_heartmonitor
+[Tue Dec 05 10:10:15.627884 2023] [mpm_event:notice] [pid 38902:tid 38902] AH00489: Apache/2.4.57 (AlmaLinux) OpenSSL/3.0.7 mod_fcgid/2.3.9 configured -- resuming normal operations
+[Tue Dec 05 10:10:15.627895 2023] [core:notice] [pid 38902:tid 38902] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Tue Dec 05 10:11:02.247923 2023] [autoindex:error] [pid 38905:tid 39025] [client 192.168.56.1:49370] AH01276: Cannot serve directory /var/www/html/: No matching DirectoryIndex (index.html) found, and server-generated directory index forbidden by Options directive
+[Tue Dec 05 10:12:37.353480 2023] [autoindex:error] [pid 38906:tid 39093] [client ::1:33426] AH01276: Cannot serve directory /var/www/html/: No matching DirectoryIndex (index.html) found, and server-generated directory index forbidden by Options directive
+[Tue Dec 05 10:12:45.191945 2023] [autoindex:error] [pid 38906:tid 39095] [client 192.168.56.1:49378] AH01276: Cannot serve directory /var/www/html/: No matching DirectoryIndex (index.html) found, and server-generated directory index forbidden by Options directive
 ```
 
 エラーログには、Webサーバーの起動や停止の際に出力されたログや、アクセスログにも記録されているエラーの詳細などが記録されています。
 
 エラーログの中に以下のようなエラーがあります。
 
-★エラーログ、あとでコピペ
+```
+AH01276: Cannot serve directory /var/www/html/: No matching DirectoryIndex (index.html) found, and server-generated directory index forbidden by Options directive
+```
 
 これは、/var/www/htmlディレクトリにindex.htmlが存在しない、というエラーです。実はテストページとして表示されていたのは、エラー404が発生した時にWebサーバーが返すHTMLの内容がテストページのように見えていただけで、実際には必要なファイルが見つからないエラーが発生していたわけです。このエラーを解決してみましょう。
 
