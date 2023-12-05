@@ -76,6 +76,25 @@ Linuxをインストールしたマシンが正常にネットワークに接続
 4: virbr0-nic: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast master virbr0 state DOWN group default qlen 1000
     link/ether 52:54:00:96:78:2c brd ff:ff:ff:ff:ff:ff
 
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:2d:1c:bc brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+       valid_lft 65668sec preferred_lft 65668sec
+    inet6 fe80::a00:27ff:fe2d:1cbc/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:93:ab:ef brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute enp0s8
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a00:27ff:fe93:abef/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
 ipコマンドで表示されたloは仮想的なループバックインターフェースです。また、この例ではenp0s3が物理的なインターフェースです。この名称は、インストールしたPCによって変わります。enoXX、ensXX、enpXsX、ethX、enxXXなどの名称になる場合もあります。
 
 ### ネットワークインターフェースの再設定
@@ -101,6 +120,15 @@ PING 192.168.56.101 (192.168.1.101) 56(84) bytes of data.
 --- 192.168.56.101 ping statistics ---
 5 packets transmitted, 5 received, 0% packet loss, time 3998ms
 rtt min/avg/max/mdev = 0.144/0.164/0.209/0.027 ms
+
+PING 192.168.56.101 (192.168.56.101) 56(84) bytes of data.
+64 バイト応答 送信元 192.168.56.101: icmp_seq=1 ttl=64 時間=0.148ミリ秒
+64 バイト応答 送信元 192.168.56.101: icmp_seq=2 ttl=64 時間=0.038ミリ秒
+64 バイト応答 送信元 192.168.56.101: icmp_seq=3 ttl=64 時間=0.040ミリ秒
+^C
+--- 192.168.56.101 ping 統計 ---
+送信パケット数 3, 受信パケット数 3, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.038/0.075/0.148/0.051 ms
 
 ### サービスのポート番号を確認
 どんなネットワークサービスが自分のPCで動いているかを、ssコマンドとlsofコマンドで確認します。ss -atコマンドを実行すると、現在のTCP通信の状態をすべて表示します。
