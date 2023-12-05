@@ -101,10 +101,10 @@ All Rights Reserved. Copyright(C) The Linux Professional Institute Japan.
 ### 使用に関する権利 {.unnumbered}
 本教科書は、クリエイティブ・コモンズ・ライセンスの「表示 - 非営利 - 改変禁止 4.0 国際 (CC BY-NC-ND 4.0) 」によってライセンスされています。
 
-#### 表示 {.unnumbered}
+- 表示 {.unnumbered}
 本教科書は、特定非営利活動法人エルピーアイジャパンに著作権が帰属するものであることを表示してください。
 
-#### 改変禁止 {.unnumbered}
+- 改変禁止 {.unnumbered}
 本教科書は、改変せず使用してください。本教科書に対する改変は、特定非営利活動法人エルピーアイジャパンまたは特定非営利活動法人エルピーアイジャパンが認める団体により行われています。
 
 フィードバックは誰でも参加できるSlackで行われていますので、積極的にご参加ください。
@@ -113,7 +113,7 @@ All Rights Reserved. Copyright(C) The Linux Professional Institute Japan.
 https://bit.ly/linux-text
 ```
 
-#### 非営利 {.unnumbered}
+- 非営利 {.unnumbered}
 本教科書は、営利目的以外で教材として自由に利用することができます。
 
 営利目的での利用は、特定非営利活動法人エルピーアイジャパンによる許諾が必要です。本教科書を利用した教育において、本教科書自体の対価を請求しない場合は、営利目的の教育であっても基本的に使用できます。
