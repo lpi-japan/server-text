@@ -286,3 +286,4 @@ $ ping 192.168.56.1
 
 ![Windowsからのpingの画面](image/Ch3/cmdPing.png)
 
+\pagebreak
