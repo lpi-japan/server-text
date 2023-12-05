@@ -187,7 +187,7 @@ Connection to localhost closed.
 ssh-keygenコマンドを使用して一対の公開鍵(id_dsa.pub)と秘密鍵(id_dsa)を生成します。鍵のファイルはホームディレクトリに作られた.sshディレクトリに保存されます。
 秘密鍵には不正利用を防止するためのパスフレーズを設定します。接続時にパスフレーズを正しく入力できないと、秘密鍵は利用できないので、公開鍵認証による接続はできません。このパスフレーズはSSHクライアント側で秘密鍵に対して処理されるので、ネットワーク上には情報は流れません。
 
-[admin@host1 ~]$ su - user1	← ユーザーuseraにユーザを切り替え
+[admin@host1 ~]$ su - usera	← ユーザーuseraにユーザを切り替え
 [usera@host1 ~]$  ssh-keygen -t dsa	← DSA暗号形式で鍵を生成
 Generating public/private dsa key pair.
 Enter file in which to save the key (/home/usera/.ssh/id_dsa): ← Enterキーを入力
