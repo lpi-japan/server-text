@@ -196,68 +196,68 @@ Connection to localhost closed.
 以下の手順で公開鍵認証を設定します。
 
 1. 公開鍵と秘密鍵を生成する
-ssh-keygenコマンドを使用して一対の公開鍵(id_rsa.pub)と秘密鍵(id_rsa)を生成します。鍵のファイルはホームディレクトリに作られた.sshディレクトリに保存されます。
+    ssh-keygenコマンドを使用して一対の公開鍵(id_rsa.pub)と秘密鍵(id_rsa)を生成します。鍵のファイルはホームディレクトリに作られた.sshディレクトリに保存されます。
 
-秘密鍵には不正利用を防止するためのパスフレーズを設定します。接続時にパスフレーズを正しく入力できないと、秘密鍵は利用できないので、公開鍵認証による接続はできません。このパスフレーズはSSHクライアント側で秘密鍵に対して処理されるので、ネットワーク上には情報は流れません。
+    秘密鍵には不正利用を防止するためのパスフレーズを設定します。接続時にパスフレーズを正しく入力できないと、秘密鍵は利用できないので、公開鍵認証による接続はできません。このパスフレーズはSSHクライアント側で秘密鍵に対して処理されるので、ネットワーク上には情報は流れません。
 
-```
-[admin@host1 ~]$ su - user1 ← ユーザーuser1に切り替え
-パスワード:userpass ← user1のパスワードを入力（非表示）
-最終ログイン: 2023/12/05 (火) 11:46:38 JST 日時 pts/1
-[user1@host1 ~]$ ssh-keygen ← 鍵形式を省略したのでRSA形式で鍵を生成
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/user1/.ssh/id_rsa): ← Enterキーを入力
-Created directory '/home/user1/.ssh'.
-Enter passphrase (empty for no passphrase): userpass ← 秘密鍵にパスフレーズを設定（非表示）
-Enter same passphrase again: userpass ← パスフレーズを再入力（非表示）
-Your identification has been saved in /home/user1/.ssh/id_rsa
-Your public key has been saved in /home/user1/.ssh/id_rsa.pub
-The key fingerprint is:
-SHA256:aiUB6c+AYV4K+8b6d3RgAYmYsoH3d2waUN0G3MmHNDk user1@host1.example1.jp
-The key's randomart image is:
-+---[RSA 3072]----+
-|.o .o=.o.*o+     |
-|B = =.. o E..    |
-|.O B ..o . o     |
-|o + + =.+        |
-| o   *.*S        |
-|  +   =+.        |
-| o   .o.         |
-|.   ...          |
-| ... .           |
-+----[SHA256]-----+
-```
+    ```
+    [admin@host1 ~]$ su - user1 ← ユーザーuser1に切り替え
+    パスワード:userpass ← user1のパスワードを入力（非表示）
+    最終ログイン: 2023/12/05 (火) 11:46:38 JST 日時 pts/1
+    [user1@host1 ~]$ ssh-keygen ← 鍵形式を省略したのでRSA形式で鍵を生成
+    Generating public/private rsa key pair.
+    Enter file in which to save the key (/home/user1/.ssh/id_rsa): ← Enterキーを入力
+    Created directory '/home/user1/.ssh'.
+    Enter passphrase (empty for no passphrase): userpass ← 秘密鍵にパスフレーズを設定（非表示）
+    Enter same passphrase again: userpass ← パスフレーズを再入力（非表示）
+    Your identification has been saved in /home/user1/.ssh/id_rsa
+    Your public key has been saved in /home/user1/.ssh/id_rsa.pub
+    The key fingerprint is:
+    SHA256:aiUB6c+AYV4K+8b6d3RgAYmYsoH3d2waUN0G3MmHNDk user1@host1.example1.jp
+    The key's randomart image is:
+    +---[RSA 3072]----+
+    |.o .o=.o.*o+     |
+    |B = =.. o E..    |
+    |.O B ..o . o     |
+    |o + + =.+        |
+    | o   *.*S        |
+    |  +   =+.        |
+    | o   .o.         |
+    |.   ...          |
+    | ... .           |
+    +----[SHA256]-----+
+    ```
 
 1. 接続先にauthorized_keysを作成する
-ユーザーに公開鍵認証によるSSHでの接続を許可するには、ユーザーアカウントを作成し、そのユーザーのホームディレクトリに.ssh/authorized_keysファイルを作成しておきます。.sshディレクトリのパーミッションは700(drwx------)、authorized_keysファイルのパーミッションは600(-rwx------)に設定する必要があります。
+    ユーザーに公開鍵認証によるSSHでの接続を許可するには、ユーザーアカウントを作成し、そのユーザーのホームディレクトリに.ssh/authorized_keysファイルを作成しておきます。.sshディレクトリのパーミッションは700(drwx------)、authorized_keysファイルのパーミッションは600(-rwx------)に設定する必要があります。
 
-```
-[user1@host1 ~]$ ls -ld .ssh
-drwx------. 2 user1 user1 38 12月  5 11:47 .ssh
-[user1@host1 ~]$ cd .ssh
-[user1@host1 .ssh]$ touch authorized_keys
-[user1@host1 .ssh]$ chmod 600 authorized_keys
-[user1@host1 .ssh]$ cat id_rsa.pub >> authorized_keys
-[user1@host1 .ssh]$ ls -l authorized_keys
--rw-------. 1 user1 user1 577 12月  5 12:08 authorized_keys
-```
+    ```
+    [user1@host1 ~]$ ls -ld .ssh
+    drwx------. 2 user1 user1 38 12月  5 11:47 .ssh
+    [user1@host1 ~]$ cd .ssh
+    [user1@host1 .ssh]$ touch authorized_keys
+    [user1@host1 .ssh]$ chmod 600 authorized_keys
+    [user1@host1 .ssh]$ cat id_rsa.pub >> authorized_keys
+    [user1@host1 .ssh]$ ls -l authorized_keys
+    -rw-------. 1 user1 user1 577 12月  5 12:08 authorized_keys
+    ```
 
 1. 公開鍵認証で接続する
-公開鍵認証で接続します。sshコマンドの使用法自体はパスワード認証と同じですが、パスワードの代わりに秘密鍵に設定したパスフレーズの入力が必要です。
+    公開鍵認証で接続します。sshコマンドの使用法自体はパスワード認証と同じですが、パスワードの代わりに秘密鍵に設定したパスフレーズの入力が必要です。
 
-```
-[user1@host1 ~]$ ssh user1@localhost
-The authenticity of host 'localhost (::1)' can't be established.
-ED25519 key fingerprint is SHA256:7+us06xcMV24dGBfoGXIKCyiDWexydVXYlbYGMyV4Mk.
-This key is not known by any other names
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes ← yesと入力
-Warning: Permanently added 'localhost' (ED25519) to the list of known hosts.
-Enter passphrase for key '/home/user1/.ssh/id_rsa':userpass ←秘密鍵のパスフレーズを入力（非表示）
-Last login: Tue Dec  5 11:46:46 2023
-[user1@host1 ~]$ exit
-ログアウト
-Connection to localhost closed.
-```
+    ```
+    [user1@host1 ~]$ ssh user1@localhost
+    The authenticity of host 'localhost (::1)' can't be established.
+    ED25519 key fingerprint is SHA256:7+us06xcMV24dGBfoGXIKCyiDWexydVXYlbYGMyV4Mk.
+    This key is not known by any other names
+    Are you sure you want to continue connecting (yes/no/[fingerprint])? yes ← yesと入力
+    Warning: Permanently added 'localhost' (ED25519) to the list of known hosts.
+    Enter passphrase for key '/home/user1/.ssh/id_rsa':userpass ←秘密鍵のパスフレーズを入力（非表示）
+    Last login: Tue Dec  5 11:46:46 2023
+    [user1@host1 ~]$ exit
+    ログアウト
+    Connection to localhost closed.
+    ```
 
 ### パスワード認証の禁止
 パスワード認証が有効になっていると、パスワードの総当たり攻撃により不正にリモートログインできてしまいます。公開鍵認証で接続できるようになった後には、SSHサーバーの設定を変更してパスワード認証を禁止しておきます。
@@ -265,50 +265,50 @@ Connection to localhost closed.
 1. adminユーザーでパスワード認証で接続できることを確認する
 user1ユーザーになっている場合にはexitしてadminユーザーに戻ります。
 
-```
-[user1@host1 ~]$ exit
-ログアウト
-[admin@host1 ~]$ ssh localhost
-admin@localhost's password:
-Activate the web console with: systemctl enable --now cockpit.socket
+    ```
+    [user1@host1 ~]$ exit
+    ログアウト
+    [admin@host1 ~]$ ssh localhost
+    admin@localhost's password:
+    Activate the web console with: systemctl enable --now cockpit.socket
 
-Last login: Tue Dec  5 12:16:49 2023 from ::1
-[admin@host1 ~]$ exit
-ログアウト
-Connection to localhost closed.
-[admin@host1 ~]$
-```
+    Last login: Tue Dec  5 12:16:49 2023 from ::1
+    [admin@host1 ~]$ exit
+    ログアウト
+    Connection to localhost closed.
+    [admin@host1 ~]$
+    ```
 
 1. 設定ファイル/etc/ssh/sshd_configを修正する
 
-```
-[admin@host1 ~]$ sudo vi /etc/ssh/sshd_config
-[sudo] admin のパスワード: ← adminユーザーのパスワードを入力（非表示）
-```
+    ```
+    [admin@host1 ~]$ sudo vi /etc/ssh/sshd_config
+    [sudo] admin のパスワード: ← adminユーザーのパスワードを入力（非表示）
+    ```
 
-```
-（略）
-# To disable tunneled clear text passwords, change to no here!
-#PasswordAuthentication yes
-PasswordAuthentication no ← noに設定した行を追加
-#PermitEmptyPasswords no
-（略）
-```
+    ```
+    （略）
+    # To disable tunneled clear text passwords, change to no here!
+    #PasswordAuthentication yes
+    PasswordAuthentication no ← noに設定した行を追加
+    #PermitEmptyPasswords no
+    （略）
+    ```
 
 1. 設定を変更後、sshd設定を再読み込みする
 
-```
-[admin@host1 ~]$ sudo systemctl reload sshd
-[admin@host1 ~]$ ssh localhost
-admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
-```
+    ```
+    [admin@host1 ~]$ sudo systemctl reload sshd
+    [admin@host1 ~]$ ssh localhost
+    admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+    ```
 
 1. 公開鍵認証を設定していないユーザーでSSHサーバーに接続して、接続できないことを確認する
 
-```
-[admin@host1 ~]$ ssh localhost
-admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
-```
+    ```
+    [admin@host1 ~]$ ssh localhost
+    admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+    ```
 
 ## ファイアウォールの設定
 ファイアウォールはネットワークにおいて様々なアクセス制限を行い、ネットワークからの攻撃や不正なアクセス等を防ぐ機能です。
