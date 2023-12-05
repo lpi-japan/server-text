@@ -85,18 +85,18 @@ VirutalBoxは、次のURLからダウンロードできます。
 
 https://www.virtualbox.org/
 
-![VirtualBoxのWebサイト](image/Ch2/VirtualBoxOrgMain.png)
+![VirtualBoxのWebサイト](image/Ch2/VirtualBoxOrgMain.png){width=70%}
 
 ホストOSの種類に合わせてダウンロードを行えます。今回はWindows環境にインストールします。
 
 左のメニューからDownloadsをクリックし、VirtualBox binariesからWindows hostsをクリックして、インストーラーをダウンロードします。
 
-![VirtualBoxのダウンロードサイト](image/Ch2/VirtualBoxOrgDownload.png)
+![VirtualBoxのダウンロードサイト](image/Ch2/VirtualBoxOrgDownload.png){width=70%}
 
 ### Virtualboxのインストール
 VirtualBoxのインストーラーをダウンロードしたら、インストーラーを起動してインストールします。
 
-![VirtualBoxのインストーラー画面](image/Ch2/VirtualBoxInstaller.png)
+![VirtualBoxのインストーラー画面](image/Ch2/VirtualBoxInstaller.png){width=70%}
 
 インストール時の特別な設定は行いませんので、インストーラーの指示に従ってインストールします。インストーラーが仮想ネットワークのインストールについて、またPythonとの連携について確認を取ってきますが、そのまま進めても問題ありません。
 
@@ -109,7 +109,7 @@ VirtualBoxを起動します。
 
 VirtualBoxが起動すると、VirtualBoxマネージャーが表示されます。
 
-![VirtualBoxマネージャーの画面](image/Ch2/VirtualBoxManager.png)
+![VirtualBoxマネージャーの画面](image/Ch2/VirtualBoxManager.png){width=70%}
 
 ## VirtualBoxマネージャー
 VirtualBoxマネージャーは、VirtualBoxによる仮想マシン実行環境全体を管理するツールです。主に以下のことが行えます。
@@ -139,7 +139,7 @@ VirtualBoxマネージャーで「新規(N)」ボタンをクリックし、新�
 
 設定したら、「次へ」ボタンをクリックします。
 
-![仮想マシンの名前とOS選択の画面](image/Ch2/NewVMnameOS.png)
+![仮想マシンの名前とOS選択の画面](image/Ch2/NewVMnameOS.png){width=70%}
 
 ### 仮想マシンのハードウェアの設定
 仮想マシンのハードウェアの設定として、メインメモリーの容量とプロセッサの数を設定します。また、EFIの設定も行います。
@@ -152,7 +152,7 @@ VirtualBoxマネージャーで「新規(N)」ボタンをクリックし、新�
 
 設定しましたら、「次へ」ボタンをクリックします。
 
-![仮想マシンのメモリやCPU設定の画面](image/Ch2/NewVMmemoryCPU.png)
+![仮想マシンのメモリやCPU設定の画面](image/Ch2/NewVMmemoryCPU.png){width=70%}
 
 #### メインメモリーの容量
 メインメモリーの容量は、使用しているコンピューターが搭載しているメモリ容量以下に制限されます。仮想マシンにある程度多めのメインメモリーを割り当てることで快適に動作させることができます。
@@ -176,7 +176,7 @@ OSのインストール先となる仮想ハードディスクの設定をしま
 
 設定しましたら、「次へ」ボタンをクリックします。
 
-![貸そうハードディスクの設定画面](image/Ch2/NewVMharddisk.png)
+![貸そうハードディスクの設定画面](image/Ch2/NewVMharddisk.png){width=70%}
 
 #### 仮想ハードディスクの容量
 仮想ハードディスクの容量は、使用しているコンピューターが搭載しているストレージの容量以下に制限されます。また、「Pre-allocate Full Size」をチェックしない限り、仮想ハードディスクの容量はゲストOSが使用した分だけしか消費しませんので、設定は最大消費容量を指定することになります。
@@ -188,14 +188,14 @@ OSのインストールとサーバーの設定だけではそれほど沢山の
 
 確認後、「完了」ボタンをクリックします。
 
-![仮想マシンの設定の確認画面](image/Ch2/NewVMspec.png)
+![仮想マシンの設定の確認画面](image/Ch2/NewVMspec.png){width=70%}
 
 VirtualBoxマネージャーに、新しく作成した仮想マシンが追加されたことを確認します。
 
 ## 仮想マシンの設定方法
 仮想マシンの設定を確認したり、変更するには、VirtualBoxマネージャーで仮想マシンを選択し、右側に表示される各種設定情報から変更が行えます。設定項目の見出し部分（「一般」や「システム」など）をクリックすると、その項目の設定画面が表示されます。
 
-![仮想マシンの設定画面](image/Ch2/NewVMconfig.png)
+![仮想マシンの設定画面](image/Ch2/NewVMconfig.png){width=70%}
 
 試しに、仮想マシン作成時に設定したEFIの有効化について確認してみます。
 
@@ -210,7 +210,7 @@ VirtualBoxマネージャーに、新しく作成した仮想マシンが追加�
 
 確認、あるいは修正ができたら、「OK」ボタンをクリックします。
 
-![仮想マシンのシステム設定の画面](image/Ch2/NewVMEFI.png)
+![仮想マシンのシステム設定の画面](image/Ch2/NewVMEFI.png){width=70%}
 
 ## ネットワークの追加 
 ホストマシンと仮想マシンが通信できるようにするため、以下の手順で「ホストオンリーアダプター」を追加します。
@@ -222,13 +222,13 @@ VirtualBoxの仮想ネットワークの設定を確認します。
 
 VirtualBoxマネージャーの「ツール」右側のリストボタン（横3本線）をクリックし、「ネットワーク」を選択します。
 
-![ツールからネットワークを選択する画面](image/Ch2/selectNetwork.png)
+![ツールからネットワークを選択する画面](image/Ch2/selectNetwork.png){width=70%}
 
 「Host-only Networks」タブを選択し、「VirtualBox Host-Only Eternet Adapter」が存在していることを確認します。IPアドレスは、インストール時に自動的に作成された場合には192.168.56.1/24が設定されています。このIPアドレスは、ホストOSに作成された仮想ネットワークアダプターに割り当てられているIPアドレスです。
 
 DHCPサーバーもデフォルトで有効になっていますが、本教科書の演習ではDHCPサーバーは使用しません。
 
-![仮想ネットワークの設定画面](image/Ch2/configHostOnly.png)
+![仮想ネットワークの設定画面](image/Ch2/configHostOnly.png){width=70%}
 
 ### 仮想マシンにネットワークアダプターを追加
 仮想マシンにネットワークアダプターを追加します。
@@ -237,13 +237,13 @@ VirtualBoxマネージャーから仮想マシンを選択し、右側の各種�
 
 仮想マシンには最大4つのネットワークアダプターを設定できます。アダプター1はNATが設定されており、外部のネットワークやその先にあるインターネットに接続できます。
 
-![仮想マシンのネットワークアダプター1の設定画面](image/Ch2/VMconfigNAT.png)
+![仮想マシンのネットワークアダプター1の設定画面](image/Ch2/VMconfigNAT.png){width=70%}
 
 アダプター2のタブを選択し、「ネットワークアダプターを有効化」をチェックします。「割り当て」を「ホストオンリーアダプター」に設定すると、「名前」に「VirtualBox Host-Only Ethernet Adapter」が設定されます。これによって、この仮想マシンはホストマシンと通信が行えるようになります。
 
 設定したら、「OK」をクリックします。
 
-![仮想マシンのネットワークアダプター2の設定画面](image/Ch2/VMconfigHostOnly.png)
+![仮想マシンのネットワークアダプター2の設定画面](image/Ch2/VMconfigHostOnly.png){width=70%}
 
 ## ISOイメージを仮想光学ドライブで読み込む設定
 第1章でダウンロードしたOSインストール用のISOイメージを、仮想マシンの仮想光学ドライブで読み込む設定をします。
@@ -254,7 +254,7 @@ VirtualBoxマネージャーから仮想マシンを選択し、右側の各種�
 
 「光学ドライブ:IDE セカンダリマスター」の右側にある円形のボタンをクリックし、「ディスクファイルを選択」を選択すると、ファイルダイアログが開きます。準備しておいたOSインストール用のISOイメージを選択し、「開く」ボタンをクリックします。「空」の表示がファイル名に変わります。
 
-![仮想マシンの仮想光学ドライブの設定画面](image/Ch2/VMconfigDVD.png)
+![仮想マシンの仮想光学ドライブの設定画面](image/Ch2/VMconfigDVD.png){width=70%}
 
 以上で仮想マシンの作成と、OSインストールの準備は完了です。
 

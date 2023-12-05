@@ -82,7 +82,7 @@ DNSやメールの実習では3台の仮想マシンを使って実習を行う�
 
 https://almalinux.org/ja/
 
-![AlmaLinuxのWebサイト](image/Ch1/AlmaLinuxOrg.png)
+![AlmaLinuxのWebサイト](image/Ch1/AlmaLinuxOrg.png){width=70%}
 
 AlmaLinuxは、商用ディストリビューションであるRed Hat Enterprise Linuxをベースにしたディストリビューションとして提供されています。利用に際し費用が発生しない、無償で提供されているディストリビューションです。
 
@@ -101,7 +101,7 @@ http://ftp.iij.ad.jp/pub/linux/almalinux/9.3/isos/x86_64/
 #### URLが利用できない場合
 URLはサイト構造の変更によって変わっている場合があります。その場合には、AlmaLinuxのWebサイトからリンクを辿ってダウンロードサイトを探してください。
 
-![AlmaLinuxのダウンロードサイト](image/Ch1/AlmaLinuxDownload.png)
+![AlmaLinuxのダウンロードサイト](image/Ch1/AlmaLinuxDownload.png){width=70%}
 
 ## ISOイメージのファイル名
 ISOイメージは以下のようなファイル名になっています。
