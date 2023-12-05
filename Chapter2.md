@@ -104,6 +104,8 @@ VirtualBoxのインストーラーをダウンロードしたら、インスト�
 
 インストール終了後、Finishボタンをクリックするとインストーラーが終了し、VirtualBoxが起動します。
 
+\pagebreak
+
 ## VirtualBoxの起動
 VirtualBoxを起動します。
 
