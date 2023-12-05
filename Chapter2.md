@@ -83,7 +83,9 @@ VirtualBoxを実行するには、使用するコンピューターが搭載し�
 ### VirtualBoxのダウンロード
 VirutalBoxは、次のURLからダウンロードできます。
 
+```
 https://www.virtualbox.org/
+```
 
 ![VirtualBoxのWebサイト](image/Ch2/VirtualBoxOrgMain.png){width=70%}
 
@@ -176,7 +178,7 @@ OSのインストール先となる仮想ハードディスクの設定をしま
 
 設定しましたら、「次へ」ボタンをクリックします。
 
-![貸そうハードディスクの設定画面](image/Ch2/NewVMharddisk.png){width=70%}
+![仮想ハードディスクの設定画面](image/Ch2/NewVMharddisk.png){width=70%}
 
 #### 仮想ハードディスクの容量
 仮想ハードディスクの容量は、使用しているコンピューターが搭載しているストレージの容量以下に制限されます。また、「Pre-allocate Full Size」をチェックしない限り、仮想ハードディスクの容量はゲストOSが使用した分だけしか消費しませんので、設定は最大消費容量を指定することになります。
@@ -188,7 +190,7 @@ OSのインストールとサーバーの設定だけではそれほど沢山の
 
 確認後、「完了」ボタンをクリックします。
 
-![仮想マシンの設定の確認画面](image/Ch2/NewVMspec.png){width=70%}
+![仮想マシンの設定確認画面](image/Ch2/NewVMspec.png){width=70%}
 
 VirtualBoxマネージャーに、新しく作成した仮想マシンが追加されたことを確認します。
 
