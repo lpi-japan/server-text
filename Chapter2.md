@@ -89,13 +89,17 @@ https://www.virtualbox.org/
 
 ![VirtualBoxのWebサイト](image/Ch2/VirtualBoxOrgMain.png){width=70%}
 
-ホストOSの種類に合わせてダウンロードを行えます。今回はWindows環境にインストールします。
-
-左のメニューからDownloadsをクリックし、VirtualBox binariesからWindows hostsをクリックして、インストーラーをダウンロードします。
+ホストOSの種類に合わせてダウンロードを行えます。今回はWindows環境にインストールします。左のメニューからDownloadsをクリックし、VirtualBox binariesからWindows hostsをクリックして、インストーラーをダウンロードします。
 
 ![VirtualBoxのダウンロードサイト](image/Ch2/VirtualBoxOrgDownload.png){width=70%}
 
-### Virtualboxのインストーラーの実行
+今回はバージョン7.0.12を使用しています。これ以降のバージョンでネットワーク機能（ホストオンリーアダプター）が変更になっている可能性があるため、新しいバージョンになっている場合には過去のビルド（VirtualBox older builds）からバージョン7.0.12をダウンロードしてください。
+
+```
+https://www.virtualbox.org/wiki/Download_Old_Builds_7_0
+```
+
+### VirtualBoxのインストーラーの実行
 VirtualBoxのインストーラーをダウンロードが完了したら、インストーラーを実行してインストールします。
 
 ![VirtualBoxのインストーラー画面](image/Ch2/VirtualBoxInstaller.png){width=70%}
