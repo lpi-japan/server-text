@@ -147,6 +147,8 @@ Webサーバーが正しくバックグラウンドサービスとして実行�
 ### systemctl statusコマンドによる動作状態の確認
 systemctl statusコマンドで、管理対象となるユニットの状態やログの一部などを確認できます。
 
+表示を終了するにはQキーを入力します。
+
 ```
 $ sudo systemctl status httpd
 ● httpd.service - The Apache HTTP Server

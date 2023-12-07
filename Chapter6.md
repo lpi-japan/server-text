@@ -146,6 +146,11 @@ Installed:
 Complete!
 ```
 
+### インターネット接続できない環境でのインストール
+インターネット接続できない環境での実習の場合、OSインストール時にメールサーバーを追加でインストールしていますが、s-nailパッケージはインストールされていません。
+
+本章の最後でISOイメージからインストールする方法を解説しているので、その手順に従ってs-nailとthunderbirdをインストールしてください。
+
 ## Postfixの設定ファイル main.cfの設定
 Postfixの設定ファイルは、/etc/postfix/main.cfです。次のパラメータを探して設定します。
 
@@ -702,5 +707,55 @@ Running transaction
 本章では、電子メールに関する学習を行いました。また、実際にメールサーバーを設定し、mailコマンドやThunderbirdを利用してメールの送受信の確認を行いました。
 
 メールサーバーの設定は、メールサーバーが正しく設定され起動していたとしても、DNSサーバーが正しく動いていなければ利用できないなどの理由から難しかったと思います。設定ファイルの記述に問題がないのに、メールがどうしても送れない、受信できない場合は、まずDNSが正しく動いているかdigコマンドを実行して確認します。また、ログ（/var/log/mail）を見て、エラーが出ていないか確認することも大切です。
+
+## ISOイメージからのパッケージのインストール
+dnfコマンドはインターネット上にあるパッケージリポジトリからダウンロードしてインストールを行います。インターネット接続できない環境でパッケージをインストールするには、ISOイメージに入っているRPMパッケージからインストールを行います。
+
+1. 仮想マシンにadminユーザーでログインします
+1. 仮想マシンの仮想光学ドライブにISOイメージを読み込ませます
+1. ISOイメージが自動マウントされます
+
+### ISOイメージのマウントポイントの確認
+ISOイメージが自動マウントされたマウントポイント（ディレクトリ）を確認します。
+
+マウントポイントはmountコマンドで確認できます。マウントポイントが多数あるため、grepコマンドで絞り込みます。
+
+```
+$ mount | grep dvd
+/dev/sr0 on /run/media/admin/AlmaLinux-9-3-aarch64-dvd type iso9660 (ro,nosuid,nodev,relatime,nojoliet,check=s,map=n,blocksize=2048,uid=1000,gid=1000,dmode=500,fmode=400,uhelper=udisks2)
+```
+
+ISOイメージはISO9660ファイル形式として「/run/media/ユーザー名」以下にマウントされていることが分かります。
+
+ISOイメージの中身を確認してみます。
+
+```
+$ ls /run/media/admin/AlmaLinux-9-3-aarch64-dvd/
+AppStream  EULA                     TRANS.TBL         images
+BaseOS     LICENSE                  boot.catalog      media.repo
+EFI        RPM-GPG-KEY-AlmaLinux-9  extra_files.json
+```
+
+### パッケージのインストール
+マウントされたISOイメージからパッケージをインストールします。
+
+OSインストール時にインストールできなかったs-nailとthunderbirdをインストールします。これらはAppStremディレクトリ内に保存されています。
+
+```
+$ cd /run/media/admin/AlmaLinux-9-3-aarch64-dvd/AppStream/Packages/
+$ ls -l s-nail-14.9.22-6.el9.x86_64.rpm
+-r--r--r--. 5 admin admin 635625  3月 10  2022 s-nail-14.9.22-6.el9.x86_64.rpm
+$ ls -l thunderbird-115.4.1-1.el9_2.alma.x86_64.rpm
+-r--r--r--. 5 admin admin 111843172 11月  3 00:37 thunderbird-115.4.1-1.el9_2.alma.x86_64.rpm
+```
+
+パッケージのRPMファイルが確認できたら、dnfコマンドの引数として指定してインストールします。
+
+```
+$ pwd
+/run/media/admin/AlmaLinux-9-3-x86_64-dvd/AppStream/Packages
+$ sudo dnf install ./s-nail-14.9.22-6.el9.x86_64.rpm
+$ sudo dnf install ./thunderbird-115.4.1-1.el9_2.alma.x86_64.rpm
+```
 
 \pagebreak

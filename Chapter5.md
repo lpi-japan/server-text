@@ -257,12 +257,11 @@ zone "example1.jp" IN {
 named.confで定義したゾーンの内容を記述するゾーンファイルの作成を行います。
 
 ### ゾーンファイルの準備
-ゾーンファイルのテンプレートとなる/var/named/named.emptyファイルをコピーします。新たに作成するファイルのファイル名はゾーン定義のfile句で指定したファイル名を指定します。example1.jpゾーンであればexample1.jp.zoneとなります。また、コピー元と同じ所有権、パーミッションにするため、cpコマンドに-pオプションを付けて実行します。
+ゾーンファイルのテンプレートとなる/var/named/named.emptyファイルをコピーします。新たに作成するファイルのファイル名はゾーン定義のfile句で指定したファイル名を指定します。example1.jpゾーンであればexample1.jp.zoneとなります。また、コピー元と同じ所有権（root:named）、パーミッション（640）にするため、cpコマンドに-pオプションを付けて実行します。
 
 ```
-$ cd /var/named
-$ sudo cp -p named.empty example1.jp.zone
-$ ls -l example1.jp.zone
+$ sudo cp -p /var/named/named.empty /var/named/example1.jp.zone
+$ sudo ls -l /var/named/example1.jp.zone
 -rw-r-----. 1 root named 152 Jul 18 16:51 example1.jp.zone
 ```
 
@@ -330,7 +329,7 @@ $ sudo named-checkconf
 ゾーンファイルを編集時、よくあるミスとしては、FQDNで記述すべきところを最後の.が抜けているなどがあります。named-checkzoneコマンドを使ってゾーンファイルに間違いがないか確認しましょう。引数は$ORIGINに指定したゾーン名と、確認を行うゾーンファイル名です。
 
 ```
-$ sudo named-checkzone example1.jp. /var/named/example1.jp.zone 
+$ sudo named-checkzone example1.jp. /var/named/example1.jp.zone
 zone example1.jp/IN: loaded serial 2023100901
 OK
 ```
@@ -416,6 +415,28 @@ digコマンドでホスト名からIPアドレスが解決されることを確
 
 ```
 $ dig host1.example1.jp
+
+; <<>> DiG 9.16.23-RH <<>> host1.example1.jp
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44138
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 4a0648fe1005f0ed010000006571236da9d7e870ba70525b (good)
+;; QUESTION SECTION:
+;host1.example1.jp.		IN	A
+
+;; ANSWER SECTION:
+host1.example1.jp.	10800	IN	A	192.168.156.101
+
+;; Query time: 0 msec
+;; SERVER: 192.168.156.101#53(192.168.156.101)
+;; WHEN: Thu Dec 07 10:44:13 JST 2023
+;; MSG SIZE  rcvd: 90
+
 ```
 
 host1.example1.jpのAレコードが正しく設定されていることが確認できます。
@@ -424,27 +445,72 @@ host1.example1.jpのAレコードが正しく設定されていることが確�
 
 ```
 $ dig www.example1.jp
+
+; <<>> DiG 9.16.23-RH <<>> www.example1.jp
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 6337
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: db2999488ac8f606010000006571238266734096a170f419 (good)
+;; QUESTION SECTION:
+;www.example1.jp.		IN	A
+
+;; ANSWER SECTION:
+www.example1.jp.	10800	IN	A	192.168.156.101
+
+;; Query time: 0 msec
+;; SERVER: 192.168.156.101#53(192.168.156.101)
+;; WHEN: Thu Dec 07 10:44:34 JST 2023
+;; MSG SIZE  rcvd: 88
+
 ```
 
 ```
-$ dig mail.example1.jp 192.168.56.101
+$ dig mail.example1.jp
+
+; <<>> DiG 9.16.23-RH <<>> mail.example1.jp
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 51265
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: cd3bc3c12d3883880100000065712390ff9c301e85b5889a (good)
+;; QUESTION SECTION:
+;mail.example1.jp.		IN	A
+
+;; ANSWER SECTION:
+mail.example1.jp.	10800	IN	A	192.168.156.101
+
+;; Query time: 0 msec
+;; SERVER: 192.168.156.101#53(192.168.156.101)
+;; WHEN: Thu Dec 07 10:44:48 JST 2023
+;; MSG SIZE  rcvd: 89
+
 ```
 
 ### digコマンドでNSレコードを確認
-ドメイン名の後にnsを指定すると、ドメインに登録されているNSレコード(ネームサーバーの情報)が表示されます。
+ドメイン名の後にnsを指定すると、ドメインに登録されているNSレコード(ネームサーバーの情報)と、NSレコードで返されたホストのAレコードが表示されます。
 
 ```
 $ dig example1.jp ns
 
-; <<>> DiG 9.16.23-RH <<>> example1.jp ns @192.168.56.101
+; <<>> DiG 9.16.23-RH <<>> example1.jp ns
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57210
-;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 2
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 43712
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 2
+;; WARNING: recursion requested but not available
 
 ;; OPT PSEUDOSECTION:
 ; EDNS: version: 0, flags:; udp: 1232
-; COOKIE: e0c074ccce4dcb7001000000652395e5374ff621232b02b7 (good)
+; COOKIE: 514e24b609deb6f7010000006571239f32ec12213b63d3be (good)
 ;; QUESTION SECTION:
 ;example1.jp.			IN	NS
 
@@ -452,31 +518,32 @@ $ dig example1.jp ns
 example1.jp.		10800	IN	NS	host1.example1.jp.
 
 ;; ADDITIONAL SECTION:
-host1.example1.jp.		10800	IN	A	192.168.56.101
+host1.example1.jp.	10800	IN	A	192.168.156.101
 
 ;; Query time: 0 msec
-;; SERVER: 192.168.56.101#53(192.168.56.101)
-;; WHEN: Mon Oct 09 14:55:49 JST 2023
-;; MSG SIZE  rcvd: 101
+;; SERVER: 192.168.156.101#53(192.168.156.101)
+;; WHEN: Thu Dec 07 10:45:03 JST 2023
+;; MSG SIZE  rcvd: 104
+
 ```
 
-digコマンドの結果に、ANSWER SECTIONがあれば正常であり、ANSWER SECTIONが無ければ結果が返らない状態のエラーです。
-
 ### digコマンドでMXレコードを確認
-ドメイン名の後にmxを指定すると、ドメインに登録されているMXレコード(メールサーバーの情報)が表示されます。
+ドメイン名の後にmxを指定すると、ドメインに登録されているMXレコード(メールサーバーの情報)と、MXレコードで返されたホストのAレコードが表示されます。
 
 ```
 $ dig example1.jp mx
 
-; <<>> DiG 9.16.23-RH <<>> example1.jp mx @192.168.56.101
+;
+; <<>> DiG 9.16.23-RH <<>> example1.jp mx
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 23441
-;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 2
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7127
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 2
+;; WARNING: recursion requested but not available
 
 ;; OPT PSEUDOSECTION:
 ; EDNS: version: 0, flags:; udp: 1232
-; COOKIE: c1f5c1430953e074010000006523960da0c510f634ea02aa (good)
+; COOKIE: 166fbbe055ccc8af01000000657123b993148836eb1425c7 (good)
 ;; QUESTION SECTION:
 ;example1.jp.			IN	MX
 
@@ -484,12 +551,13 @@ $ dig example1.jp mx
 example1.jp.		10800	IN	MX	10 mail.example1.jp.
 
 ;; ADDITIONAL SECTION:
-mail.example1.jp.		10800	IN	A	192.168.56.101
+mail.example1.jp.	10800	IN	A	192.168.156.101
 
 ;; Query time: 0 msec
-;; SERVER: 192.168.56.101#53(192.168.56.101)
-;; WHEN: Mon Oct 09 14:56:29 JST 2023
-;; MSG SIZE  rcvd: 102
+;; SERVER: 192.168.156.101#53(192.168.156.101)
+;; WHEN: Thu Dec 07 10:45:29 JST 2023
+;; MSG SIZE  rcvd: 105
+
 ```
 
 ## example2.jpサーバーとjpサーバーの追加
