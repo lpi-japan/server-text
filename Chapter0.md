@@ -33,9 +33,10 @@ https://linuc.org/textbooks/server/
 仮想マシン環境を実現するソフトウェアとして、以下のようなものがあげられます。
 
 - VirtualBox（Windows、Linux、macOS）
-- VMware Workstation(Windows)
-- VMware Fusion(macOS)
-- Parallels Desktop(macOS)
+- VMware Workstation（Windows）
+- VMware Fusion（macOS）
+- Parallels Desktop（macOS）
+- UTM（macOS）
 - Linux KVM（Linux）
 
 本教科書では、VirtualBoxをWindows上で実行して解説を進めます。
