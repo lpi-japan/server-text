@@ -2,33 +2,32 @@
 メールのやり取りが行えるよう、メールサーバーを設定します。まずはPostfixを使って、メールサーバー同士でメールのやり取りが行えるように設定します。さらにPOP/IMAPサーバーとメールクライアントを使って、より実践的なメール環境を構築します。
 
 ## 用語集
-### メールサーバー
+### メールサーバー {.unlisted .unnumbered}
 電子メールのサービスを行います。クライアントよりメールを受け取り、バケツリレーの方式で相手先のメールサーバーまで送ります。また、受信用のメールサーバーでは、送ってきたメールを蓄積しておいて、クライアントの要求に応じて応答します。
 
-### MTA（Mail Transfer Agent）
+### MTA（Mail Transfer Agent） {.unlisted .unnumbered}
 メールの転送を行うプログラムです。SendmailやPostfixなどが代表例です。
 
-### SMTP(Simple Mail Transfer Protocol)
+### SMTP（Simple Mail Transfer Protocol） {.unlisted .unnumbered}
 電子メールの送信、転送のときに利用されるプロトコルのことです。
 
-### SMTP認証
+### SMTP認証 {.unlisted .unnumbered}
 SMTPでのメールを送信する際に認証を行う機構です。迷惑メール対策としてのメール中継の制限を、この認証機能で許可する、といった利用方法があります。
 
-### Postfix
+### Postfix {.unlisted .unnumbered}
 MTAとして動作するサーバープログラムです。LinuxやUnixのシステムで古くから使われてきたSendmailよりもセキュリティが高く、高速に動作すると言われています。
 
-### POP3(Post Office Protocol version3)
+### POP3（Post Office Protocol version3） {.unlisted .unnumbered}
 クライアントが電子メールを取り寄せるときに利用されるプロトコルです。シンプルな設計で、IMAP4と比べて機能が少ないです。
 
-### IMAP4（Internet Message Access Protocol 4）
+### IMAP4（Internet Message Access Protocol 4） {.unlisted .unnumbered}
 クライアントが電子メールを取り寄せるときに利用されるプロトコルです。メールのフォルダ機能サポート等、多機能です。
 
-### Dovecot
+### Dovecot {.unlisted .unnumbered}
 POP3やIMAP4のサーバー機能を提供するプログラムです。
 
-### Thunderbird
+### Thunderbird {.unlisted .unnumbered}
 Mozilla Projectが配布している、高機能なメールクライアントソフトウェアです。Windows, Mac OS X, Linux等と、動作環境は多岐に渡っており、各国語版も用意されております。機能も必要十分な内容がそろっています。
-
 
 ## メールのやり取りの仕組み
 インターネット上で沢山の人が電子メールを利用していますが、電子メールは以下の手順でやり取りされています。括弧内はそれぞれの手順に関わるプログラムや動作、プロトコルです。
@@ -44,31 +43,31 @@ Mozilla Projectが配布している、高機能なメールクライアント�
 
 メールの送信に関わるプログラムやプロトコルについて解説します。
 
-### MTA(Mail Transfer Agent)
+### MTA（Mail Transfer Agent）
 メールクライアントから送信されたメールは、送信用メールサーバーから宛先の受信用メールサーバーに転送されます。このメールの転送を行うプログラムをMTAと呼びます。本教科書ではPostfixというMTAを利用します。他に有名なMTAとしてSendmailがあります。
 
-### MDA(Mail Delivery Agent)
+### MDA（Mail Delivery Agent）
 受信用メールサーバーが受信したメールを宛先アドレスのメールボックスに配送するプログラムをMDAと呼びます。MTAであるPostfixがMDAの機能も受け持ちます。他にMDAとしてProcmailがあります。
 
-### MUA(Mail User Agent)
+### MUA（Mail User Agent）
 メールの利用者が、メールの送信や受信を行うプログラムをMUAと呼びます。本教科書ではThunderbirdを利用します。WebメールもMUAの一種となります。
 
-### SMTP(Simple Mail Transfer Protocol)の拡張
+### SMTP（Simple Mail Transfer Protocol）の拡張
 メールクライアントからのメール送信や、メールサーバー間のメールの転送は、SMTPというプロトコルでやり取りされています。SMTPはかなり昔に設計、定義されたプロトコルのため、認証やアクセス制限などが無く、勝手にメールサーバーを利用されて迷惑メールを送られてしまう問題がありました。このような問題を解決するためにESMTP（拡張SMTP）が定義されました。SMTPと呼ぶ場合、このESMTPで定義された機能も含んでいることがあります。
 
-#### SMTP認証(SMTP Authentication)とリレー
+#### SMTP認証（SMTP Authentication）とリレー
 SMTP認証はESMTPの機能のうちの1つです。通常のSMTPには認証機能が無いため、送信元のIPアドレスを制限するなど適切に設定されていないと迷惑メール送信の踏み台とされてしまう問題があります。SMTP認証は、メールの送信時に認証を行い、認証が行われた場合のみメールの送信を受け付けます。受け付けたメールを宛先の受信用メールサーバーに転送することをリレーと呼びます。
 
 ## メールの受信
 送信されたメールが宛先のメールボックスに配送されると、受信者はメールを受信して読むことができます。メールの受信に関係するいくつかの事項について解説します。
 
 ### メールの配送
-受信用メールサーバーが送信用メールサーバーからメールを受け取り、宛先アドレスのメールボックスにメールを届けることを配送と呼びます。メールボックスが無い場合、宛先不明として送信用メールサーバーにエラーを返します。メールの配送を行うソフトウェアをMDA(Mail Delivery Agent)と呼びます。
+受信用メールサーバーが送信用メールサーバーからメールを受け取り、宛先アドレスのメールボックスにメールを届けることを配送と呼びます。メールボックスが無い場合、宛先不明として送信用メールサーバーにエラーを返します。メールの配送を行うソフトウェアをMDA（Mail Delivery Agent）と呼びます。
 
 #### ローカル配送
 送信側と受信側が同じメールサーバーを使用している場合、メールは外部のメールサーバーに転送する必要がなく、すぐに宛先アドレスのメールボックスに配送されます。これをローカル配送と呼びます。
 
-### POP3(Post Office Protocol version 3)
+### POP3（Post Office Protocol version 3）
 POP3は電子メールを受信するときに利用するプロトコルです。非常にシンプルなプロトコルで、ユーザー名、パスワードを利用して接続し、メールの内容を受信します。
 
 ### IMAP4
