@@ -110,7 +110,7 @@ All Rights Reserved. Copyright(C) The Linux Professional Institute Japan.
 ## 使用に関する権利 {.unnumbered}
 本教科書は、クリエイティブ・コモンズ・ライセンスの「表示 - 非営利 - 改変禁止 4.0 国際 (CC BY-NC-ND 4.0) 」によってライセンスされています。
 
-![CC BY-NC-ND 4.0](image/Ch0/by-nc-nd.png){width=70%}
+![CC BY-NC-ND 4.0](image/Ch0/by-nc-nd.png){width=403px}
 
 
 ### 表示 {.unlisted .unnumbered}
