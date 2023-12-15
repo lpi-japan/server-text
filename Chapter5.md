@@ -670,7 +670,7 @@ $ sudo systemctl start named-chroot
 ```
 
 ### 自動起動とファイアーウォールの設定
-自動起動の設定や、ファイアーウォールの設定の変更も忘れず行っておきます。
+自動起動の設定や、ファイアーウォールの設定を行います。
 
 ```
 $ sudo systemctl enable named-chroot
@@ -802,7 +802,7 @@ $ sudo systemctl start named-chroot
 ```
 
 ### 自動起動とファイアーウォールの設定
-自動起動の設定や、ファイアーウォールの設定の変更も忘れず行っておきます。
+自動起動の設定や、ファイアーウォールの設定を行います。
 
 ```
 $ sudo systemctl enable named-chroot
