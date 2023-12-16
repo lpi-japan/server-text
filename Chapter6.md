@@ -55,7 +55,7 @@ Mozilla Projectが配布している、高機能なメールクライアント�
 ### SMTP（Simple Mail Transfer Protocol）の拡張
 メールクライアントからのメール送信や、メールサーバー間のメールの転送は、SMTPというプロトコルでやり取りされています。SMTPはかなり昔に設計、定義されたプロトコルのため、認証やアクセス制限などが無く、勝手にメールサーバーを利用されて迷惑メールを送られてしまう問題がありました。このような問題を解決するためにESMTP（拡張SMTP）が定義されました。SMTPと呼ぶ場合、このESMTPで定義された機能も含んでいることがあります。
 
-#### SMTP認証（SMTP Authentication）とリレー
+### SMTP認証（SMTP Authentication）とリレー
 SMTP認証はESMTPの機能のうちの1つです。通常のSMTPには認証機能が無いため、送信元のIPアドレスを制限するなど適切に設定されていないと迷惑メール送信の踏み台とされてしまう問題があります。SMTP認証は、メールの送信時に認証を行い、認証が行われた場合のみメールの送信を受け付けます。受け付けたメールを宛先の受信用メールサーバーに転送することをリレーと呼びます。
 
 ## メールの受信
@@ -94,9 +94,29 @@ Thunderbirdをメールクライアントとして設定し、SMTP認証によ�
 
 ## Postfixのインストール
 Postfixをdnfコマンドでインストールをします。また、SMTP認証で使用するCyrus-SASL（cyrus-saslパッケージ）とmailコマンドが含まれているs-nailパッケージも一緒にインストールしておきます。
+また、IMAPサーバーとして使用するdovecotパッケージ、メールクライアントとして使用するthunderbirdパッケージも同時にインストールしておきます。
+
+### NATネットワークの有効化
+DNSサーバーの設定でNATネットワークを無効化している場合には、インターネットに接続できるように有効化します。インストールが終わった後に再度無効化します。
 
 ```
-$ sudo dnf install postfix cyrus-sasl s-nail
+$ sudo nmcli con up enp0s3
+接続が正常にアクティベートされました (D-Bus アクティブパス: /org/freedesktop/NetworkManager/ActiveConnection/11)
+```
+
+### パッケージのインストール
+dnfコマンドで必要なパッケージをインストールします。
+
+```
+$ sudo dnf install postfix cyrus-sasl s-nail dovecot thunderbird
+```
+
+### NATネットワークの無効化
+NATネットワークを無効化します。
+
+```
+$ sudo nmcli con down enp0s3
+接続 'enp0s3' が正常に非アクティブ化されました (D-Bus アクティブパス: /org/freedesktop/NetworkManager/ActiveConnection/11)
 ```
 
 ### インターネット接続できない環境でのインストール
@@ -104,8 +124,12 @@ $ sudo dnf install postfix cyrus-sasl s-nail
 
 本章の最後でISOイメージに含まれているRPMパッケージからインストールする方法を解説しているので、その手順に従ってs-nailとthunderbirdをインストールしてください。
 
-## Postfixの設定ファイル main.cfの設定
+## Postfixの設定ファイルmain.cfの設定
 Postfixの設定ファイルは/etc/postfix/main.cfです。次のパラメータを探して設定します。
+
+```
+$ sudo vi /etc/postfix/main.cf
+```
 
 パラメータによっては、デフォルト値が設定されているので、その場合には書き換えます。コメントアウトされた形で記述されている場合には、コメントアウトを外して設定を有効にした上で値を記述します。
 
@@ -120,9 +144,8 @@ host1の設定
 | mydomain | example1.jp |
 | inet_interfaces | localhost, 192.168.56.101 |
 | mydestination | $mydomain |
-| mynetworks | 192.168.56.101 |
 | smtpd_sasl_auth_enable | yes |
-| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition |
+| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination |
 
 host2の設定
 | 項目 | 設定値 |
@@ -131,9 +154,8 @@ host2の設定
 | mydomain | example2.jp |
 | inet_interfaces | localhost, 192.168.56.102 |
 | mydestination | $mydomain |
-| mynetworks | 192.168.56.102 |
 | smtpd_sasl_auth_enable | yes |
-| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition |
+| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination |
 
 それぞれのパラメータの意味と設定値は以下の通りです。
 
@@ -184,19 +206,6 @@ host1とhost2共通の設定
 mydestination = $mydomain
 ```
 
-### mynetworks
-信頼するクライアントのIPアドレスを設定します。このIPアドレスからのメール送信は、認証無しでリレーして宛先の受信用メールサーバーに転送されます。
-
-host1の設定
-```
-mynetworks = 192.168.56.101
-```
-
-host2の設定
-```
-mynetworks = 192.168.56.102
-```
-
 ### smtpd_sasl_auth_enable
 SMTP認証用のSASL認証連携を有効にします。
 
@@ -210,7 +219,7 @@ SMTP認証でSASL認証されたクライアントからのメール送信を許
 
 host1とhost2共通の設定
 ```
-smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
 ```
 
 これら2つの設定は後述するSMTP認証（SASL認証連携）に関係する設定ですが、先に設定しておきます。
@@ -224,11 +233,11 @@ $ sudo postfix check
 
 書式が正しい場合には、何も表示されません。エラーが表示された場合には、エラー内容をよく見て修正します。
 
-## Postfixの再起動
-postfixサービスを再起動します。
+## Postfixの起動
+postfixサービスを起動します。
 
 ```
-$ sudo systemctl restart postfix.service
+$ sudo systemctl start postfix
 ```
 
 ## 自動起動とファイアーウォールの設定
@@ -286,13 +295,13 @@ SMTP認証の機能を有効にすると、Postfixはsaslauthdに認証を依頼
 SMTP認証用のsaslauthdサービスを起動します。
 
 ```
-$ sudo systemctl start saslauthd.service
+$ sudo systemctl start saslauthd
 ```
 
 saslauthdの自動起動設定も行っておきます。
 
 ```
-$ sudo systemctl enable saslauthd.service
+$ sudo systemctl enable saslauthd
 ```
 
 これでPostfixの設定は完了です。
@@ -307,8 +316,9 @@ host1でuser1というアカウントを作成します。このアカウント�
 [admin@host1 ~]$ sudo useradd user1
 [admin@host1 ~]$ sudo passwd user1
 ユーザー user1 のパスワードを変更。
-新しいパスワード: userpass	← 入力文字は非表示
-新しいパスワードを再入力してください: userpass	← 入力文字は非表示
+新しいパスワード: userpass ← 入力文字は非表示
+正しくないパスワード: このパスワードは辞書チェックに失敗しました - 辞書の単語に基づいています
+新しいパスワードを再入力してください: userpass ← 入力文字は非表示
 passwd: すべての認証トークンが正しく更新できました。
 ```
 
@@ -319,8 +329,9 @@ host2でuser2というアカウントを作成します。このアカウント�
 [admin@host2 ~]$ sudo useradd user2
 [admin@host2 ~]$ sudo passwd user2
 ユーザー user2 のパスワードを変更。
-新しいパスワード: userpass	← 入力文字は非表示
-新しいパスワードを再入力してください: userpass	← 入力文字は非表示
+新しいパスワード: userpass ← 入力文字は非表示
+正しくないパスワード: このパスワードは辞書チェックに失敗しました - 辞書の単語に基づいています
+新しいパスワードを再入力してください: userpass ← 入力文字は非表示
 passwd: すべての認証トークンが正しく更新できました。
 ```
 
@@ -365,9 +376,9 @@ host2はuser2で操作を行います。
 mailコマンドを使って、host1のuser1からuser2@example2.jpへメールを送信します。
 
 ```
-[user1@host1 ~]$ mail user2@example2.jp	← mailコマンドの引数に宛先のアドレスを指定
+[user1@host1 ~]$ mail user2@example2.jp ← mailコマンドの引数に宛先のアドレスを指定
 Subject: Test mail from user1 ← Subjectを入力
-This is Test Mail from user1 ← メッセージ本文を入力
+This is test mail from user1 ← メッセージ本文を入力
 ^D ← メッセージ本文の入力が終わったらCtrl+dを入力
 -------
 (Preliminary) Envelope contains:
@@ -415,19 +426,18 @@ IMAPサーバーを利用してメールを受信できるよう、IMAPサーバ
 
 以下の作業はhost1で行いますが、host2でも設定して双方向でメールのやり取りができるようにしてもよいでしょう。
 
-## Dovecotのインストール
-まずはIMAPサーバーであるDovecotをインストールします。
-
-```
-$ sudo dnf install dovecot
-```
-
 ## Dovecotの設定
-Dovecotの設定を行います。
+IMAPサーバーとしてDovecotの設定を行います。
 
-設定ファイルは/etc/dovecot/dovecot.confと/etc/dovecot/conf.dディレクトリ以下に分かれています。
+今回設定するファイルは/etc/dovecot/dovecot.confと、/etc/dovecot/conf.dディレクトリ以下に分かれている以下のファイルです。
 
-### /etc/dovecot/dovecot.conf
+- /etc/dovecot/dovecot.conf（変更不要）
+- /etc/dovecot/conf.d/10-mail.conf
+- /etc/dovecot/conf.d/10-auth.conf
+- /etc/dovecot/conf.d/10-ssl.conf
+
+
+### /etc/dovecot/dovecot.conf（変更不要）
 全体的な設定ファイルです。デフォルトの設定がコメントアウトで記述されています。特に変更は必要ありません。
 
 ```
@@ -460,7 +470,8 @@ $ sudo vi /etc/dovecot/conf.d/10-mail.conf
 #
 # <doc/wiki/MailLocation.txt>
 #
-mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 上にある例を参考に修正
+#mail_location =
+mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 上にある2番目の例を参考に追加
 
 （略）
 
@@ -468,7 +479,7 @@ mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 上にある例を参考に�
 # used only with INBOX when either its initial creation or dotlocking fails.
 # Typically this is set to "mail" to give access to /var/mail.
 #mail_privileged_group =
-mail_privileged_group = mail ← 権限が必要な動作はmailグループとして行う
+mail_privileged_group = mail ← 権限が必要な動作はmailグループとして行うように追加
 
 # Grant access to these supplementary groups for mail processes. Typically
 # these are used to set up access to shared mailboxes. Note that it may be
@@ -476,7 +487,8 @@ mail_privileged_group = mail ← 権限が必要な動作はmailグループと�
 # set here, ln -s /var/mail ~/mail/var could allow a user to delete others'
 # mailboxes, or ln -s /secret/shared/box ~/mail/mybox would allow reading it).
 #mail_access_groups =
-mail_access_groups = mail ← mailグループにアクセス権限を与える
+mail_access_groups = mail ← mailグループにアクセス権限を与えるように追加
+（略）
 ```
 
 ### /etc/dovecot/conf.d/10-auth.conf
@@ -500,6 +512,7 @@ $ sudo vi /etc/dovecot/conf.d/10-auth.conf
 # See also ssl=required setting.
 #disable_plaintext_auth = yes
 disable_plaintext_auth = no	← noに変更
+（略）
 ```
 
 ### /etc/dovecot/conf.d/10-ssl.conf
@@ -538,15 +551,8 @@ $ sudo firewall-cmd --add-service=imap --zone=public --permanent
 $ sudo firewall-cmd --reload
 ```
 
-## Thunderbirdのインストール
-メールクライアントとしてThunderbirdをインストールします。
-
-```
-$ sudo dnf install thunderbird
-```
-
 ## Thunderbirdの起動
-次にThunderbirdの設定を行います。
+次にメールクライアントとしてThunderbirdの設定を行います。
 
 1. その他のユーザーでログインしている場合にはログアウトします。
 1. メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。パスワードはuserpassです。正しく設定されていない場合には、再度adminユーザーでログインし、passwdコマンドで設定し直してください。このパスワードがThunderbirdの設定にも使用されます。
