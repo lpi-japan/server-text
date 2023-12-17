@@ -79,19 +79,28 @@ Linuxをインストールしたマシンが正常にネットワークに接続
 ipコマンドで表示されたloは仮想的なループバックインターフェースです。また、この例ではenp0s3がNAT、enp0s8がホストオンリーのインターフェースです。この名称は、enoXX、ensXX、ethX、enxXXなどの名称になる場合もあります。
 
 ### ネットワークインターフェースの再設定
-インストール時にIPアドレスの設定を間違えた時などは、ネットワークインターフェースを再設定します。設定は、GNOMEの管理画面から行うことができます。
+インストール時にIPアドレスの設定を間違えた時などは、ネットワークインターフェースを再設定します。
 
-GNOMEのデスクトップのアプリケーションメニューから「システムツール」→「設定」を選択します。表示された設定画面の左側のメニューから「ネットワーク」を選択します。
+1. デスクトップを右クリックし、ポップアップメニューから「設定」を選択します。
+1. 設定画面の左側のメニューから「ネットワーク」を選択します。
+1. 変更したいネットワークインターフェースの欄にある歯車のボタンをクリックします。
 
-「有線」の欄にある歯車のボタンをクリックすると、接続プロファイルの設定画面が表示されます。「IPv4」のタブをクリックすると、次のような画面になります。
+![ネットワークの設定画面](image/Ch7/NetworkConfig.png){width=70%}
 
-この画面で、設定を変更することで、ネットワークインターフェースの設定を変更することができます。変更したら、「適用」ボタンを押して元の画面に戻ります。「有線」の項目にあるスイッチを、一旦「オフ」に変えます。再度、「オン」に変えるとネットワークインターフェース設定が変更されます。
+1. 接続プロファイルの設定画面が表示されます。
+
+![インターフェースの設定画面](image/Ch7/InterfaceConfig.png){width=70%}
+
+1. 設定を変更します。
+1. 「適用」ボタンを押して元の画面に戻ります。
+1. 変更したネットワークインターフェースの欄にあるスイッチを一旦「オフ」に変えます。
+1. 再度「オン」に変えると設定が適用されます。
 
 ### ネットワークインターフェースの動作確認
 ネットワークインターフェースが動作しているかはpingコマンドで確認します。pingコマンドで確認するIPアドレスとして自分の物理ネットワークインターフェースのIPアドレス、講師のマシンのIPアドレス（192.168.56.100）やその他のマシンのIPアドレスなどを指定します。pingコマンドはCtrl+Cで中止できます。
 
 ```
-$ ping 192.168.56.101	←　自分のIPアドレス
+$ ping 192.168.56.101 ← 自分のIPアドレス
 PING 192.168.56.101 (192.168.56.101) 56(84) bytes of data.
 64 バイト応答 送信元 192.168.56.101: icmp_seq=1 ttl=64 時間=0.148ミリ秒
 64 バイト応答 送信元 192.168.56.101: icmp_seq=2 ttl=64 時間=0.038ミリ秒
@@ -178,14 +187,14 @@ sshコマンドは特別な設定を行わなくても、パスワード認証�
 The authenticity of host 'localhost (::1)' can't be established.
 ED25519 key fingerprint is SHA256:7+us06xcMV24dGBfoGXIKCyiDWexydVXYlbYGMyV4Mk.
 This key is not known by any other names
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes← yesを入力
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes ← yesを入力
 Warning: Permanently added 'localhost' (ED25519) to the list of known hosts.
-user1@localhost's password: userpass	← 実際には非表示
+user1@localhost's password: userpass ← 実際には非表示
 Last login: Sat Dec  2 11:44:55 2023
-[use1@host1 ~]$ exit	← リモートログインを修了
+[use1@host1 ~]$ exit ← リモートログインを修了
 ログアウト
 Connection to localhost closed.
-[admin@host1 ~]$ 	← 元のユーザーadminに復帰
+[admin@host1 ~]$ ← 元のユーザーadminに復帰
 ```
 
 ### 公開鍵による認証
@@ -283,7 +292,6 @@ Connection to localhost closed.
 
 ```
 [admin@host1 ~]$ sudo vi /etc/ssh/sshd_config
-[sudo] admin のパスワード: ← adminユーザーのパスワードを入力（非表示）
 ```
 
 ```
@@ -299,8 +307,6 @@ PasswordAuthentication no ← noに設定した行を追加
 
 ```
 [admin@host1 ~]$ sudo systemctl reload sshd
-[admin@host1 ~]$ ssh localhost
-admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 ```
 
 1. 公開鍵認証を設定していないユーザーでSSHサーバーに接続して、接続できないことを確認する
@@ -309,6 +315,8 @@ admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 [admin@host1 ~]$ ssh localhost
 admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 ```
+
+この設定を行った後はパスワード認証でリモートログインできなくなるので、かならず事前に管理権限を持ったユーザーが公開鍵認証でリモートログインできるようにしておく必要があります。
 
 ## ファイアウォールの設定
 ファイアウォールはネットワークにおいて様々なアクセス制限を行い、ネットワークからの攻撃や不正なアクセス等を防ぐ機能です。
