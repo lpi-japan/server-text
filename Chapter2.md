@@ -212,7 +212,6 @@ VirtualBoxマネージャーに、新しく作成した仮想マシンが追加�
 ![仮想マシンのシステム設定の画面](image/Ch2/NewVMEFI.png){width=70%}
 
 \pagebreak
-
 ## ネットワークの追加 
 ホストマシンと仮想マシンが通信できるようにするため、以下の手順で「ホストオンリーアダプター」を追加します。
 
@@ -220,7 +219,7 @@ VirtualBoxマネージャーに、新しく作成した仮想マシンが追加�
 
 ![NAT](image/Ch2/NAT.png){width=70%}
 
-
+\pagebreak
 ### 仮想ネットワークの設定を確認
 VirtualBoxの仮想ネットワークの設定を確認します。
 
@@ -232,7 +231,7 @@ VirtualBoxマネージャーの「ツール」右側のリストボタン（横3
 
 DHCPサーバーもデフォルトで有効になっていますが、本教科書の演習ではDHCPサーバーは使用しません。
 
-![ホストオンリーアダプター](image/Ch2/NAT.png){width=70%}
+![ホストオンリーアダプター](image/Ch2/HostOnly.png){width=70%}
 
 ![仮想ネットワークの設定画面](image/Ch2/configHostOnly.png){width=70%}
 
