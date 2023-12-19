@@ -632,7 +632,8 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 1. 「作成」ボタンをクリック
 1. 宛先に他の受講生のメールアドレス（user2@example2.jp）を指定して、メールを作成、送信してみます。
 1. host2でmailコマンドを使ってメールを受信できたことを確認します。
-1. mailコマンドでuser1@example1.jp宛にメールを送信し、host1で受信できることを確認します。   
+1. mailコマンドでuser1@example1.jp宛にメールを送信し、host1で受信できることを確認します。
+
 ![Thunderbirdのメール送受信画面](image/Ch6/ThunderbirdMailbox.png){width=70%}
 
 ## うまく動作しない場合には
