@@ -567,7 +567,7 @@ $ sudo firewall-cmd --reload
 
 1. Thunderbirdが起動すると別途Webブラウザが開いてThunderbirdのWebページが表示されますが、Webブラウザごと閉じて構いません。
 1. Thunderbirdのアプリケーションウインドウを表示し、「既存のメールアドレスのセットアップ」タブが表示されていることを確認します。
-1. 各設定項目の値を以下のように入力します。
+1. 各設定項目の値を以下のように入力します。   
 
 | 設定項目 | 設定値 |
 |---|---|
@@ -575,7 +575,7 @@ $ sudo firewall-cmd --reload
 | メールアドレス |user1@example1.jp |
 | パスワード |userpass |
 | パスワードを記憶する | チェックしておく |
-	![メールアドレスとパスワードの設定](image/Ch6/ThunderbirdSetup1.png){width=70%}
+![メールアドレスとパスワードの設定](image/Ch6/ThunderbirdSetup1.png){width=70%}
 
 1. 「手動設定」をクリックします。
 1. 「受信サーバー」と「送信サーバー」が表示されるので、各設定項目を以下のように入力します。
