@@ -89,6 +89,7 @@ https://www.virtualbox.org/
 
 ![VirtualBoxのWebサイト](image/Ch2/VirtualBoxOrgMain.png){width=70%}
 
+\pagebreak
 ホストOSの種類に合わせてダウンロードを行えます。今回はWindows環境にインストールします。左のメニューからDownloadsをクリックし、VirtualBox binariesからWindows hostsをクリックして、インストーラーをダウンロードします。
 
 ![VirtualBoxのダウンロードサイト](image/Ch2/VirtualBoxOrgDownload.png){width=70%}
@@ -148,6 +149,7 @@ VirtualBoxマネージャーで「新規(N)」ボタンをクリックし、新�
 
 ![仮想マシンの名前とOS選択の画面](image/Ch2/NewVMnameOS.png){width=70%}
 
+\pagebreak
 ### 仮想マシンのハードウェアの設定
 仮想マシンのハードウェアの設定として、メインメモリーの容量とプロセッサの数を設定します。また、EFIの設定も行います。
 
@@ -167,6 +169,7 @@ Enable EFIは、デフォルトではチェックされていません。OSの�
 
 設定しましたら、「次へ」ボタンをクリックします。
 
+\pagebreak
 ### 仮想ハードディスクの設定
 OSのインストール先となる仮想ハードディスクの設定をします。
 
