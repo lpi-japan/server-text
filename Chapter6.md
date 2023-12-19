@@ -141,7 +141,7 @@ $ sudo vi /etc/postfix/main.cf
 
 host1とhost2に、それぞれ以下のように設定します。
 
-host1の設定
+host1の設定   
 | 項目 | 設定値 |
 |------------|---------------|
 | myhostname | mail.example1.jp |
@@ -151,7 +151,7 @@ host1の設定
 | smtpd_sasl_auth_enable | yes |
 | smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination |
 
-host2の設定
+host2の設定   
 | 項目 | 設定値 |
 |------------|---------------|
 | myhostname | mail.example2.jp |
@@ -372,7 +372,7 @@ host1はuser1で操作を行います。
 host2はuser2で操作を行います。
 
 ```
-[admin@host1 ~]$ sudo su - user2
+[admin@host2 ~]$ sudo su - user2
 [user2@host2 ~]$
 ```
 
@@ -580,7 +580,7 @@ $ sudo firewall-cmd --reload
 1. 「手動設定」をクリックします。
 1. 「受信サーバー」と「送信サーバー」が表示されるので、各設定項目を以下のように入力します。
 
-受信サーバー
+受信サーバー   
 | 設定項目 | 設定値 |
 |---|---|
 | プロトコル | IMAP |
@@ -590,7 +590,7 @@ $ sudo firewall-cmd --reload
 | 認証方式 | 通常のパスワード認証 |
 | ユーザ名 | user1 |
 
-送信サーバー
+送信サーバー   
 | 設定項目 | 設定値 |
 |------------|---------------|
 | ホスト名 | mail.example1.jp |
