@@ -557,17 +557,29 @@ $ sudo firewall-cmd --add-service=imap --zone=public --permanent
 $ sudo firewall-cmd --reload
 ```
 
-## Thunderbirdの起動
+## Thunderbirdの設定
 次にメールクライアントとしてThunderbirdの設定を行います。
 
-1. その他のユーザーでログインしている場合にはログアウトします。
-1. メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。パスワードはuserpassです。正しく設定されていない場合には、再度adminユーザーでログインし、passwdコマンドで設定し直してください。このパスワードがThunderbirdの設定にも使用されます。
-1. Thunderbirdを起動します。画面左上にある「アクティビティ」をクリックし、画面下に表示されるアイコンドックから一番右にある「アプリケーションを表示する」をクリックします。表示されるアプリケーションアイコンから「Thunderbird」をクリックします。
+### ユーザーを切り替えてログイン
+メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。
 
-    ![Thunderbirdの起動](image/Ch6/Appli.png){width=70%}
-1. Thunderbirdが起動すると別途Webブラウザが開いてThunderbirdのWebページが表示されますが、Webブラウザごと閉じて構いません。
-1. Thunderbirdのアプリケーションウインドウを表示し、「既存のメールアドレスのセットアップ」タブが表示されていることを確認します。
-1. 各設定項目の値を以下のように入力します。   
+その他のユーザーでログインしている場合にはログアウトします。
+
+パスワードはuserpassです。正しく設定されていない場合には、再度adminユーザーでログインし、passwdコマンドで設定し直してください。このパスワードがThunderbirdの設定にも使用されます。
+
+### Thunderbirdの起動
+Thunderbirdを起動します。
+
+画面左上にある「アクティビティ」をクリックし、画面下に表示されるアイコンドックから一番右にある「アプリケーションを表示する」をクリックします。表示されるアプリケーションアイコンから「Thunderbird」をクリックします。
+
+![Thunderbirdの起動](image/Ch6/Appli.png){width=70%}
+
+Thunderbirdが起動すると別途Webブラウザが開いてThunderbirdのWebページが表示されますが、Webブラウザごと閉じて構いません。
+
+### Thunderbirdの基本設定
+Thunderbirdのアプリケーションウインドウを表示し、「既存のメールアドレスのセットアップ」タブが表示されていることを確認します。
+
+各設定項目の値を以下のように入力します。   
 ![メールアドレスとパスワードの設定](image/Ch6/ThunderbirdSetup1.png){width=70%}
 
     | 設定項目 | 設定値 |
@@ -576,6 +588,8 @@ $ sudo firewall-cmd --reload
     | メールアドレス |user1@example1.jp |
     | パスワード |userpass |
     | パスワードを記憶する | チェックしておく |
+
+### Thunderbirdの送受信メールサーバーの設定
 1. 「手動設定」をクリックします。
 1. 「受信サーバー」と「送信サーバー」が表示されるので、各設定項目を以下のように入力します。   
 ![受信サーバーと送信サーバーの設定](image/Ch6/ThunderbirdSetup2.png){width=70%}
