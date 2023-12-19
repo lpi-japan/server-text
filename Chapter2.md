@@ -232,10 +232,11 @@ VirtualBoxマネージャーの「ツール」右側のリストボタン（横3
 
 DHCPサーバーもデフォルトで有効になっていますが、本教科書の演習ではDHCPサーバーは使用しません。
 
-![ホストオンリーアダプター](image/Ch2/HostOnly.png){width=70%}
-
 ![仮想ネットワークの設定画面](image/Ch2/configHostOnly.png){width=70%}
 
+![ホストオンリーアダプター](image/Ch2/HostOnly.png){width=70%}
+
+\pagebreak
 \pagebreak
 ### 仮想マシンにネットワークアダプターを追加
 仮想マシンにネットワークアダプターを追加します。
