@@ -292,6 +292,7 @@ zone "example1.jp" IN {
 -rw-r-----. 1 root named 152 11月  8 01:28 /var/named/example1.jp.zone
 ```
 
+\pagebreak
 ## ゾーンファイルの修正
 コピーした/var/named/example1.jp.zoneファイルを修正します。
 
