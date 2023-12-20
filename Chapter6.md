@@ -91,6 +91,7 @@ Postfixの設定が完了したら、動作確認としてmailコマンドを使
 
 ![メール配送の基本的な仕組み](image/Ch6/MailTransfer.png){width=70%}
 
+\pagebreak
 ### Thunderbirdを利用したメールの送受信
 Thunderbirdをメールクライアントとして設定し、SMTP認証によるメール送信や、DovecotによるIMAPサーバーからのメール受信を行います。
 
@@ -230,6 +231,7 @@ smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, rej
 
 これら2つの設定は後述するSMTP認証（SASL認証連携）に関係する設定ですが、先に設定しておきます。
 
+\pagebreak
 ## 書式のチェック
 /etc/postfix/main.cfの修正ができたら、書式チェックを行っておきます。
 
