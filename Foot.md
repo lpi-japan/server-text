@@ -18,6 +18,8 @@ Linuxサーバー構築標準教科書
 
 2022年  8月  9日 V3.0.2 発行
 
+2023年 12月 21日 V4.0.0-RC1 発行
+
 ![](image/bar.png){width=90%}
 
 &copy; LPI-Japan
