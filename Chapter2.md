@@ -119,7 +119,7 @@ VirtualBoxが起動すると、VirtualBoxマネージャーが表示されます
 
 ![VirtualBoxマネージャーの画面](image/Ch2/VirtualBoxManager.png){width=70%}
 
-## VirtualBoxマネージャー
+### VirtualBoxマネージャー
 VirtualBoxマネージャーは、VirtualBoxによる仮想マシン実行環境全体を管理するツールです。主に以下のことが行えます。
 
 - VirtualBox自身の各種設定
@@ -142,6 +142,7 @@ VirtualBoxマネージャーの環境設定から、ホストキーを変更で�
 
 ホストキーに設定できるのはCtrlキー、Altキー、Windowsキー、Shiftキー（単独設定不可）です。左のCtrlキーをホストキーに設定してしまうと、コマンドライン操作などの際に重複してしまうので、避けた方がよいでしょう。複数のキーを同時に押す組み合わせをホストキーにすることもできるので、2つないし3つのキーの組み合わせをホストキーとして設定するとよいでしょう。
 
+\pagebreak
 ## 仮想マシンの作成
 仮想マシンを作成します。
 
