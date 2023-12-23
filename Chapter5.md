@@ -78,17 +78,17 @@ DNSが取り扱うドメイン名は設計上、ルートドメインを頂点�
 ドメイン名の記述は、右側から記述していきます。FQDN(Fully Qualified Domain Name)であれば一番右にルートドメイン、そしてトップレベルドメインを記述し、さらに左側に各組織毎に割り当てられたドメイン名を記述していきます。各要素の間は「.」（ドット）で区切っていきます。
 
 ### ドメイン名の記述例
-- example.com.
-- example.jp.
-- example.co.jp.
+- example.com
+- example.jp
+- example.co.jp
 
 トップレベルドメイン以降のドメイン名は、ドメイン取得者が独自にドメイン名を決めることができます。上記の例ではexampleの部分が独自のドメイン名にあたります。
 
 ### サブドメイン
 記述例のようにドメイン名の左側にさらにドメイン名を記述していくことを「サブドメイン化」と呼びます。たとえば、example.co.jpドメインをさらに東京と大阪の2つに分けて表記したいような場合には、以下の例のように記述します。
 
-- tokyo.example.co.jp.
-- osaka.example.co.jp.
+- tokyo.example.co.jp
+- osaka.example.co.jp
 
 サブドメイン化は、上位のドメイン（表記上の右側）を管理している管理者が行います。たとえば、tokyo.example.co.jpドメインまでのサブドメインの階層は次のようになっています。
 
@@ -147,9 +147,9 @@ example2.jpゾーンを管理するDNSコンテンツサーバーとして設定
 
 |ドメイン名|ホスト名|IPアドレス|
 |---|---|---|
-| jp. | host0.jp. | 192.168.56.100 |
-| example1.jp. | host1.example1.jp. | 192.168.56.101 |
-| example2.jp. | host2.example2.jp. | 192.168.56.102 |
+| jp | host0.jp | 192.168.56.100 |
+| example1.jp | host1.example1.jp | 192.168.56.101 |
+| example2.jp | host2.example2.jp | 192.168.56.102 |
 
 ## アドレス解決の流れ
 host1.example1.jpのマシン(192.168.56.101)がホストwww.example2.jpを解決するときの動きを追ってみましょう。
