@@ -137,7 +137,7 @@ Copyright©️ LPI-Japan. All Rights Reserved.
 https://linuc.org/textbooks/server/
 ```
 
-![https://linuc.org/textbooks/server/](image/Ch0/QRserver.png){width=50%}
+![https://linuc.org/textbooks/server/](image/Ch0/QRserver.png){width=25%}
 
 ## 本教科書の使用に関するお問合せ先 {.unnumbered}
 特定非営利活動法人エルピーアイジャパン（LPI-Japan）事務局  
@@ -164,6 +164,6 @@ LinuCの出題範囲策定や試験開発は、実際に現場で活躍してい
 ### LinuCシステムアーキテクト {.unlisted .unnumbered}
 オンプレ／クラウド、物理／仮想化を含むシステムのライフサイクル全体を俯瞰して最適なアーキテクチャを設計・構築ができる上級エンジニアの証明（ITSSレベル4相当のスキルレベル）
 
-![https://linuc.org/textbooks/server/](image/Ch0/QRaboutLinuC.png){width=50%}
+![https://linuc.org/textbooks/server/](image/Ch0/QRaboutLinuC.png){width=25%}
 
 \pagebreak
