@@ -248,8 +248,8 @@ postfixサービスを起動します。
 $ sudo systemctl start postfix
 ```
 
-## 自動起動とファイアーウォールの設定
-自動起動の設定や、ファイアーウォールの設定を行います。
+## 自動起動とファイアウォールの設定
+自動起動の設定や、ファイアウォールの設定を行います。
 
 ```
 $ sudo systemctl enable postfix
@@ -550,8 +550,8 @@ dovecotサービスを起動します。
 $ sudo systemctl start dovecot
 ```
 
-### 自動起動とファイアーウォールの設定
-自動起動の設定や、ファイアーウォールの設定を行います。
+### 自動起動とファイアウォールの設定
+自動起動の設定や、ファイアウォールの設定を行います。
 
 ```
 $ sudo systemctl enable dovecot
