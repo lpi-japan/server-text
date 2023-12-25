@@ -1,5 +1,5 @@
 # メールサーバーの構築
-第6章では、メールのやり取りが行えるようメールサーバーを設定します。まずはPostfixを使って、メールサーバー同士でメールのやり取りが行えるように設定します。さらにIMAPサーバーのDevecotとメールクライアントのThunderbirdを使って、より実践的なメール環境を構築します。
+第6章では、メールのやり取りが行えるようメールサーバーを設定します。まずはPostfixを使って、メールサーバー同士でメールのやり取りが行えるように設定します。さらにIMAPサーバーのDovecotとメールクライアントのThunderbirdを使って、より実践的なメール環境を構築します。
 
 ## 用語集
 ### メールサーバー {.unlisted .unnumbered}
@@ -295,7 +295,7 @@ Postfixの設定ファイルであるmain.cfでSASL認証を有効にします�
 | 項目 | 設定値 |
 |------------|---------------|
 | smtpd_sasl_auth_enable | yes |
-| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destinaition |
+| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination |
 
 SMTP認証の機能を有効にすると、Postfixはsaslauthdに認証を依頼し、認証が成功するとメールを受け取ってリレーを行います。
 
@@ -430,7 +430,7 @@ Held 1 message in /var/spool/mail/user2
 ## メールクライアントソフトでのメールの送受信
 通常のメールサーバーの運用では、メールの利用者はメールクライアントを使用してメールの送受信を行います。送信はSMTP、受信はIMAP4やPOP3をプロトコルとして使用します。
 
-IMAPサーバーを利用してメールを受信できるよう、IMAPサーバーであるDevecotと、メールクライアントとしてThunderbirdをインストールして、メールを送受信してみます。
+IMAPサーバーを利用してメールを受信できるよう、IMAPサーバーであるDovecotと、メールクライアントとしてThunderbirdをインストールして、メールを送受信してみます。
 
 以下の作業はhost1で行いますが、host2でも設定して双方向でメールのやり取りができるようにしてもよいでしょう。
 
@@ -681,7 +681,7 @@ EFI        RPM-GPG-KEY-AlmaLinux-9  extra_files.json
 ### パッケージのインストール
 マウントされたISOイメージからパッケージをインストールします。
 
-OSインストール時にインストールできなかったs-nailとthunderbirdをインストールします。これらはAppStremディレクトリ内に保存されています。
+OSインストール時にインストールできなかったs-nailとthunderbirdをインストールします。これらはAppStreamディレクトリ内に保存されています。
 
 ```
 $ cd /run/media/admin/AlmaLinux-9-3-x86_64-dvd/AppStream/Packages/
