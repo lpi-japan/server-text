@@ -526,7 +526,7 @@ disable_plaintext_auth = no	← noに変更
 ### /etc/dovecot/conf.d/10-ssl.conf
 SSL/TLSを設定するファイルです。
 
-今回はSSL/TLS暗号化をしませんので、SSLの利用を停止しておきます。
+今回はSSL/TLS暗号化をしませんので、SSL/TLS暗号化の利用を停止しておきます。
 
 ```
 $ sudo vi /etc/dovecot/conf.d/10-ssl.conf
