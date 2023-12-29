@@ -321,15 +321,17 @@ admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 AlmaLinuxのファイアウォール機能はfirewalldによって管理されています。firewalldでは、ネットワークインターフェースへのパケットの受信の許可、拒否のルールを管理しています。firewalldの設定は、firewall-cmdコマンドで行います。
 
 ### ファイアウォール設定の確認
-許可されているサービスを調べるには、\-\-list-servicesオプションを使います。
+まず、許可されているサービスを調べます。
 
 ```
 $ sudo firewall-cmd --list-services
-cockpit dhcpv6-client http imap pop3 smtp ssh
+cockpit dhcpv6-client http ssh
 ```
 
+ここでは、HTTPやSSHなどのプロトコルが使用するポートが受信を許可されています。
+
 ### 許可サービスの追加
-許可サービスを追加するには、次のように\-\-add-serviceオプションを使います。以下の例では、imapサービスを許可しています。
+サービスの許可を追加します。以下の例では、imapサービスを許可しています。
 
 ```
 $ sudo firewall-cmd --add-service=imap
@@ -344,23 +346,27 @@ $ sudo firewall-cmd --reload
 ```
 
 ### 設定可能なサービスの確認
-設定可能なサービスは、\-\-get-servicesオプションで確認できます。
+設定可能なサービスはあらかじめ定義されているので、一覧を確認してみます。
 
 ```
 $ sudo firewall-cmd --get-services
 RH-Satellite-6 amanda-client amanda-k5-client bacula bacula-client bgp bitcoin bitcoin-rpc bitcoin-testnet bitcoin-testnet-rpc ceph ceph-mon cfengine condor-collector ctdb dhcp dhcpv6 dhcpv6-client dns docker-registry docker-swarm dropbox-lansync elasticsearch freeipa-ldap freeipa-ldaps freeipa-replication freeipa-trust ftp ganglia-client ganglia-master git gre high-availability http https imap imaps ipp ipp-client ipsec irc ircs iscsi-target jenkins kadmin kerberos kibana klogin kpasswd kprop kshell ldap ldaps libvirt libvirt-tls managesieve mdns minidlna mongodb mosh mountd ms-wbt mssql murmur mysql nfs nfs3 nmea-0183 nrpe ntp openvpn ovirt-imageio ovirt-storageconsole ovirt-vmconsole pmcd pmproxy pmwebapi pmwebapis pop3 pop3s postgresql privoxy proxy-dhcp ptp pulseaudio puppetmaster quassel radius redis rpc-bind rsh rsyncd samba samba-client sane sip sips smtp smtp-submission smtps snmp snmptrap spideroak-lansync squid ssh syncthing syncthing-gui synergy syslog syslog-tls telnet tftp tftp-client tinc tor-socks transmission-client upnp-client vdsm vnc-server wbem-https xmpp-bosh xmpp-client xmpp-local xmpp-server zabbix-agent zabbix-server
 ```
 
+プロトコル名の場合もあれば、使用したいソフトウェアの名称で定義されている場合もあります。
+
 ### 許可サービスの取り消し
-許可されているサービスを停止するには、\-\-remove-serviceオプションを使います。
+許可されているサービスを取り消しすることもできます。
 
 ```
 $ sudo firewall-cmd --remove-service=imap
 success
 ```
 
+この設定も一時的なもので、システムの再起動時に許可したくない場合には、次の設定の保存が必要です。
+
 ### ファイアウォール設定の保存
-\-\-add-service、\-\-remove-serviceなどで行ったファイアウォールルールの変更は、一時的なものです。そのため、再起動をすると失われてしまいます。再起動後も設定を有効にするには、次のように\-\-runtime-to-permanentオプションを使って、現在の設定を保存します。
+上記の方法で行ったファイアウォールルールの変更は、一時的なものです。そのため、再起動をすると失われてしまいます。再起動後も設定を有効にするには、現在の設定を保存します。
 
 ```
 $ sudo firewall-cmd --runtime-to-permanent
