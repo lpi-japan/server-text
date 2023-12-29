@@ -321,7 +321,7 @@ admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 AlmaLinuxのファイアウォール機能はfirewalldによって管理されています。firewalldでは、ネットワークインターフェースへのパケットの受信の許可、拒否のルールを管理しています。firewalldの設定は、firewall-cmdコマンドで行います。
 
 ### ファイアウォール設定の確認
-許可されているサービスを調べるには、`--list-services`オプションを使います。
+許可されているサービスを調べるには、```--list-services```オプションを使います。
 
 ```
 $ sudo firewall-cmd --list-services
