@@ -321,7 +321,7 @@ admin@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 AlmaLinuxのファイアウォール機能はfirewalldによって管理されています。firewalldでは、ネットワークインターフェースへのパケットの受信の許可、拒否のルールを管理しています。firewalldの設定は、firewall-cmdコマンドで行います。
 
 ### ファイアウォール設定の確認
-許可されているサービスを調べるには、----list-servicesオプションを使います。
+許可されているサービスを調べるには、\-\-list-servicesオプションを使います。
 
 ```
 $ sudo firewall-cmd --list-services
@@ -329,7 +329,7 @@ cockpit dhcpv6-client http imap pop3 smtp ssh
 ```
 
 ### 許可サービスの追加
-許可サービスを追加するには、次のように---add-serviceオプションを使います。以下の例では、imapサービスを許可しています。
+許可サービスを追加するには、次のように\-\-add-serviceオプションを使います。以下の例では、imapサービスを許可しています。
 
 ```
 $ sudo firewall-cmd --add-service=imap
@@ -344,7 +344,7 @@ $ sudo firewall-cmd --reload
 ```
 
 ### 設定可能なサービスの確認
-設定可能なサービスは、\ -\ -get-servicesオプションで確認できます。
+設定可能なサービスは、\-\-get-servicesオプションで確認できます。
 
 ```
 $ sudo firewall-cmd --get-services
@@ -352,7 +352,7 @@ RH-Satellite-6 amanda-client amanda-k5-client bacula bacula-client bgp bitcoin b
 ```
 
 ### 許可サービスの取り消し
-許可されているサービスを停止するには、--remove-serviceオプションを使います。
+許可されているサービスを停止するには、\-\-remove-serviceオプションを使います。
 
 ```
 $ sudo firewall-cmd --remove-service=imap
@@ -360,7 +360,7 @@ success
 ```
 
 ### ファイアウォール設定の保存
---add-service、--remove-serviceなどで行ったファイアウォールルールの変更は、一時的なものです。そのため、再起動をすると失われてしまいます。再起動後も設定を有効にするには、次のように--runtime-to-permanentオプションを使って、現在の設定を保存します。
+\-\-add-service、\-\-remove-serviceなどで行ったファイアウォールルールの変更は、一時的なものです。そのため、再起動をすると失われてしまいます。再起動後も設定を有効にするには、次のように\-\-runtime-to-permanentオプションを使って、現在の設定を保存します。
 
 ```
 $ sudo firewall-cmd --runtime-to-permanent
