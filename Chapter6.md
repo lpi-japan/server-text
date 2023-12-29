@@ -323,7 +323,7 @@ host1でuser1というアカウントを作成します。このアカウント�
 ```
 [admin@host1 ~]$ sudo useradd user1
 [admin@host1 ~]$ sudo passwd user1
-ユーザー user1 のパスワードを変更。
+user1ユーザーのパスワードを変更。
 新しいパスワード: userpass ← 入力文字は非表示
 正しくないパスワード: このパスワードは辞書チェックに失敗しました - 辞書の単語に基づいています
 新しいパスワードを再入力してください: userpass ← 入力文字は非表示
@@ -336,7 +336,7 @@ host2でuser2というアカウントを作成します。このアカウント�
 ```
 [admin@host2 ~]$ sudo useradd user2
 [admin@host2 ~]$ sudo passwd user2
-ユーザー user2 のパスワードを変更。
+user2ユーザーのパスワードを変更。
 新しいパスワード: userpass ← 入力文字は非表示
 正しくないパスワード: このパスワードは辞書チェックに失敗しました - 辞書の単語に基づいています
 新しいパスワードを再入力してください: userpass ← 入力文字は非表示

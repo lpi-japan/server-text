@@ -191,7 +191,7 @@ Last login: Sat Dec  2 11:44:55 2023
 [use1@host1 ~]$ exit ← リモートログインを修了
 ログアウト
 Connection to localhost closed.
-[admin@host1 ~]$ ← 元のユーザーadminに復帰
+[admin@host1 ~]$ ← 元のadminユーザーに復帰
 ```
 
 ### 公開鍵による認証
@@ -207,7 +207,7 @@ ssh-keygenコマンドを使用して一対の公開鍵（id_rsa.pub）と秘密
 秘密鍵には不正利用を防止するためのパスフレーズを設定します。接続時にパスフレーズを正しく入力できないと、秘密鍵は利用できないので、公開鍵認証による接続はできません。このパスフレーズはSSHクライアント側で秘密鍵に対して処理されるので、ネットワーク上には情報は流れません。
 
 ```
-[admin@host1 ~]$ su - user1 ← ユーザーuser1に切り替え
+[admin@host1 ~]$ su - user1 ← user1ユーザーに切り替え
 パスワード:userpass ← user1のパスワードを入力（非表示）
 最終ログイン: 2023/12/05 (火) 11:46:38 JST 日時 pts/1
 [user1@host1 ~]$ ssh-keygen ← 鍵形式を省略したのでRSA形式で鍵を生成
