@@ -664,7 +664,7 @@ ISOイメージが自動マウントされたマウントポイント（ディ�
 
 ```
 $ mount | grep dvd
-/dev/sr0 on /run/media/admin/AlmaLinux-9-3-x86_64-dvd type iso9660 (ro,nosuid,nodev,relatime,nojoliet,check=s,map=n,blocksize=2048,uid=1000,gid=1000,dmode=500,fmode=400,uhelper=udisks2)
+/dev/sr0 on /run/media/admin/AlmaLinux-9-3-x86_64-dvd type iso9660 (ro,nosuid,nodev,relatime,nojoliet,check=s,map=n,blocksize=2048,uid=1000, gid=1000,dmode=500,fmode=400,uhelper=udisks2)
 ```
 
 ISOイメージはISO9660ファイル形式として「/run/media/ユーザー名」以下にマウントされていることが分かります。
