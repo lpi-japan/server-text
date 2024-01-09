@@ -174,7 +174,13 @@ LinuCの出題範囲策定や試験開発は、実際に現場で活躍してい
 ### LinuCシステムアーキテクト {.unlisted .unnumbered}
 オンプレ／クラウド、物理／仮想化を含むシステムのライフサイクル全体を俯瞰して最適なアーキテクチャを設計・構築ができる上級エンジニアの証明（ITSSレベル4相当のスキルレベル）
 
-LinuCの詳細については、以下のQRコードから参照してください。
+\pagebreak
+LinuCの詳細については、以下のWebサイトを参照してください。
+
+```
+https://linuc.org/about/01.html
+```
+
 
 ![https://linuc.org/about/01.html](image/Ch0/QRaboutLinuC.png){width=25%}
 
