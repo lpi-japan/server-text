@@ -354,7 +354,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /u
 ```
 
 ### ファイアウォールの自動設定
-OS起動時にファイアウォールを自動的に設定するようにするにはfirewall-cmdに--permanentオプションを付けて実行します。--permanentオプションを付けて実行した場合、ファイアウォールの設定に即座には反映されないので、firewall-cmdコマンドを--reloadオプションをつけて実行し、変更を反映させる必要があります。
+OS起動時にファイアウォールを自動的に設定するようにするにはfirewall-cmdにpermanentオプションを付けて実行します。permanentオプションを付けて実行した場合、ファイアウォールの設定に即座には反映されないので、firewall-cmdコマンドをreloadオプションをつけて実行し、変更を反映させる必要があります。
 
 ```
 $ sudo firewall-cmd --add-service=http --zone=public --permanent
