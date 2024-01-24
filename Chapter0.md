@@ -152,7 +152,7 @@ https://linuc.org/textbooks/server/
 特定非営利活動法人エルピーアイジャパン（LPI-Japan）事務局  
 〒100-0011 東京都千代田区内幸町2-1-1 飯野ビルディング9階  
 TEL：03-6205-7025  
-E-Mail：info@lpi.or.jp  
+E-Mail：info@lpi.or.jp
 
 \pagebreak
 ## Linux技術者認定「LinuC（リナック）」のご紹介 {.unnumbered}
