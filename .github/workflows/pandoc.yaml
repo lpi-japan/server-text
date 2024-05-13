@@ -19,7 +19,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.github_token }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: list-files
         run: echo "chapter=$(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//')" >> "$GITHUB_OUTPUT"
         shell: bash
@@ -33,7 +33,7 @@ jobs:
     container:
       image: pandoc/core:3.1.1.0
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: list-items
         run: cat $(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//') | sed 's/^####.*/#& {-}/' > guide.md
         shell: sh
