@@ -5,14 +5,13 @@ on:
         required: true
         type: string
 
-defaults:
-  run:
-    shell: sh
-    working-directory: ${{ inputs.working-directory }}
-
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+        working-directory: ${{ inputs.working-directory }}
     container:
       image: ghcr.io/lpi-japan/server-text:latest
       credentials:
@@ -29,6 +28,10 @@ jobs:
           path: guide.pdf
   build-epub:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: sh
+        working-directory: ${{ inputs.working-directory }}
     container:
       image: pandoc/core:3.1.1.0
     steps:
