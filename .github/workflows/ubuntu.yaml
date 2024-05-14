@@ -7,7 +7,7 @@ on:
       - feature/*
     paths:
       - ubuntu/Chapter*.md
-      - ubuntu/image/*
+      - ubuntu/image/**
       - listing.tex
       - .github/workflows/pandoc.yaml
       - .github/workflows/ubuntu.yaml
