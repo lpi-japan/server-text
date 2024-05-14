@@ -25,7 +25,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: guide.pdf
-          path: guide.pdf
+          path: ${{ inputs.working-directory }}/guide.pdf
   build-epub:
     runs-on: ubuntu-latest
     defaults:
@@ -42,4 +42,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: guide.epub
-          path: guide.epub
+          path: ${{ inputs.working-directory }}/guide.epub
