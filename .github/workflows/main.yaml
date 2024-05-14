@@ -6,7 +6,7 @@ on:
       - main
       - feature/*
     paths:
-      - ubuntu/Chapter*.md
+      - main/Chapter*.md
       - listing.tex
       - .github/workflows/pandoc.yaml
       - .github/workflows/main.yaml
