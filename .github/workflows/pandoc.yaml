@@ -19,12 +19,12 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.github_token }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: list-files
         run: echo "chapter=$(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//')" >> "$GITHUB_OUTPUT"
         shell: bash
       - run: pandoc -o guide.pdf -d config.yaml ${{ steps.list-files.outputs.chapter }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: guide.pdf
           path: guide.pdf
@@ -33,12 +33,12 @@ jobs:
     container:
       image: pandoc/core:3.1.1.0
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: list-items
         run: cat $(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//') | sed 's/^####.*/#& {-}/' > guide.md
         shell: sh
       - run: /usr/bin/awk 'BEGIN{go=0;}{ if (go==1){print;} else {if($$0 ~ /^#/) { go=1;print;}}}' guide.md | pandoc -t epub3 -F pandoc-crossref -o guide.epub -N -M "crossrefYaml=crossref.yaml" --metadata-file=metadata.yaml --epub-cover-image=image/Cover/cover.png --css=epub.css
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: guide.epub
           path: guide.epub
