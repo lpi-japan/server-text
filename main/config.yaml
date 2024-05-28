@@ -8,8 +8,7 @@ filters:
 
 variables:
   documentClass: ltjarticle
-  #mainfont: TakaoPGothic
-  mainfont: IPAGothic
+  mainfont: Harano Aji Gothic
 
 toc: true
 
@@ -18,7 +17,7 @@ toc-depth: 3
 highlight-style: tango
 
 include-in-header:
-  - ../listing.tex
+  - listing.tex
 
 
 # https://pandoc-doc-ja.readthedocs.io/ja/latest/users-guide.html#options-affecting-specific-writers-1
