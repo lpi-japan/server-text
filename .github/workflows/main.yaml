@@ -7,7 +7,7 @@ on:
       - feature/*
     paths:
       - main/Chapter*.md
-      - main/image/*
+      - main/image/**
       - listing.tex
       - .github/workflows/pandoc.yaml
       - .github/workflows/main.yaml
