@@ -173,17 +173,6 @@ WebブラウザでWebページを表示させるとき、DNSキャッシュサ�
 ## DNSコンテンツサーバーの設定
 DNSコンテンツサーバーのソフトウェアとしてBINDをインストールして、各ゾーンの設定を行います。
 
-### chroot機能を利用したBINDのセキュリティ
-chroot機能はセキュリティを高めるために、プログラムに対して特定のディレクトリ以外にはアクセスできないようにするための機能です。
-
-chroot機能を使ってBINDを実行すると、bindプロセスは/var/named/chrootディレクトリを/（ルート）ディレクトリとして動作します。たとえば、bindプロセスが/etcディレクトリにアクセスしても、実際にアクセスされるのは/var/named/chroot/etcディレクトリになるので、パスワードその他のセキュリティに関する情報にアクセスできません。
-
-![chroot機能](image/Ch5/chroot.png){width=70%}
-
-DNSという重要なサービスを提供している関係上、BINDはインターネット上の数多くのサーバーで実行されており、セキュリティの攻撃を受けやすくなっています。万が一、BINDがセキュリティ攻撃を受けて乗っ取られてしまったとしても、chroot機能のおかげでbindプロセスがアクセスできるディレクトリを限定することができるので、システムのその他のファイルへのアクセスを妨げ、被害を最小限に食い止めることができます。
-
-AlmaLinuxでは、シンボリックリンクやマウントなどのLinuxの機能を使って、chroot機能を使った場合でもほとんど管理方法が変わらないように工夫されています。そのため、本書でもchroot機能を有効にします。追加でbind-chrootパッケージのインストールが必要だったり、systemctlコマンドで扱うユニット名（named-chroot）が異なる点に注意してください。
-
 ### ゾーンを設定する流れ
 ゾーンを設定するために必要な作業は以下の手順となります。
 
@@ -194,11 +183,10 @@ AlmaLinuxでは、シンボリックリンクやマウントなどのLinuxの機
 1. BINDの起動を行います。
 1. BINDの自動起動の設定を行います。
 1. ファイアウォールの設定を変更します。
-1. NATネットワークを無効化します。
 1. /etc/resolv.confの参照するDNSサーバーの設定を確認します。
 1. 名前解決の確認を行います。
 
-BINDの基本的な設定ファイルとして/etc/bind/named.confファイルがあります。/etc/bind/named.confにBINDの基本的な設定とゾーンの定義を追加します。さらにゾーンの詳細を定義するゾーンファイルを/var/namedディレクトリに作ります。
+BINDの基本的な設定ファイルとして/etc/bind9/named.confファイルがあります。/etc/bind/named.confにBINDの基本的な設定とゾーンの定義を追加します。さらにゾーンの詳細を定義するゾーンファイルを/etc/bind9ディレクトリに作ります。
 
 ## BINDのインストール
 BINDのインストールには、bind9パッケージとbind9-utilsパッケージが必要です。必要なパッケージがインストールされていないときには、aptコマンドでインストールします。
@@ -257,7 +245,7 @@ No VM guests are running outdated hypervisor (qemu) binaries on this host.
 ```
 
 ## /etc/named.confの基本設定
-/etc/named.confファイルにBINDをDNSコンテンツサーバーとして動作させる基本設定を行います。
+/etc/bind/named.confファイルにBINDをDNSコンテンツサーバーとして動作させる基本設定を行います。
 
 ```
 ubuntu@host1examplejp:~$ sudo vi /etc/bind/named.conf
@@ -306,13 +294,6 @@ www     A       192.168.56.101
 mail    A       192.168.56.101
 ```
 
-
-
-
-
-
-
-
 ```
 ubuntu@host1examplejp:~$ sudo cat /etc/bind/named.conf.options
 options {
@@ -351,27 +332,28 @@ zone "example1.jp" IN {
 ```
 
 ## ゾーンファイルの準備
-ゾーンファイルのテンプレートとなる/var/named/named.emptyファイルをコピーします。新たに作成するファイルのファイル名はゾーン定義のfile句で指定したファイル名を指定します。example1.jpゾーンであればexample1.jp.zoneとなります。また、コピー元と同じ所有権（root:named）、パーミッション（640）にするため、cpコマンドに-pオプションを付けて実行します。
+ゾーンファイルのテンプレートとなる/etc/bind/db.emptyファイルをコピーします。新たに作成するファイルのファイル名はゾーン定義のfile句で指定したファイル名を指定します。example1.jpゾーンであればexample1.jp.zoneとなります。また、所有権をroot:bindとします。
 
 ```
-[admin@host1 ~]$ sudo cp -p /var/named/named.empty /var/named/example1.jp.zone
-[admin@host1 ~]$ sudo ls -l /var/named/example1.jp.zone
--rw-r-----. 1 root named 152 11月  8 01:28 /var/named/example1.jp.zone
+ubuntu@host1examplejp:/etc/bind$ sudo cp /etc/bind/db.empty /etc/bind/example1.jp.zone
+ubuntu@host1examplejp:/etc/bind$ sudo chown root:bind /etc/bind/example1.jp.zone
+ubuntu@host1examplejp:/etc/bind$ sudo ls -l /etc/bind/example1.jp.zone
+-rw-r--r--   1 root bind  102 Jul  8 14:10 named.conf.my-zones
 ```
 
 \pagebreak
 ## ゾーンファイルの修正
-コピーした/var/named/example1.jp.zoneファイルを修正します。
+コピーした/etc/bind/example1.jp.zoneファイルを修正します。
 
 ```
-[admin@host1 ~]$ sudo vi /var/named/example1.jp.zone
+ubuntu@host1examplejp:/etc/bind$ sudo vi /etc/bind/example1.jp.zone
 ```
 
 ```
 $TTL 3H
 $ORIGIN example1.jp.
 @       IN SOA  host1 root (
-                                        2023100901       ; serial
+                                        2024070801       ; serial
                                         1D      ; refresh
                                         1H      ; retry
                                         1W      ; expire
@@ -408,7 +390,7 @@ Aレコードで名前とIPアドレスの対応を定義する箇所は、左�
 設定ファイルとゾーンファイルの作成が終わったら、書式の確認を行います。設定が多岐に渡るため、間違いがないかを確認するためのコマンドを使って確認します。
 
 ### 設定ファイルの書式確認と注意点
-/etc/named.confファイルの編集時、括弧やセミコロンの不足などは良くある設定ミスです。named-checkconfコマンドで/etc/named.confに間違いがないか確認しましょう。
+/etc/bind/named.confファイルの編集時、括弧やセミコロンの不足などは良くある設定ミスです。named-checkconfコマンドで/etc/bind/named.confに間違いがないか確認しましょう。
 
 ```
 ubuntu@host1examplejp:~$ named-checkconf /etc/bind/named.conf
@@ -485,13 +467,17 @@ Activeの欄に「active (running)」と表示されていることを確認し�
 システム起動時にBINDが自動的に起動されるように設定しておきましょう。systemctl enableコマンドで設定します。
 
 ```
-[admin@host1 ~]$ sudo systemctl enable named-chroot
-Created symlink /etc/systemd/system/multi-user.target.wants/named-chroot.service → /usr/lib/systemd/system/named-chroot.service.
+ubuntu@host1examplejp:/etc/bind$ sudo systemctl enable named
+Synchronizing state of named.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable named
 ```
 
 自動起動になっているかは、次のように確認できます。
 
 ```
+ubuntu@host1examplejp:/etc/bind$ sudo systemctl is-enabled named
+enabled
+
 ubuntu@host1examplejp:~$ sudo systemctl is-enabled bind9
 alias
 ```
@@ -525,16 +511,16 @@ To                         Action      From
 53/udp (v6)                ALLOW       Anywhere (v6)
 ```
 
-## 参照するDNSサーバーの設定とNATネットワークの停止
-DNSサーバーによる名前解決を確認する前に、参照するDNSサーバーの設定について確認、変更します。また、変更にあたっては、実習環境で使用している仮想マシンのNATネットワークの停止を行います。
+## 参照するDNSサーバーの設定
+DNSサーバーによる名前解決を確認する前に、参照するDNSサーバーの設定について確認、変更します。
 
 ### /etc/resolv.confによる参照DNSサーバーの設定
 Linuxで名前解決を行うために参照するDNSサーバーは/etc/resolv.confに記述されています。
 
 ```
-ubuntu@host1examplejp:~$ sudo vi /etc/resolv.conf
+ubuntu@host1example1jp:~$ sudo vi /etc/resolv.conf
 
-ubuntu@host1examplejp:~$ sudo cat /etc/resolv.conf
+ubuntu@host1example1jp:$ sudo cat /etc/resolv.conf
 nameserver 192.168.56.101
 search example1.jp
 ```
@@ -544,15 +530,13 @@ search example1.jp
 ### エディタで/etc/resolv.confを修正すると？
 エディタで/etc/resolv.confを修正すると、設定は即時有効となります。
 
-ただし、ファイルの先頭行に「# Generated by NetworkManager」と書かれている通り、/etc/resolv.confはNetworkManagerが自動的に生成しています。そのため、システムの再起動などによって再生成されるとエディタでの変更は破棄されます。一時的に動作を変更したいような場合にはよいですが、継続して設定を適用したい場合には大元となるネットワークの設定を変更する必要があります。本章の最後では、ネットワークインターフェースの設定を変更する方法を解説しています。
-
-以下の手順ではNetworkManagerを操作して設定ファイルを再生成しています。ただし、この方法も継続的な変更ではなく、システムが再起動されるとNATネットワークのネットワークインターフェースが有効化され、変更は破棄され元に戻ります。
+ただし、システムの再起動などによって修正変更は破棄されます。一時的に動作を変更したいような場合にはよいですが、継続して設定を適用したい場合には大元となるネットワークの設定を変更する必要があります。本章の最後では、ネットワークインターフェースの設定を変更する方法を解説しています。
 
 ### ネットワークインターフェースの名前を確認
 まず、ネットワークインターフェースの名前を確認します。
 
 ```
-ubuntu@host1examplejp:~$ ip -4 a
+ubuntu@host1example1jp:/etc/bind$ ip -4 a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
@@ -566,41 +550,72 @@ ubuntu@host1examplejp:~$ ip -4 a
 
 この例では、IPアドレス「10.0.2.15」からNATネットワークのネットワークインターフェースは「enp0s3」と分かります。
 
-### NATネットワークを停止する
-NATネットワークのネットワークインターフェースenp0s3を停止します。NetworkManagerをコマンドラインから操作するnmcliコマンドを使用します。
 
+
+
+
+
+
+### 起動時に読み込まれるresolv.confの設定の更新
+
+OS起動時に/etc/resolv.confは、プログラムsystemd-resolvedにより/run/systemd/resolve/stub-resolv.confのリンクとなっています。
+その為、/run/systemd/resolve/resolv.confを編集しリンクを貼り直します。
 ```
-[admin@host1 ~]$ sudo nmcli connection down enp0s3
-接続 'enp0s3' が正常に非アクティブ化されました (D-Bus アクティブパス: /org/freedesktop/NetworkManager/ActiveConnection/2)
+ubuntu@host1example1jp:~$ sudo ls -l /etc/resolv.conf
+lrwxrwxrwx 1 root root 32 Aug 10 13:49 /etc/resolv.conf -> /run/systemd/resolve/stub-resolv.conf
+
+ubuntu@host1example1jp:~$ sudo vi /run/systemcd/resolve/resolv.conf
+
+ubuntu@host1example1jp:~$ sudo cat /run/systemcd/resolve/resolv.conf
+# Do not edit.
+#
+# This file might be symlinked as /etc/resolv.conf. If you're looking at
+# /etc/resolv.conf and seeing this text, you have followed the symlink.
+#
+# This is a dynamic resolv.conf file for connecting local clients directly to
+# all known uplink DNS servers. This file lists all configured search domains.
+#
+# Third party programs should typically not access this file directly, but only
+# through the symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a
+# different way, replace this symlink by a static file or a different symlink.
+#
+# See man:systemd-resolved.service(8) for details about the supported modes of
+# operation for /etc/resolv.conf.
+
+nameserver 192.168.56.101
+search example1.jp
+
+ubuntu@host1example1jp:~$ sudo ln -fs /run/systemcd/resolve/resolv.conf /etc/resolv.conf
+
+ubuntu@host1example1jp:~$ sudo systemctl reboot
 ```
 
 ### /etc/resolv.confの変更の確認
-NetworkManagerは設定が変更される度に/etc/resolv.confを再生成します。変更されたことを確認します。
+起動後、/etc/resolv.confが変更されたことを確認します。
 
 ```
-[admin@host1 ~]$ cat /etc/resolv.conf
-# Generated by NetworkManager
+ubuntu@host1example1jp:/etc/bind$ cat /etc/resolv.conf
+# This is /run/systemd/resolve/resolv.conf managed by man:systemd-resolved(8).
+# Do not edit.
+#
+# This file might be symlinked as /etc/resolv.conf. If you're looking at
+# /etc/resolv.conf and seeing this text, you have followed the symlink.
+#
+# This is a dynamic resolv.conf file for connecting local clients directly to
+# all known uplink DNS servers. This file lists all configured search domains.
+#
+# Third party programs should typically not access this file directly, but only
+# through the symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a
+# different way, replace this symlink by a static file or a different symlink.
+#
+# See man:systemd-resolved.service(8) for details about the supported modes of
+# operation for /etc/resolv.conf.
+
+nameserver 192.168.56.101 ※仮想マシンが存在するNW環境のDHCP機能により、その他nameserver設定が表示されることがあります。
 search example1.jp
-nameserver 192.168.56.101
 ```
 
 このように、参照するDNSサーバーの設定が自分自身だけになりました。
-
-### NATネットワークの接続の有効化
-再度インターネットなどに接続する必要が出た場合には、nmcliコマンドでネットワークインターフェースを有効化する必要があります。
-
-```
-[admin@host1 ~]$ sudo nmcli connection up enp0s3
-接続が正常にアクティベートされました (D-Bus アクティブパス: /org/freedesktop/NetworkManager/ActiveConnection/6)
-```
-
-インターネットに接続できるように戻ったことを確認したら、再度NATネットワークを無効化しておきます。
-
-```
-[admin@host1 ~]$ sudo nmcli connection down enp0s3
-```
-
-ただし、この無効化はOSが再起動されるとNATネットワークが有効になり元に戻ることに注意してください。
 
 ## 名前解決の確認
 BINDを起動し、NATネットワークを無効化したら、名前解決が正常に行われるかを確認します。名前解決の確認にはdigコマンドが使用できます。
@@ -609,7 +624,7 @@ BINDを起動し、NATネットワークを無効化したら、名前解決が�
 digコマンドでホスト名からIPアドレスが解決されることを確認します。digコマンドの引数に名前解決するホスト名を指定して実行します。
 
 ```
-ubuntu@host1examplejp:~$ dig host1.example1.jp
+ubuntu@host1example1jp:/etc/bind$ dig host1.example1.jp
 
 ; <<>> DiG 9.18.24-0ubuntu5-Ubuntu <<>> host1.example1.jp
 ;; global options: +cmd
@@ -642,7 +657,7 @@ host1.example1.jpのAレコードが正しく設定されていることが確�
 同様に、www.example1.jpやmail.example1.jpも確認してみます。
 
 ```
-[admin@host1 ~]$ dig www.example1.jp
+ubuntu@host1example1jp:/etc/bind$ dig www.example1.jp
 （略）
 ;; QUESTION SECTION:
 ;www.example1.jp.		IN	A
@@ -653,7 +668,7 @@ www.example1.jp.	10800	IN	A	192.168.56.101
 ```
 
 ```
-[admin@host1 ~]$ dig mail.example1.jp
+ubuntu@host1example1jp:/etc/bind$ dig mail.example1.jp
 （略）
 ;; QUESTION SECTION:
 ;mail.example1.jp.		IN	A
@@ -667,7 +682,7 @@ mail.example1.jp.	10800	IN	A	192.168.156.101
 ドメイン名の後にnsを指定すると、ドメインに登録されているNSレコード(ネームサーバーの情報)と、NSレコードで返されたホストのAレコードが表示されます。
 
 ```
-[admin@host1 ~]$ dig example1.jp ns
+ubuntu@host1example1jp:/etc/bind$ dig example1.jp ns
 （略）
 ;; QUESTION SECTION:
 ;example1.jp.			IN	NS
@@ -684,7 +699,7 @@ host1.example1.jp.	10800	IN	A	192.168.156.101
 ドメイン名の後にmxを指定すると、ドメインに登録されているMXレコード(メールサーバーの情報)と、MXレコードで返されたホストのAレコードが表示されます。
 
 ```
-[admin@host1 ~]$ dig example1.jp mx
+ubuntu@host1example1jp:/etc/bind$ dig example1.jp mx
 （略）
 ;; QUESTION SECTION:
 ;example1.jp.			IN	MX
@@ -701,7 +716,7 @@ mail.example1.jp.	10800	IN	A	192.168.156.101
 digコマンドの引数に「@IPアドレス」を指定することで、一時的に参照するDNSサーバーを変更することができます。DNSサーバーの動作が正しくないような場合の原因究明に利用できます。
 
 ```
-[admin@host1 ~]$ dig www.example1.jp @192.168.56.101
+ubuntu@host1example1jp:/etc/bind$ dig www.example1.jp @192.168.56.101
 ```
 
 ## example2.jpサーバーとjpサーバーの追加
@@ -751,7 +766,6 @@ $ ping 192.168.56.101
 1. BINDの起動を行います。
 1. BINDの自動起動の設定を行います。
 1. ファイアウォールの設定を変更します。
-1. NATネットワークを無効化します。
 1. /etc/resolv.confの参照するDNSサーバーの設定を確認します。
 1. 名前解決の確認を行います。
 
@@ -808,19 +822,11 @@ include "/etc/named.root.key";
 ```
 
 ### ゾーン定義ファイルの作成
-ゾーン定義ファイルを作成します。example1.jp.zoneをexample2.jp.zoneとしてコピーします。-pオプションを忘れないようにしてください。
+example1.jp.zoneと同様にゾーン定義ファイルを作成します。
+ゾーン名が「example2.jp」、ホスト名が「host2」、IPアドレスが「192.168.56.102」になっている点に注意が必要です。
 
 ```
-[admin@host2 ~]$ sudo cp -p /var/named/named.empty /var/named/example2.jp.zone
-[admin@host2 ~]$ sudo ls -l /var/named/example2.jp.zone
--rw-r-----. 1 root named 152 11月  8 01:28 /var/named/example2.jp.zone
-```
-
-### ゾーンファイルの修正
-コピーした/var/named/example2.jp.zoneファイルを修正します。ゾーン名が「example2.jp」、ホスト名が「host2」、IPアドレスが「192.168.56.102」になっている点に注意が必要です。
-
-```
-[admin@host2 ~]$ sudo vi /var/named/example2.jp.zone
+ubuntu@host2example2jp:/etc/bind$ sudo vi /etc/bind/example2.jp.zone
 ```
 
 ```
@@ -844,48 +850,43 @@ mail    A       192.168.56.102
 example2.jpゾーンの設定が完了したら、BINDを起動します。
 
 ```
-[admin@host2 ~]$ sudo systemctl start named-chroot
+ubuntu@host2example2jp:/etc/bind$ sudo systemctl start bind9
 ```
 
 ### 自動起動とファイアウォールの設定
 自動起動の設定や、ファイアウォールの設定を行います。
-
 ```
-[admin@host2 ~]$ sudo systemctl enable named-chroot
-[admin@host2 ~]$ sudo firewall-cmd --add-service=dns --zone=public --permanent
-[admin@host2 ~]$ sudo firewall-cmd --reload
-```
-
-### NATネットワークを停止する
-NATネットワークのネットワークインターフェースenp0s3を停止します。
-
-```
-[admin@host2 ~]$ sudo nmcli connection down enp0s3
-
+ubuntu@host2example2jp:/etc/bind$ sudo systemctl enable named
+ubuntu@host2example2jp:/etc/bind$ sudo systemctl is-enabled named
+ubuntu@host2example2jp:/etc/bind$ sudo systemctl is-enabled bind9
 ```
 
-/etc/resolv.confが変更されていることを確認します。
-
 ```
-[admin@host2 ~]$ cat /etc/resolv.conf
-# Generated by NetworkManager
-search example2.jp
-nameserver 192.168.56.102
+ubuntu@host2example2jp:/etc/bind$ sudo ufw allow 53/tcp
+ubuntu@host2example2jp:/etc/bind$ sudo ufw allow 53/udp
+ubuntu@host2example2jp:/etc/bind$ sudo ufw status
 ```
 
 ### 名前解決の確認
 名前解決を確認します。確認方法はexample1.jpゾーンを設定した際に行ったdigコマンドと同様です。
+/etc/resolv.confが変更されていることを確認します。
 
 ```
-[admin@host2 ~]$ dig host2.example2.jp
+ubuntu@host2example2jp:/etc/bind$ cat /etc/resolv.conf
+search example2.jp
+nameserver 192.168.56.102 ※仮想マシンが存在するNW環境のDHCP機能により、その他nameserver設定が表示されることがあります。
 ```
 
 ```
-[admin@host2 ~]$ dig example2.jp ns
+ubuntu@host2example2jp:/etc/bind$ dig host2.example2.jp
 ```
 
 ```
-[admin@host2 ~]$ dig example2.jp mx
+ubuntu@host2example2jp:/etc/bind$ dig example2.jp ns
+```
+
+```
+ubuntu@host2example2jp:/etc/bind$ dig example2.jp mx
 ```
 
 ## 上位jpゾーンのDNSコンテンツサーバーの設定
@@ -898,7 +899,6 @@ example1.jpゾーン、example2.jpゾーンの設定が完了したら、上位�
 1. BINDの起動を行います。
 1. BINDの自動起動の設定を行います。
 1. ファイアウォールの設定を変更します。
-1. NATネットワークを無効化します。
 1. /etc/resolv.confの参照するDNSサーバーの設定を確認します。
 1. 名前解決の確認を行います。
 
@@ -955,28 +955,19 @@ include "/etc/named.root.key";
 ```
 
 ### ゾーン定義ファイルの作成
-ゾーン定義ファイルを作成します。example1.jp.zoneをjp.zoneとしてコピーします。-pオプションを忘れないようにしてください。
-
-```
-[admin@host0 ~]$ sudo cp -p /var/named/named.empty /var/named/jp.zone
-[admin@host0 ~]$ sudo ls -l /var/named/jp.zone
--rw-r-----. 1 root named 152 11月  8 01:28 /var/named/jp.zone
-```
-
-### ゾーンファイルの修正
-コピーした/var/named/jp.zoneファイルを修正します。ゾーン名が「jp」、ホスト名が「host0」、IPアドレスが「192.168.56.100」になっている点に注意が必要です。メールやWebなどには使用しないので、MXレコードやwww、mailなどのAレコードは作成しません。
+example1.jp.zoneと同様にゾーン定義ファイルを作成します。ゾーン名が「jp」、ホスト名が「host0」、IPアドレスが「192.168.56.100」になっている点に注意が必要です。メールやWebなどには使用しないので、MXレコードやwww、mailなどのAレコードは作成しません。
 
 サブドメインとして権限の委譲を行ったexample1.jpゾーンとexample2.jpゾーンのNSレコード、それぞれのゾーンを管理するDNSコンテンツサーバーを指定するAレコードをグルーレコードとして記述します。
 
 ```
-[admin@host0 ~]$ sudo vi /var/named/jp.zone
+ubuntu@host0jp:/etc/bind$ sudo vi /etc/bind/jp.zone
 ```
 
 ```
 $TTL 3H
 $ORIGIN jp.
 @       IN SOA  host0 root (
-                                        2023100901       ; serial
+                                        2024070801       ; serial
                                         1D      ; refresh
                                         1H      ; retry
                                         1W      ; expire
@@ -994,44 +985,60 @@ host2.example2.jp.     A       192.168.56.102
 jpゾーンの設定が完了したら、BINDを起動します。
 
 ```
-[admin@host0 ~]$ sudo systemctl start named-chroot
+ubuntu@host0jp:/etc/bind$ sudo systemctl start bind9
 ```
 
 ### 自動起動とファイアウォールの設定
 自動起動の設定や、ファイアウォールの設定を行います。
 
 ```
-[admin@host0 ~]$ sudo systemctl enable named-chroot
-[admin@host0 ~]$ sudo firewall-cmd --add-service=dns --zone=public --permanent
-[admin@host0 ~]$ sudo firewall-cmd --reload
+ubuntu@host0jp:/etc/bind$ sudo systemctl enable named
+ubuntu@host0jp:/etc/bind$ sudo ufw allow 53/tcp
+ubuntu@host0jp:/etc/bind$ sudo ufw allow 53/udp
+ubuntu@host0jp:/etc/bind$ sudo ufw status
 ```
 
-### NATネットワークを停止する
-NATネットワークのネットワークインターフェースenp0s3を停止します。
+### 名前解決の確認
+名前解決を確認します。確認方法はexample1.jpゾーンを設定した際に行ったdigコマンドと同様です。
 
 ```
-[admin@host0 ~]$ sudo nmcli connection down enp0s3
-
-```
-
 /etc/resolv.confが変更されていることを確認します。
 
 ```
-[admin@host0 ~]$ cat /etc/resolv.conf
-# Generated by NetworkManager
-search jp
-nameserver 192.168.56.100
+ubuntu@host0jp:/etc/bind$ cat /etc/resolv.conf
+# This is /run/systemd/resolve/stub-resolv.conf managed by man:systemd-resolved(8).
+# Do not edit.
+#
+# This file might be symlinked as /etc/resolv.conf. If you're looking at
+# /etc/resolv.conf and seeing this text, you have followed the symlink.
+#
+# This is a dynamic resolv.conf file for connecting local clients to the
+# internal DNS stub resolver of systemd-resolved. This file lists all
+# configured search domains.
+#
+# Run "resolvectl status" to see details about the uplink DNS servers
+# currently in use.
+#
+# Third party programs should typically not access this file directly, but only
+# through the symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a
+# different way, replace this symlink by a static file or a different symlink.
+#
+# See man:systemd-resolved.service(8) for details about the supported modes of
+# operation for /etc/resolv.conf.
+
+nameserver 192.168.56.100 ※仮想マシンが存在するNW環境のDHCP機能により、その他nameserver設定が表示されることがあります。
+search example1.jp
 ```
 
 ### 名前解決の確認
 名前解決を確認します。example1.jpゾーンとexample2.jpゾーンのDNSコンテンツサーバーを示すグルーレコードが名前解決できるかを確認するため、それぞれのNSレコードを問い合わせます。
 
 ```
-[admin@host0 ~]$ dig example1.jp ns
+ubuntu@host0jp:/etc/bind$ dig example1.jp ns
 ```
 
 ```
-[admin@host0 ~]$ dig example2.jp ns
+ubuntu@host0jp:/etc/bind$ dig example2.jp ns
 ```
 
 ## 相互に名前解決できることを確認
@@ -1042,17 +1049,28 @@ example1.jpゾーンとexample2.jpゾーンを相互に参照できるように�
 
 以下の手順で、host1とhost2の設定をそれぞれ変更します。
 
-1. デスクトップを右クリックし、ポップアップメニューから「設定」を選択します。
-1. 設定画面の左側のメニューから「ネットワーク」を選択します。
-1. 「Ethernet (tnp0s8)」の欄にある歯車のボタンをクリックします。
-1. 接続プロファイルの設定画面が表示されます。
-1. 「IPv4」のタブをクリックします。
-1. DNSサーバーのアドレスをhost0.jpマシンのIPアドレス「192.168.56.100」に変更します。
-1. 「適用」ボタンを押して元の画面に戻ります。
-1. 「Ethernet (tnp0s8)」の欄にあるスイッチを一旦「オフ」に変えます。
-1. 再度「オン」に変えるとDNS設定が変更されます。
+1. netplanの設定ファイルである/etc/netplan/50-cloud-init.yamlにおいて、以下のように編集する
 
-![参照するDNSサーバーのアドレス変更](image/Ch5/nameserver.png){width=70%}
+```
+ubuntu@host1examplejp:/etc/bind$ sudo cat /etc/netplan/50-cloud-init.yaml
+# This file is generated from information provided by the datasource.  Changes
+# to it will not persist across an instance reboot.  To disable cloud-init's
+# network configuration capabilities, write a file
+# /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg with the following:
+# network: {config: disabled}
+network:
+    ethernets:
+        enp0s3:
+            dhcp4: true
+        enp0s8:
+            addresses:
+            - 192.168.56.101/24
+            nameservers:
+                addresses:
+                - 192.168.56.100
+                search: [example1.jp] ← host2の場合は、example2.jpとなる
+    version: 2
+```
 
 設定は/etc/resolv.confが再生成されることで適用されています。ファイルの内容を確認してみてください。
 
@@ -1062,7 +1080,7 @@ digコマンドで、他のドメインのNSレコードやMXレコードを問�
 以下は、host1上で実行して、example2.jpドメインのレコードが名前解決できるかを確認しています。
 
 ```
-[admin@host1 ~]$ dig www.example2.jp
+ubuntu@host1examplejp:/etc/bind$  dig www.example2.jp
 （略）
 ;; QUESTION SECTION:
 ;www.example2.jp.		IN	A

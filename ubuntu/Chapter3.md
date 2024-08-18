@@ -70,7 +70,7 @@ Subnet：192.168.56.0/24
 Address:192.168.56.101
 Gateway:設定しない
 Name servers:192.168.56.101
-Search domains:空欄
+Search domains:example1.jp
 
 | 項目 | インターフェイス名 | 設定値 |
 |------------|---------------|---------------|
