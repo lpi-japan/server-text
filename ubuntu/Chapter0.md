@@ -1,5 +1,5 @@
 ---
-include-before: |
+include-before: 
   # まえがき {.unlisted .unnumbered}
   このたび、特定非営利活動法人エルピーアイジャパンは、Linux技術者教育に利用していただくことを目的とした教材「Linuxサーバー構築標準教科書(Ubuntu版)」（以下、本教科書）を開発し、インターネット上にて公開し、提供することとなりました。
 
