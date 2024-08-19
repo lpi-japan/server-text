@@ -81,6 +81,7 @@ ipコマンドで表示されたloは仮想的なループバックインター�
 ### ネットワークインターフェースの再設定
 
 /etc/netplan/50-cloud-init.yamlを編集します。
+
 ```
 $ sudo cat /etc/netplan/50-cloud-init.yaml
 # This file is generated from information provided by the datasource.  Changes
