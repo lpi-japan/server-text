@@ -342,6 +342,7 @@ Webサーバーを再度起動し、正常にアクセスできるように復�
 ```
 ubuntu@host1examplejp:~$ sudo systemctl start apache2
 ```
+
 ```
 ubuntu@host1examplejp:~$ curl localhost
 ```
@@ -359,6 +360,7 @@ ubuntu@host1examplejp:~$ curl localhost
 ubuntu@host1examplejp:~$ sudo ufw status
 Status: inactive
 ```
+
 ステータスがinactiveとなっており、ufwは有効化されていないことが分かります。
 
 

@@ -264,6 +264,7 @@ include "/etc/bind/named.conf.local";
 include "/etc/bind/named.conf.default-zones";
 include "/etc/bind/named.conf.my-zones";　← 追記設定を記載するファイルを指定
 ```
+
 ```
 ubuntu@host1examplejp:~$ sudo vi /etc/bind/named.conf.my-zones
 
@@ -274,6 +275,7 @@ zone "example1.jp" IN { ← example1.jpゾーンを指定
         allow-update { none; };
 };
 ```
+
 ```
 ubuntu@host1examplejp:~$ sudo vi /etc/bind/example1.jp.zone
 
@@ -549,11 +551,6 @@ ubuntu@host1example1jp:/etc/bind$ ip -4 a
 ```
 
 この例では、IPアドレス「10.0.2.15」からNATネットワークのネットワークインターフェースは「enp0s3」と分かります。
-
-
-
-
-
 
 
 ### 起動時に読み込まれるresolv.confの設定の更新
