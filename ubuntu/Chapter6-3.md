@@ -320,11 +320,11 @@ Retype new password:
 passwd: password updated successfully
 Changing the user information for user1
 Enter the new value, or press ENTER for the default
-        Full Name []:
-        Room Number []:
-        Work Phone []:
-        Home Phone []:
-        Other []:
+Full Name []:
+Room Number []:
+Work Phone []:
+Home Phone []:
+Other []:
 Is the information correct? [Y/n]
 info: Adding new user `user1' to supplemental / extra groups `users' ...
 info: Adding user `user1' to group `users' ...
@@ -346,11 +346,11 @@ Retype new password:
 passwd: password updated successfully
 Changing the user information for user1
 Enter the new value, or press ENTER for the default
-        Full Name []:
-        Room Number []:
-        Work Phone []:
-        Home Phone []:
-        Other []:
+Full Name []:
+Room Number []:
+Work Phone []:
+Home Phone []:
+Other []:
 Is the information correct? [Y/n]
 info: Adding new user `user1' to supplemental / extra groups `users' ...
 info: Adding user `user2' to group `users' ...
@@ -399,3 +399,290 @@ host2はuser2で操作を行います。
 ubuntu@host2example2jp:~$ sudo su - user2
 user2@host2example2jp:~$
 ```
+
+### mailコマンドをMaildir形式に対応させる
+環境変数MAILを変更します。
+host1のuser1、host2のuser2それぞれで実施します。
+
+```
+user1@host1examplejp:~$ echo $MAIL
+/var/mail/user1
+user1@host1examplejp:~$ MAIL=^~/Maildir
+user1@host1examplejp:~$ MAIL=~/Maildir
+user1@host1examplejp:~$ $MAIL
+/home/user1/Maildir
+```
+
+```
+user2@host2example2jp:~$ echo $MAIL
+/var/mail/user2
+user2@host2example2jp:~$ MAIL=^~/Maildir
+user2@host2example2jp:~$ MAIL=~/Maildir
+user2@host2example2jp:~$ $MAIL
+/home/user2/Maildir
+```
+
+### user1@example1.jpからuser2@example2.jpへメール送信
+mailコマンドを使って、host1のuser1からuser2@example2.jpへメールを送信します。
+
+```
+user1@host1example1jp:~$ mail user2@example2.jp ← mailコマンドの引数に宛先のアドレスを指定
+Cc:
+Subject: Test mail from user1 ← Subjectを入力
+This is test mail from user1 ← メッセージ本文を入力
+^D ← メッセージ本文の入力が終わったらCtrl+dを入力
+```
+
+### user2のメール着信確認
+mailコマンドを使って、host2.example2.jpのuser2にメールが届いているかを確認します。
+
+```
+user2@host2exampl2jp:~$ mail
+"/home/user2/Maildir": 1 messages 1 new
+>N   1 user1@host1example Wed Aug 14 11:36  13/415   "Test mail from user1"
+& 1	← 1を入力
+Message  1:
+From user1@mail.example1.jp  Wed Aug 14 11:36:31 2024
+Return-Path: <user1@mail.example1.jp>
+X-Original-To: user2@example2.jp
+Delivered-To: user2@example2.jp
+Date: Wed, 14 Aug 2024 11:36:31 +0900
+To: user2@example2.jp
+Subject: Test mail from user1
+User-Agent: Heirloom mailx 12.5 7/5/10
+Content-Type: text/plain; charset=us-ascii
+From: user1@mail.example1.jp
+Status: R
+
+This is Test Mail from user1
+
+& q	← qを入力
+```
+
+このように、host1.example1.jpからhost2.example2.jpにメールが送られていることがわかります。
+
+反対にuser2@example2.jpからuser1@example1.jpへのメールも送信できることを確認してみましょう。
+
+## メールクライアントソフトでのメールの送受信
+通常のメールサーバーの運用では、メールの利用者はメールクライアントを使用してメールの送受信を行います。送信はSMTP、受信はIMAP4やPOP3をプロトコルとして使用します。
+
+IMAPサーバーを利用してメールを受信できるよう、IMAPサーバーであるDovecotと、メールクライアントとしてThunderbirdをインストールして、メールを送受信してみます。
+
+以下の作業はhost1で行いますが、host2でも設定して双方向でメールのやり取りができるようにしてもよいでしょう。
+
+## Dovecotの設定
+IMAPサーバーとしてDovecotの設定を行います。
+
+今回設定するファイルは/etc/dovecot/dovecot.confと、/etc/dovecot/conf.dディレクトリ以下に分かれている以下のファイルです。
+
+- /etc/dovecot/dovecot.conf（変更不要）
+- /etc/dovecot/conf.d/10-mail.conf
+- /etc/dovecot/conf.d/10-auth.conf
+- /etc/dovecot/conf.d/10-ssl.conf
+
+
+### /etc/dovecot/dovecot.conf（変更不要）
+全体的な設定ファイルです。デフォルトの設定がコメントアウトで記述されています。特に変更は必要ありません。
+
+```
+$ sudo vi /etc/dovecot/dovecot.conf
+（略）
+# Protocols we want to be serving.
+#protocols = imap pop3 lmtp submission	← IMAP/POP3/LMTP/SMTP submissionが使用可能
+
+# A comma separated list of IPs or hosts where to listen in for connections.
+# "*" listens in all IPv4 interfaces, "::" listens in all IPv6 interfaces.
+# If you want to specify non-default ports or anything more complex,
+# edit conf.d/master.conf.
+#listen = *, ::	← ホストのすべてのIPアドレスで接続を受け付ける
+```
+
+### /etc/dovecot/conf.d/10-mail.conf
+メールボックスの位置などを設定するファイルです。
+
+今回はmbox形式のメールボックスを指定します。また、メールボックスへのアクセス権限を設定します。
+
+```
+$ sudo vi /etc/dovecot/conf.d/10-mail.conf
+```
+
+```
+（略）
+#   mail_location = maildir:~/Maildir
+#   mail_location = mbox:~/mail:INBOX=/var/mail/%u
+#   mail_location = mbox:/var/mail/%d/%1n/%n:INDEX=/var/indexes/%d/%1n/%n
+#
+# <doc/wiki/MailLocation.txt>
+#
+#mail_location =
+mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 上にある2番目の例を参考に追加
+
+（略）
+
+# Group to enable temporarily for privileged operations. Currently this is
+# used only with INBOX when either its initial creation or dotlocking fails.
+# Typically this is set to "mail" to give access to /var/mail.
+#mail_privileged_group =
+mail_privileged_group = mail ← 権限が必要な動作はmailグループとして行うように追加
+
+# Grant access to these supplementary groups for mail processes. Typically
+# these are used to set up access to shared mailboxes. Note that it may be
+# dangerous to set these if users can create symlinks (e.g. if "mail" group is
+# set here, ln -s /var/mail ~/mail/var could allow a user to delete others'
+# mailboxes, or ln -s /secret/shared/box ~/mail/mybox would allow reading it).
+#mail_access_groups =
+mail_access_groups = mail ← mailグループにアクセス権限を与えるように追加
+（略）
+```
+
+### /etc/dovecot/conf.d/10-auth.conf
+認証を設定するファイルです。
+
+今回は暗号化していない平文での認証を許可します。
+
+```
+$ sudo vi /etc/dovecot/conf.d/10-auth.conf
+```
+
+```
+##
+## Authentication processes
+##
+
+# Disable LOGIN command and all other plaintext authentications unless
+# SSL/TLS is used (LOGINDISABLED capability). Note that if the remote IP
+# matches the local IP (ie. you're connecting from the same computer), the
+# connection is considered secure and plaintext authentication is allowed.
+# See also ssl=required setting.
+#disable_plaintext_auth = yes
+disable_plaintext_auth = no	← noに変更
+（略）
+```
+
+### /etc/dovecot/conf.d/10-ssl.conf
+SSL/TLSを設定するファイルです。
+
+今回はSSL/TLS暗号化をしませんので、SSL/TLS暗号化の利用を停止しておきます。
+
+```
+$ sudo vi /etc/dovecot/conf.d/10-ssl.conf
+```
+
+```
+##
+## SSL settings
+##
+
+# SSL/TLS support: yes, no, required. <doc/wiki/SSL.txt>
+# disable plain pop3 and imap, allowed are only pop3+TLS, pop3s, imap+TLS and imaps
+# plain imap and pop3 are still allowed for local connections
+ssl = no	← requiredをnoに変更
+```
+
+## Dovecotの起動
+dovecotサービスを起動します。
+
+```
+$ sudo systemctl start dovecot
+```
+
+### 自動起動とファイアウォールの設定
+自動起動の設定や、ファイアウォールの設定を行います。
+
+```
+$ sudo systemctl enable dovecot
+$ sudo ufw allow 110/tcp
+$ sudo ufw allow 143/tcp
+$ sudo ufw status
+```
+
+## Thunderbirdの設定
+次にメールクライアントとしてThunderbirdの設定を行います。
+
+### ユーザーを切り替えてログイン
+メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。
+
+その他のユーザーでログインしている場合にはログアウトします。
+
+パスワードはuserpassです。正しく設定されていない場合には、改めてpasswdコマンドで設定し直してください。このパスワードがThunderbirdの設定にも使用されます。
+
+### Thunderbirdの起動
+Thunderbirdを起動します。
+
+画面左上にある「アクティビティ」をクリックし、画面下に表示されるアイコンドックから一番右にある「アプリケーションを表示する」をクリックします。表示されるアプリケーションアイコンから「Thunderbird」をクリックします。
+
+![Thunderbirdの起動](image/Ch6/Appli.png){width=70%}
+
+Thunderbirdが起動すると別途Webブラウザが開いてThunderbirdのWebページが表示されますが、Webブラウザごと閉じて構いません。
+
+\pagebreak
+### Thunderbirdの基本設定
+Thunderbirdのアプリケーションウインドウを表示し、「既存のメールアドレスのセットアップ」タブが表示されていることを確認します。
+
+各設定項目の値を以下のように入力します。
+
+| 設定項目 | 設定値 |
+|---|---|
+| あなたの名前 |user1 |
+| メールアドレス |user1@example1.jp |
+| パスワード |userpass |
+| パスワードを記憶する | チェックしておく |
+
+![メールアドレスとパスワードの設定](image/Ch6/ThunderbirdSetup1.png){width=70%}
+
+\pagebreak
+### Thunderbirdの送受信メールサーバーの設定
+「手動設定」をクリックして、Thunderbirdの送受信メールサーバーの設定を行います。
+
+「受信サーバー」と「送信サーバー」が表示されるので、各設定項目を以下のように入力します。
+
+| 設定項目 | 設定値 |
+|---|---|
+| プロトコル | IMAP |
+| ホスト名 | mail.example1.jp |
+| ポート番号 | 143 |
+| 接続の保護 | なし |
+| 認証方式 | 通常のパスワード認証 |
+| ユーザ名 | user1 |
+
+| 設定項目 | 設定値 |
+|------------|---------------|
+| ホスト名 | mail.example1.jp |
+| ポート番号 | 25 |
+| 接続の保護 | なし |
+| 認証方式 | 通常のパスワード認証 |
+|ユーザ名 | user1 |
+
+![受信サーバーと送信サーバーの設定](image/Ch6/ThunderbirdSetup2.png){width=70%}
+
+入力を終えたら「完了」ボタンをクリックします。
+
+\pagebreak
+「警告！」ダイアログが表示されますが、左下の「接続する上での危険性を理解しました」をチェックし、「確認」ボタンをクリックします。
+
+![警告ダイアログ](image/Ch6/Warning.png){width=70%}
+
+最後に「リンクしたサービスへの接続」の「完了」ボタンをクリックします。
+
+\pagebreak
+## メールの送信
+メールを送信するには、「作成」ボタンをクリックしてメール作成ウインドウを呼び出します。
+
+### 自分宛のメール送信
+1. 「作成」ボタンをクリック
+1. 宛先に自分のメールアドレス（user1@example1.jp）を指定して、メールを作成、送信してみます。
+1. 「受信」ボタンをクリックして、メールが受信できることを確認します。
+
+### 別サーバー宛のメール送信
+1. 「作成」ボタンをクリック
+1. 宛先に他の受講生のメールアドレス（user2@example2.jp）を指定して、メールを作成、送信してみます。
+1. host2でmailコマンドを使ってメールを受信できたことを確認します。
+1. mailコマンドでuser1@example1.jp宛にメールを送信し、host1で受信できることを確認します。
+
+![Thunderbirdのメール送受信画面](image/Ch6/ThunderbirdMailbox.png){width=70%}
+
+## うまく動作しない場合には
+本章では、電子メールに関する学習を行いました。また、実際にメールサーバーを設定し、mailコマンドやThunderbirdを利用してメールの送受信の確認を行いました。
+
+メールサーバーの設定は、メールサーバーが正しく設定され起動していたとしても、DNSサーバーが正しく動いていなければ利用できない場合があります。設定ファイルの記述に問題がないのに、メールがどうしても送れない、受信できない場合は、まずDNSが正しく動いているかdigコマンドを実行して確認します。また、ログ（/var/log/maillog）を見て、エラーが出ていないかを確認してみてください。
+\pagebreak
