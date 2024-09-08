@@ -108,7 +108,6 @@ aptコマンドで必要なパッケージをインストールします。
 $ sudo apt install postfix dovecot-pop3d dovecot-imapd saslauthd
 ```
 
-
 ## Postfixの設定ファイルmain.cfの設定
 Postfixの設定ファイルは/etc/postfix/main.cfです。次のパラメータを探して設定します。
 
