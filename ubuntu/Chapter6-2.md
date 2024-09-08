@@ -298,3 +298,104 @@ saslauthdの自動起動設定も行っておきます。
 ```
 $ sudo systemctl enable saslauthd
 ```
+
+これでPostfixの設定は完了です。
+
+## アカウントの作成
+メールのやり取りを行うためのアカウントを作成します。アカウントはhost1とhost2の双方で行います。
+
+### host1にuser1を作成
+host1でuser1というアカウントを作成します。このアカウントはuser1@example1.jpというメールアドレスになります。passwdコマンドでパスワードの設定も行っておきます。
+
+```
+ubuntu@host1example1jp:~$ sudo adduser user1
+info: Adding user `user1' ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Adding new group `user1' (1003) ...
+info: Adding new user `user1' (1003) with group `user1 (1003)' ...
+info: Creating home directory `/home/user1' ...
+info: Copying files from `/etc/skel' ...
+New password:
+Retype new password:
+passwd: password updated successfully
+Changing the user information for user1
+Enter the new value, or press ENTER for the default
+        Full Name []:
+        Room Number []:
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n]
+info: Adding new user `user1' to supplemental / extra groups `users' ...
+info: Adding user `user1' to group `users' ...
+```
+
+### host2にuser2を作成
+host2でuser2というアカウントを作成します。このアカウントはuser2@example2.jpというメールアドレスになります。passwdコマンドでパスワードの設定も行っておきます。
+
+```
+ubuntu@host2example2jp:~$ sudo adduser user2
+info: Adding user `user2' ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Adding new group `user2' (1003) ...
+info: Adding new user `user2' (1003) with group `user2 (1003)' ...
+info: Creating home directory `/home/user2' ...
+info: Copying files from `/etc/skel' ...
+New password:
+Retype new password:
+passwd: password updated successfully
+Changing the user information for user1
+Enter the new value, or press ENTER for the default
+        Full Name []:
+        Room Number []:
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n]
+info: Adding new user `user1' to supplemental / extra groups `users' ...
+info: Adding user `user2' to group `users' ...
+```
+
+### メールエイリアスのデータベース構築
+newaliasesコマンドを実施し、メールエイリアスデータベースを構築します。
+
+```
+ubuntu@host1examplejp:~$ sudo newaliases
+```
+
+## mailコマンドを使ったメール送受信のテスト
+メールの送受信が行えるかテストを行います。メールの送受信は作成したユーザーuser1とuser2で行います。ユーザーで操作できるよう別の端末を起動し、suコマンドを使ってユーザーを切り替えます。メールの送受信にはmailコマンドを使用します。
+
+### ログの確認用端末の設定（任意）
+メールサーバーはバックグラウンドで動作するため、どのように動いているのか確認するためにはログを参照する必要があります。
+
+tailコマンドに-fオプションを付けて実行すると、ログが書き込まれる毎に再読み込みされて最新のログを閲覧できます。
+
+1. 「端末」を起動します。
+1. tailコマンドを実行して/var/log/maillogを表示します。
+
+```
+$ sudo tail -f /var/log/maillog
+```
+
+### メール送受信用端末の起動とユーザー切り替え
+メール送受信用の端末を起動し、suコマンドでユーザーの切り替えを行います。ユーザーを完全に切り替えるために「su - ユーザー名」と「-」（ハイフン）を付けて実行してください。
+
+1. 「端末」を起動します。
+1. suコマンドでユーザーを切り替えます。
+
+### host1でuser1に切り替え
+host1はuser1で操作を行います。
+
+```
+ubuntu@host1example1jp:~$ sudo su - user1
+user1@host1example1jp:~$
+```
+
+### host2でuser2に切り替え
+host2はuser2で操作を行います。
+
+```
+ubuntu@host2example2jp:~$ sudo su - user2
+user2@host2example2jp:~$
+```
