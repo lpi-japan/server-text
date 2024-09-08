@@ -307,8 +307,54 @@ $ sudo systemctl enable saslauthd
 ### host1にuser1を作成
 host1でuser1というアカウントを作成します。このアカウントはuser1@example1.jpというメールアドレスになります。passwdコマンドでパスワードの設定も行っておきます。
 
+```
+ubuntu@host1example1jp:~$ sudo adduser user1
+info: Adding user `user1'
+info: Selecting UID/GID from range 1000 to 59999
+info: Adding new group `user1' (1003)
+info: Adding new user `user1' (1003) with group `user1 (1003)'
+info: Creating home directory `/home/user1'
+info: Copying files from `/etc/skel'
+New password:
+Retype new password:
+passwd: password updated successfully
+Changing the user information for user1
+Enter the new value, or press ENTER for the default
+        Full Name []:
+        Room Number []:
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n]
+info: Adding new user `user1' to supplemental / extra groups `users'
+info: Adding user `user1' to group `users'
+```
+
 ### host2にuser2を作成
 host2でuser2というアカウントを作成します。このアカウントはuser2@example2.jpというメールアドレスになります。passwdコマンドでパスワードの設定も行っておきます。
+
+```
+ubuntu@host2example2jp:~$ sudo adduser user2
+info: Adding user `user2'
+info: Selecting UID/GID from range 1000 to 59999
+info: Adding new group `user2' (1003) ...
+info: Adding new user `user2' (1003) with group `user2 (1003)'
+info: Creating home directory `/home/user2'
+info: Copying files from `/etc/skel'
+New password:
+Retype new password:
+passwd: password updated successfully
+Changing the user information for user1
+Enter the new value, or press ENTER for the default
+        Full Name []:
+        Room Number []:
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n]
+info: Adding new user `user1' to supplemental / extra groups `users'
+info: Adding user `user2' to group `users'
+```
 
 ### メールエイリアスのデータベース構築
 newaliasesコマンドを実施し、メールエイリアスデータベースを構築します。
