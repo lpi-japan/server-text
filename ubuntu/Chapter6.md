@@ -337,7 +337,7 @@ host2でuser2というアカウントを作成します。このアカウント�
 ubuntu@host2example2jp:~$ sudo adduser user2
 info: Adding user `user2'
 info: Selecting UID/GID from range 1000 to 59999
-info: Adding new group `user2' (1003) ...
+info: Adding new group `user2' (1003)
 info: Adding new user `user2' (1003) with group `user2 (1003)'
 info: Creating home directory `/home/user2'
 info: Copying files from `/etc/skel'
