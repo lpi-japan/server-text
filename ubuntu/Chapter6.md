@@ -309,12 +309,12 @@ host1でuser1というアカウントを作成します。このアカウント�
 
 ```
 ubuntu@host1example1jp:~$ sudo adduser user1
-info: Adding user `user1'
-info: Selecting UID/GID from range 1000 to 59999
-info: Adding new group `user1' (1003)
-info: Adding new user `user1' (1003) with group `user1 (1003)'
-info: Creating home directory `/home/user1'
-info: Copying files from `/etc/skel'
+info: Adding user 'user1' ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Adding new group 'user1' (1003) ...
+info: Adding new user 'user1' (1003) with group 'user1' (1003)' ...
+info: Creating home directory '/home/user1' ...
+info: Copying files from '/etc/skel' ...
 New password:
 Retype new password:
 passwd: password updated successfully
@@ -326,8 +326,8 @@ Enter the new value, or press ENTER for the default
         Home Phone []:
         Other []:
 Is the information correct? [Y/n]
-info: Adding new user `user1' to supplemental / extra groups `users'
-info: Adding user `user1' to group `users'
+info: Adding new user 'user1' to supplemental / extra groups 'users' ...
+info: Adding user 'user1' to group 'users' ...
 ```
 
 ### host2にuser2を作成
@@ -335,12 +335,12 @@ host2でuser2というアカウントを作成します。このアカウント�
 
 ```
 ubuntu@host2example2jp:~$ sudo adduser user2
-info: Adding user `user2'
-info: Selecting UID/GID from range 1000 to 59999
-info: Adding new group `user2' (1003)
-info: Adding new user `user2' (1003) with group `user2 (1003)'
-info: Creating home directory `/home/user2'
-info: Copying files from `/etc/skel'
+info: Adding user 'user2' ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Adding new group 'user2' (1003) ...
+info: Adding new user 'user2' (1003) with group 'user2' (1003)' ...
+info: Creating home directory '/home/user2' ...
+info: Copying files from '/etc/skel' ...
 New password:
 Retype new password:
 passwd: password updated successfully
@@ -352,8 +352,8 @@ Enter the new value, or press ENTER for the default
         Home Phone []:
         Other []:
 Is the information correct? [Y/n]
-info: Adding new user `user1' to supplemental / extra groups `users'
-info: Adding user `user2' to group `users'
+info: Adding new user 'user1' to supplemental / extra groups 'users' ...
+info: Adding user 'user2' to group 'users' ...
 ```
 
 ### メールエイリアスのデータベース構築
