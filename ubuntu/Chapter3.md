@@ -56,6 +56,7 @@ OSインストール用のISOイメージを読み込んで起動すると、最
 
 ![インストールタイプ選択画面](image/Ch3/04_installtype.png){width=70%}
 
+\pagebreak
 
 ### ネットワーク設定
 ネットワーク設定画面が表示されるので、認識されたネットワークインターフェイスにDHCPによりIPアドレスが付与されていることを確認します。
@@ -94,6 +95,7 @@ Search domains:example1.jp
 
 ![ミラーサイト設定画面](image/Ch3/07_mirrorsetting.png){width=70%}
 
+\pagebreak
 
 ### ストレージ設定
 ストレージ設定画面が表示されるので、構築するサーバにで必要となるを設定します。
@@ -104,6 +106,8 @@ Search domains:example1.jp
 ![ストレージ設定画面](image/Ch3/09_storage2.png){width=70%}
 
 ![ストレージ設定画面](image/Ch3/10_storage3.png){width=70%}
+
+\pagebreak
 
 ### サーバ名・ユーザ名・ユーザパスワード設定
 サーバ名・ユーザ名・ユーザパスワードの設定画面が表示されるので、それぞれ設定します。
@@ -119,7 +123,7 @@ Ubuntu Pro(有償サポート)の選択画面が表示されるので、選択�
 
 ![UbuntuPro画面](image/Ch3/12_ubuntupro.png){width=70%}
 
-
+\pagebreak
 
 ### OpenSShのインストール選択
 OpenSSHのインストールを選択します。
@@ -133,6 +137,7 @@ OpenSSHのインストールを選択します。
 
 ![追加パッケージ選択画面](image/Ch3/14_addpackages.png){width=70%}
 
+\pagebreak
 
 ### インストールプロセスの進捗
 インストールプロセスが開始されました。
@@ -143,10 +148,10 @@ OpenSSHのインストールを選択します。
 ![Process画面](image/Ch3/15_installprocess1.png){width=70%}
 
 ![Process画面](image/Ch3/16_installprocess2.png){width=70%}
-
+\pagebreak
 ![Process画面](image/Ch3/17_installprocess3.png){width=70%}
 
-![Process画面](image/Ch3/18_installprocess4.png){width=70%}
+![Process画面](image/Ch3/18_installprocess4.png){width=30%}
 
 
 ## ログインとログアウト
@@ -160,16 +165,16 @@ Ubuntu 24.04 LTS(Server)を使い始めるにはログインを、使い終わ�
 ログイン出来た場合は、
 「ubuntu@host1examplejp:~$」というプロンプトが表示されます。
 
-![ログイン画面](image/Ch3/19_login.png){width=30%}
+![ログイン画面](image/Ch3/19_login.png){width=70%}
 
 
 
 ### ログアウトする方法
 ログアウトするには、exitコマンドを実行します。
 
-![ログアウト選択の画面](image/Ch3/20_Logout.png){width=70%}
+![ログアウト選択の画面](image/Ch3/20_Logout.png){width=30%}
 
-
+\pagebreak
 ## コマンドの実行方法
 コマンドを実行してLinuxを操作するには、ログイン後のプロンプトが表示された状態でコマンドを実行します。
 また、仮想マシンで直接コマンド実行するのではなく、ホストOSからSSHを使ってリモート接続して操作することもできます。方法については第7章の解説を参考にしてください。
