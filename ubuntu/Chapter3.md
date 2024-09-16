@@ -116,6 +116,8 @@ host1example1jp
 
 ![サーバ名・ユーザ名・ユーザパスワード画面](image/Ch3/11_namesettings.png){width=70%}
 
+\pagebreak
+
 
 ### Ubuntu Pro選択
 Ubuntu Pro(有償サポート)の選択画面が表示されるので、選択します。
@@ -129,6 +131,7 @@ Ubuntu Pro(有償サポート)の選択画面が表示されるので、選択�
 OpenSSHのインストールを選択します。
 
 ![OpenSSHInstall画面](image/Ch3/13_openssh.png){width=70%}
+\pagebreak
 
 
 ### 追加パッケージ選択
@@ -149,6 +152,7 @@ OpenSSHのインストールを選択します。
 \pagebreak
 
 ![Process画面](image/Ch3/16_installprocess2.png){width=70%}
+
 ![Process画面](image/Ch3/17_installprocess3.png){width=70%}
 
 ![Process画面](image/Ch3/18_installprocess4.png){width=30%}
