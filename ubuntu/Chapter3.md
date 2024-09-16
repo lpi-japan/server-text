@@ -80,6 +80,7 @@ Search domains:example1.jp
 
 ![ネットワーク設定画面](image/Ch3/05_networksetting.png){width=70%}
 
+\pagebreak
 ### プロキシ設定
 プロキシ設定画面が表示されるので、必要に応じてプロキシを設定します。
 今回の環境では、未設定としています。
@@ -99,7 +100,9 @@ Search domains:example1.jp
 今回は、特にストレージ設定は変更なくデフォルトのまま進めます。
 
 ![ストレージ設定画面](image/Ch3/08_storage1.png){width=70%}
+
 ![ストレージ設定画面](image/Ch3/09_storage2.png){width=70%}
+
 ![ストレージ設定画面](image/Ch3/10_storage3.png){width=70%}
 
 ### サーバ名・ユーザ名・ユーザパスワード設定
@@ -138,8 +141,11 @@ OpenSSHのインストールを選択します。
 再起動が行われ、ユーザ名を入力するプロンプトが表示されればインストールは完了です。
 
 ![Process画面](image/Ch3/15_installprocess1.png){width=70%}
+
 ![Process画面](image/Ch3/16_installprocess2.png){width=70%}
+
 ![Process画面](image/Ch3/17_installprocess3.png){width=70%}
+
 ![Process画面](image/Ch3/18_installprocess4.png){width=70%}
 
 
@@ -154,7 +160,7 @@ Ubuntu 24.04 LTS(Server)を使い始めるにはログインを、使い終わ�
 ログイン出来た場合は、
 「ubuntu@host1examplejp:~$」というプロンプトが表示されます。
 
-![Process画面](image/Ch3/19_login.png){width=70%}
+![ログイン画面](image/Ch3/19_login.png){width=30%}
 
 
 
