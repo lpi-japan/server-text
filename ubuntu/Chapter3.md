@@ -146,9 +146,9 @@ OpenSSHのインストールを選択します。
 再起動が行われ、ユーザ名を入力するプロンプトが表示されればインストールは完了です。
 
 ![Process画面](image/Ch3/15_installprocess1.png){width=70%}
+\pagebreak
 
 ![Process画面](image/Ch3/16_installprocess2.png){width=70%}
-\pagebreak
 ![Process画面](image/Ch3/17_installprocess3.png){width=70%}
 
 ![Process画面](image/Ch3/18_installprocess4.png){width=30%}
@@ -167,6 +167,7 @@ Ubuntu 24.04 LTS(Server)を使い始めるにはログインを、使い終わ�
 
 ![ログイン画面](image/Ch3/19_login.png){width=70%}
 
+\pagebreak
 
 
 ### ログアウトする方法
