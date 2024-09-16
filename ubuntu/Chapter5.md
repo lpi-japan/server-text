@@ -564,20 +564,13 @@ lrwxrwxrwx 1 root root 32 Aug 10 13:49 /etc/resolv.conf -> /run/systemd/resolve/
 ubuntu@host1example1jp:~$ sudo vi /run/systemcd/resolve/resolv.conf
 
 ubuntu@host1example1jp:~$ sudo cat /run/systemcd/resolve/resolv.conf
-# Do not edit.
-#
-# This file might be symlinked as /etc/resolv.conf. If you're looking at
-# /etc/resolv.conf and seeing this text, you have followed the symlink.
-#
-# This is a dynamic resolv.conf file for connecting local clients directly to
-# all known uplink DNS servers. This file lists all configured search domains.
-#
-# Third party programs should typically not access this file directly, but only
-# through the symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a
-# different way, replace this symlink by a static file or a different symlink.
-#
-# See man:systemd-resolved.service(8) for details about the supported modes of
-# operation for /etc/resolv.conf.
+.
+.
+.
+略
+.
+.
+.
 
 nameserver 192.168.56.101
 search example1.jp
@@ -592,22 +585,13 @@ ubuntu@host1example1jp:~$ sudo systemctl reboot
 
 ```
 ubuntu@host1example1jp:/etc/bind$ cat /etc/resolv.conf
-# This is /run/systemd/resolve/resolv.conf managed by man:systemd-resolved(8).
-# Do not edit.
-#
-# This file might be symlinked as /etc/resolv.conf. If you're looking at
-# /etc/resolv.conf and seeing this text, you have followed the symlink.
-#
-# This is a dynamic resolv.conf file for connecting local clients directly to
-# all known uplink DNS servers. This file lists all configured search domains.
-#
-# Third party programs should typically not access this file directly, but only
-# through the symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a
-# different way, replace this symlink by a static file or a different symlink.
-#
-# See man:systemd-resolved.service(8) for details about the supported modes of
-# operation for /etc/resolv.conf.
-
+.
+.
+.
+略
+.
+.
+.
 nameserver 192.168.56.101 ※仮想マシンが存在するNW環境のDHCP機能により、その他nameserver設定が表示されることがあります。
 search example1.jp
 ```
@@ -1000,6 +984,7 @@ ubuntu@host0jp:/etc/bind$ sudo ufw status
 
 ```
 /etc/resolv.confが変更されていることを確認します。
+```
 
 ```
 ubuntu@host0jp:/etc/bind$ cat /etc/resolv.conf
@@ -1014,7 +999,6 @@ nameserver 192.168.56.100 ※仮想マシンが存在するNW環境のDHCP機能
 search example1.jp
 ```
 
-### 名前解決の確認
 名前解決を確認します。example1.jpゾーンとexample2.jpゾーンのDNSコンテンツサーバーを示すグルーレコードが名前解決できるかを確認するため、それぞれのNSレコードを問い合わせます。
 
 ```
