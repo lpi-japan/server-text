@@ -9,6 +9,7 @@ on:
       - main/Chapter*.md
       - main/image/**
       - listing.tex
+      - template.tex
       - .github/workflows/pandoc.yaml
       - .github/workflows/main.yaml
 

@@ -540,8 +540,29 @@ $if(logo)$
 \logo{\includegraphics{$logo$}}
 $endif$
 $endif$
-
+\usepackage{wallpaper}
 \begin{document}
+
+\thispagestyle{empty}
+\ThisCenterWallPaper{1}{image/Cover/cover.png}
+\null
+\cleardoublepage
+
+\thispagestyle{empty}
+\begin{center}
+  \vspace*{6cm}
+  {\Huge $bookTitle$}
+
+  \vfill
+
+  {\Large $bookVersion$}
+
+  {\Large LPI-Japan \, 発行}
+
+  \vspace*{4cm}
+\end{center}
+\newpage
+
 $if(has-frontmatter)$
 \frontmatter
 $endif$
@@ -645,5 +666,20 @@ $for(include-after)$
 $include-after$
 
 $endfor$
-%% \includepdf[pages=-, noautoscale=true, scale=1.0]{中表紙後.pdf}
+\newpage
+\thispagestyle{empty}
+  \vspace*{\fill}
+  {\LARGE $bookTitle$}
+
+  \rule{\textwidth}{0.5pt}
+
+  $bookVersion$
+
+  発行元 \, LPI-Japan
+
+  \rule{\textwidth}{0.5pt}
+
+  Copyright \copyright{} 2024 LPI-Japan. All Rights Reserved.
+
+  \vspace*{1cm}
 \end{document}
