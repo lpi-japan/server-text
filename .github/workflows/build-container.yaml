@@ -41,9 +41,6 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # tags: |
-          #   ghcr.io/${{ steps.metadata.outputs.image }}:latest
-          #   ghcr.io/${{ steps.metadata.outputs.image }}:${{ steps.metadata.outputs.tag }}
           tags: |
-            ghcr.io/${{ steps.metadata.outputs.image }}:test-20250313
+            ghcr.io/${{ steps.metadata.outputs.image }}:latest
             ghcr.io/${{ steps.metadata.outputs.image }}:${{ steps.metadata.outputs.tag }}
