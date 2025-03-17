@@ -176,3 +176,5 @@ https://linuc.org/about/01.html
 ```
 
 ![https://linuc.org/about/01.html](image/Ch0/QRaboutLinuC.png){width=25%}
+
+\pagebreak
