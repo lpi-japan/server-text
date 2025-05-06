@@ -1,5 +1,5 @@
 # Linuxのインストールと設定
-第3章では、VirtualBoxで作成した仮想マシンにUbuntu 24.04 LTS(Server)をインストールします。インストール後、初期設定とネットワーク接続の確認を行います。
+第3章では、VirtualBoxで作成した仮想マシンにUbuntu 24.04.2 LTS(Server)をインストールします。インストール後、初期設定とネットワーク接続の確認を行います。
 
 ## 用語集
 ### ISOイメージ {.unlisted .unnumbered}
@@ -63,21 +63,14 @@ OSインストール用のISOイメージを読み込んで起動すると、最
 なお、サーバとして使用するため、enp0s8は固定IPアドレスを設定します。
 
 固定IPアドレスの設定方法
-1.「enp0s8 eth」を選択肢、Enter押下
+1.「enp0s3 eth」を選択肢、Enter押下
 2.「Edit IPv4」を選択後、Enter押下
 3.「IPv4 Method」を選択後、「Manual」に変更
 4.以下のように各項目を設定
-Subnet：192.168.56.0/24
-Address:192.168.56.101
-Gateway:設定しない
-Name servers:192.168.56.101
-Search domains:example1.jp
-
-| 項目 | インターフェイス名 | 設定値 |
-|------------|---------------|---------------|
-| IPアドレス | enp0s3 | 10.0.2.15/24 |
-| IPアドレス | enp0s8 | 192.168.56.101/24 |
-
+Subnet：192.168.1.0/24
+Address:192.168.1.12
+Gateway:192.168.1.1
+Name servers:192.168.1.12
 
 ![ネットワーク設定画面](image/Ch3/05_networksetting.png){width=70%}
 
@@ -112,12 +105,10 @@ Search domains:example1.jp
 ### サーバ名・ユーザ名・ユーザパスワード設定
 サーバ名・ユーザ名・ユーザパスワードの設定画面が表示されるので、それぞれ設定します。
 今回は、ユーザ名 ubuntuと設定しています。
-host1example1jp
 
 ![サーバ名・ユーザ名・ユーザパスワード画面](image/Ch3/11_namesettings.png){width=70%}
 
 \pagebreak
-
 
 ### Ubuntu Pro選択
 Ubuntu Pro(有償サポート)の選択画面が表示されるので、選択します。
@@ -151,33 +142,21 @@ OpenSSHのインストールを選択します。
 ![Process画面](image/Ch3/15_installprocess1.png){width=70%}
 \pagebreak
 
-![Process画面](image/Ch3/16_installprocess2.png){width=70%}
-
-![Process画面](image/Ch3/17_installprocess3.png){width=70%}
-
-![Process画面](image/Ch3/18_installprocess4.png){width=30%}
-
-
 ## ログインとログアウト
-Ubuntu 24.04 LTS(Server)を使い始めるにはログインを、使い終わったらログアウトを行います。
+Ubuntu 24.04.2 LTS(Server)を使い始めるにはログインを、使い終わったらログアウトを行います。
 
 
 ### ログインする方法
-「host1examplejp login:」というプロンプトのあとに設定したユーザ名(ubuntu)入力しEnter押下、
+「host1example1test login:」というプロンプトのあとに設定したユーザ名(ubuntu)入力しEnter押下、
 その後表示される「Password:」というプロンプトのあとに設定したパスワードを入力しEnter押下します。
 
 ログイン出来た場合は、
-「ubuntu@host1examplejp:~$」というプロンプトが表示されます。
+「ubuntu@host1example1test:~$」というプロンプトが表示されます。
 
 ![ログイン画面](image/Ch3/19_login.png){width=70%}
 
-\pagebreak
-
-
 ### ログアウトする方法
 ログアウトするには、exitコマンドを実行します。
-
-![ログアウト選択の画面](image/Ch3/20_Logout.png){width=30%}
 
 \pagebreak
 ## コマンドの実行方法
@@ -185,18 +164,19 @@ Ubuntu 24.04 LTS(Server)を使い始めるにはログインを、使い終わ�
 また、仮想マシンで直接コマンド実行するのではなく、ホストOSからSSHを使ってリモート接続して操作することもできます。方法については第7章の解説を参考にしてください。
 
 ## ネットワーク接続の確認
-ネットワークに正しく接続されているかの確認を行います。ネットワークはNATを経由した外部ネットワークやインターネットの接続と、ホストオンリーネットワークを経由したホストOSとの接続があります。それぞれについてテストします。
+ネットワークに正しく接続されているかの確認を行います。
+それぞれについてテストします。
 
 ### 名前解決の確認
 digコマンドを使って、DNSによる名前解決を確認します。
 
 ```
-ubuntu@host1examplejp:~$ dig lpi.or.jp
+ubuntu@host1example1test:~$ dig lpi.or.jp
 
-; <<>> DiG 9.18.24-0ubuntu5-Ubuntu <<>> lpi.or.jp
+; <<>> DiG 9.18.30-0ubuntu0.24.04.2-Ubuntu <<>> lpi.or.jp
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4915
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 11707
 ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
 
 ;; OPT PSEUDOSECTION:
@@ -207,9 +187,9 @@ ubuntu@host1examplejp:~$ dig lpi.or.jp
 ;; ANSWER SECTION:
 lpi.or.jp.              300     IN      A       219.94.215.12
 
-;; Query time: 16 msec
+;; Query time: 14 msec
 ;; SERVER: 127.0.0.53#53(127.0.0.53) (UDP)
-;; WHEN: Sun Jul 07 05:33:45 UTC 2024
+;; WHEN: Sun May 04 15:54:30 UTC 2025
 ;; MSG SIZE  rcvd: 54
 ```
 
@@ -220,14 +200,16 @@ lpi.or.jp.              300     IN      A       219.94.215.12
 Pingコマンドを使って、インターネット上のサーバーへの接続を確認します。
 
 ```
-ubuntu@host1examplejp:~$ ping lpi.or.jp
+ubuntu@host1example1test:~$ ping lpi.or.jp
 PING lpi.or.jp (219.94.215.12) 56(84) bytes of data.
-64 bytes from 12.215.94.219.static.www232b.sakura.ne.jp (219.94.215.12): icmp_seq=1 ttl=52 time=14.4 ms
-64 bytes from 12.215.94.219.static.www232b.sakura.ne.jp (219.94.215.12): icmp_seq=2 ttl=52 time=36.3 ms
+64 bytes from 12.215.94.219.static.www232b.sakura.ne.jp (219.94.215.12): icmp_seq=1 ttl=54 time=12.9 ms
+64 bytes from 12.215.94.219.static.www232b.sakura.ne.jp (219.94.215.12): icmp_seq=2 ttl=54 time=15.3 ms
+64 bytes from 12.215.94.219.static.www232b.sakura.ne.jp (219.94.215.12): icmp_seq=3 ttl=54 time=31.8 ms
+64 bytes from 12.215.94.219.static.www232b.sakura.ne.jp (219.94.215.12): icmp_seq=4 ttl=54 time=12.6 ms
 ^C
 --- lpi.or.jp ping statistics ---
-2 packets transmitted, 2 received, 0% packet loss, time 1001ms
-rtt min/avg/max/mdev = 14.402/25.357/36.313/10.955 ms
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 12.619/18.172/31.825/7.950 ms
 ```
 
 pingコマンドの実行を停止するにはCtrl＋cを押します。正しく通信できていることがわかります。宛先のIPアドレスがdigコマンドで調べたIPアドレスと同じになっていることも分かります。
@@ -235,36 +217,46 @@ pingコマンドの実行を停止するにはCtrl＋cを押します。正し�
 pingコマンドでの接続に対する応答を返さないサーバーもあるので、返答が無い場合にはその他のサーバーへの接続も試してみるか、LinuxのGUIでWebブラウザを起動してWebサイトへ接続するなども試してみるとよいでしょう。
 
 ### ゲストOSからホストOSへの接続の確認
-pingコマンドで、ホストOSへの接続を確認します。ホストOS側のIPアドレスは、VirtualBoxのネットワーク設定で確認した「192.168.56.1」になります。
+pingコマンドで、ホストOSへの接続を確認します。ホストOS側のIPアドレスは、VirtualBoxのネットワーク設定で確認した「192.168.1.12」になります。
 
 ```
-C:\>ipconfig
-略
-
-イーサネット アダプター VirtualBox Host-Only Network:
-
-   接続固有の DNS サフィックス . . . . .:
-   リンクローカル IPv6 アドレス. . . . .: fe80::8fd1:592d:fde0:32ad%13
-   IPv4 アドレス . . . . . . . . . . . .: 192.168.56.1
-   サブネット マスク . . . . . . . . . .: 255.255.255.0
-   デフォルト ゲートウェイ . . . . . . .:
+ubuntu@host1example1test:~$ ip addr show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute
+       valid_lft forever preferred_lft forever
+2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:ee:b7:1d brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.12/24 brd 192.168.1.255 scope global enp0s3
+       valid_lft forever preferred_lft forever
+    inet6 240f:32:57b8:1:a00:27ff:feee:b71d/64 scope global dynamic mngtmpaddr noprefixroute
+       valid_lft 266sec preferred_lft 266sec
+    inet6 fe80::a00:27ff:feee:b71d/64 scope link
+       valid_lft forever preferred_lft forever
 ```
 
 ### ホストOSからゲストOSへの接続の確認
-ホストOS側でコマンドプロンプトを起動して、pingコマンドでゲストOSへの接続を確認します。ゲストOS側のIPアドレスは「192.168.56.101」になります。
+ホストOS側でコマンドプロンプトを起動して、pingコマンドでゲストOSへの接続を確認します。ゲストOS側のIPアドレスは「192.168.1.12」になります。
 コマンドプロンプトを起動するには、画面左下の「ここに入力して検索」に「cmd」と入力します。「コマンドプロンプト」が検索されるので、クリックして起動します。
 
 ```
-C:\>ping 192.168.56.101
+Microsoft Windows [Version 10.0.26100.3915]
+(c) Microsoft Corporation. All rights reserved.
 
-192.168.56.101 に ping を送信しています 32 バイトのデータ:
-192.168.56.101 からの応答: バイト数 =32 時間 <1ms TTL=64
-192.168.56.101 からの応答: バイト数 =32 時間 <1ms TTL=64
+C:\Users\kujir>ping 192.168.1.12
 
-192.168.56.101 の ping 統計:
-    パケット数: 送信 = 2、受信 = 2、損失 = 0 (0% の損失)、
+192.168.1.12 に ping を送信しています 32 バイトのデータ:
+192.168.1.12 からの応答: バイト数 =32 時間 =1ms TTL=64
+192.168.1.12 からの応答: バイト数 =32 時間 =1ms TTL=64
+192.168.1.12 からの応答: バイト数 =32 時間 <1ms TTL=64
+192.168.1.12 からの応答: バイト数 =32 時間 =1ms TTL=64
+
+192.168.1.12 の ping 統計:
+    パケット数: 送信 = 4、受信 = 4、損失 = 0 (0% の損失)、
 ラウンド トリップの概算時間 (ミリ秒):
-    最小 = 0ms、最大 = 0ms、平均 = 0ms
+    最小 = 0ms、最大 = 1ms、平均 = 0ms
 ```
 
 

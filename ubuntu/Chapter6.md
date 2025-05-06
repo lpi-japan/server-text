@@ -1,5 +1,5 @@
 # メールサーバーの構築
-第6章では、メールのやり取りが行えるようメールサーバーを設定します。まずはPostfixを使って、メールサーバー同士でメールのやり取りが行えるように設定します。さらにIMAPサーバーのDovecotとメールクライアントのThunderbirdを使って、より実践的なメール環境を構築します。
+第6章では、メールのやり取りが行えるようメールサーバーを設定します。まずはPostfixを使って、メールサーバー同士でメールのやり取りが行えるように設定します。さらにIMAPサーバーのDovecotとメールクライアントソフトウェアを使って、より実践的なメール環境を構築します。
 
 ## 用語集
 ### メールサーバー {.unlisted .unnumbered}
@@ -26,9 +26,6 @@ MTAとして動作するサーバープログラムです。LinuxやUnixのシ�
 ### Dovecot {.unlisted .unnumbered}
 POP3やIMAP4のサーバー機能を提供するプログラムです。
 
-### Thunderbird {.unlisted .unnumbered}
-Mozilla Projectが配布している、高機能なメールクライアントソフトウェアです。動作環境はWindows、macOS、Linux等と多岐に渡っています。
-
 ## メールのやり取りの仕組み
 インターネット上で沢山の人が電子メールを利用していますが、電子メールは以下の手順でやり取りされています。括弧内はそれぞれの手順に関わる動作やプロトコルです。
 
@@ -50,7 +47,7 @@ Mozilla Projectが配布している、高機能なメールクライアント�
 受信用メールサーバーが受信したメールを宛先アドレスのメールボックスに配送するプログラムをMDAと呼びます。MTAであるPostfixがMDAの機能も受け持ちます。他にMDAとしてProcmailがあります。
 
 ### MUA（Mail User Agent）
-メールの利用者が、メールの送信や受信を行うプログラムをMUAと呼びます。本教科書ではThunderbirdを利用します。WebメールもMUAの一種となります。
+メールの利用者が、メールの送信や受信を行うプログラム(メールクライアントソフトウェア)をMUAと呼びます。Thunderbirdなどがあります。WebメールもMUAの一種となります。
 
 ### SMTP（Simple Mail Transfer Protocol）の拡張
 メールクライアントからのメール送信や、メールサーバー間のメールの転送は、SMTPというプロトコルでやり取りされています。SMTPはかなり昔に設計、定義されたプロトコルのため、認証やアクセス制限などが無く、勝手にメールサーバーを利用されて迷惑メールを送られてしまう問題がありました。このような問題を解決するためにESMTP（拡張SMTP）が定義されました。SMTPと呼ぶ場合、このESMTPで定義された機能も含んでいることがあります。
@@ -98,15 +95,19 @@ Thunderbirdをメールクライアントとして設定し、SMTP認証によ�
 ![Thunderbirdでのメール送受信](image/Ch6/Thunderbird.png){width=70%}
 
 ## Postfixのインストール
-Postfixをaptコマンドでインストールをします。また、SMTP認証で使用するSASL（saslauthdパッケージ）も一緒にインストールしておきます。
+Postfixをaptコマンドでインストールをします。
 また、IMAPサーバーとして使用するdovecotパッケージも同時にインストールしておきます。
 
 ### パッケージのインストール
 aptコマンドで必要なパッケージをインストールします。
+Postfixのインストールでは設定のタイプの選択をしますが、「Internet Site」としておけば大丈夫です。また、それぞれのドメインを入力します。
 
 ```
-$ sudo apt install postfix dovecot-pop3d dovecot-imapd saslauthd
+$ sudo apt install postfix dovecot-pop3d dovecot-imapd
 ```
+
+![Postfix Configurationのタイプ](image/Ch6/postfixconfiguration.png){width=70%}
+![Postfix Configuration(ドメイン設定)](image/Ch6/postfixconfiguration2.png){width=70%}
 
 ## Postfixの設定ファイルmain.cfの設定
 Postfixの設定ファイルは/etc/postfix/main.cfです。次のパラメータを探して設定します。
@@ -125,23 +126,19 @@ host1の設定
 
 | 項目 | 設定値 |
 |------------|---------------|
-| myhostname | mail.example1.jp |
-| mydomain | example1.jp |
-| inet_interfaces | localhost, 192.168.56.101 |
+| myhostname | mail.example1.test |
+| mydomain | example1.test |
+| inet_interfaces | localhost, 192.168.1.12 |
 | mydestination | $mydomain |
-| smtpd_sasl_auth_enable | yes |
-| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination |
 
 host2の設定
 
 | 項目 | 設定値 |
 |------------|---------------|
-| myhostname | mail.example2.jp |
-| mydomain | example2.jp |
-| inet_interfaces | localhost, 192.168.56.102 |
+| myhostname | mail.example2.test |
+| mydomain | example2.test |
+| inet_interfaces | localhost, 192.168.1.13 |
 | mydestination | $mydomain |
-| smtpd_sasl_auth_enable | yes |
-| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination |
 
 それぞれのパラメータの意味と設定値は以下の通りです。
 
@@ -150,12 +147,12 @@ host2の設定
 
 host1の設定
 ```
-myhostname = mail.example1.jp
+myhostname = mail.example1.test
 ```
 
 host2の設定
 ```
-myhostname = mail.example2.jp
+myhostname = mail.example2.test
 ```
 
 ### mydomain
@@ -163,12 +160,12 @@ myhostname = mail.example2.jp
 
 host1の設定
 ```
-mydomain = example1.jp
+mydomain = example1.test
 ```
 
 host2の設定
 ```
-mydomain = example2.jp
+mydomain = example2.test
 ```
 
 ### inet_interfaces
@@ -176,12 +173,12 @@ mydomain = example2.jp
 
 host1の設定
 ```
-inet_interfaces = localhost, 192.168.56.101
+inet_interfaces = localhost, 192.168.1.12
 ```
 
 host2の設定
 ```
-inet_interfaces = localhost, 192.168.56.102
+inet_interfaces = localhost, 192.168.1.13
 ```
 
 ### mydestination
@@ -192,23 +189,13 @@ host1とhost2共通の設定
 mydestination = $mydomain
 ```
 
-### smtpd_sasl_auth_enable
-SMTP認証用のSASL認証連携を有効にします。
+### mynetworks
+Postfixが信頼するネットワークの範囲を指定します。今回の構成で使用している「192.168.1.0/24」と localhostのネットワークである「127.0.0.0/8」を記載します。
 
 host1とhost2共通の設定
 ```
-smtpd_sasl_auth_enable = yes
+mynetworks = 192.168.1.0/24 127.0.0.0/8
 ```
-
-### smtpd_recipient_restrictions
-SMTP認証でSASL認証されたクライアントからのメール送信を許可するように設定します。
-
-host1とhost2共通の設定
-```
-smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
-```
-
-これら2つの設定は後述するSMTP認証（SASL認証連携）に関係する設定ですが、先に設定しておきます。
 
 \pagebreak
 ## 書式のチェック
@@ -218,85 +205,26 @@ smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, rej
 $ sudo postfix check
 ```
 
-書式が正しい場合には、何も表示されません。エラーが表示された場合には、エラー内容をよく見て修正します。
+書式が正しい場合には、何も表示されません。エラーが表示された場合には、エラー内容をよく見て修正します。例えば、パラメータ名を記載ミスした場合には、以下のように指摘されます。
+
+```
+/usr/sbin/postconf: warning: /etc/postfix/main.cf: unused parameter: mynetworkss=192.168.1.0/24 127.0.0.0/8
+```
+
 
 ## Postfixの起動
-postfixサービスを起動します。
+設定の変更内容を反映させるため、postfixサービスを再起動します。
 
 ```
-$ sudo systemctl start postfix
+ubuntu@host1example1test:~$ sudo systemctl restart postfix
 ```
 
-## 自動起動とファイアウォールの設定
-自動起動の設定や、ファイアウォールの設定を行います。
+## Postfixの自動起動
+Postfixの自動起動の設定を確認しておきます。
 
 ```
-$ sudo systemctl enable postfix
-$ sudo ufw allow 25/tcp
-$ sudo ufw status
-```
-
-### Postfixの起動順の設定（任意）
-上記systemctl enableコマンドでPostfixの自動起動を設定しても、システムを再起動するとPostfixが起動していないことがあります。これはシステム起動時のサービスの起動順の設定の仕様によるものです。
-
-具体的には、ネットワークサービスの起動完了を待たずにPostfixを起動しようとしているのが原因です。正しい動作をさせるためにはsystemdが参照している設定ファイルを修正する必要があります。
-
-本教科書の実習では頻繁にシステム再起動を行うことはないので、起動していない場合にはその都度Postfixを起動すればよいですが、連続稼働させるシステムでPostfixを動作させる場合には、以下の修正を行ってください。
-
-### systemctl editコマンドで修正
-systemctl editコマンドを使うと、対象となるサービスの設定ファイルを編集することができます。ただし、起動するエディタがnanoになるので、vimと使い勝手が若干異なる点に注意が必要です。
-
-### vimで設定ファイルを修正
-vimで設定ファイルを直接開いて修正しても構いません。設定ファイルは/usr/lib/systemd/system/postfix.serviceです。
-
-```
-$ sudo vi /usr/lib/systemd/system/postfix.service
-```
-
-```
-[Unit]
-Description=Postfix Mail Transport Agent
-After=syslog.target network-online.target ← network.targetをnetwork-online.targetに変更
-Conflicts=sendmail.service exim.service
-（略）
-```
-
-After=network.targetは、ネットワークサービスの起動の後にPostfixを起動しますが、ネットワークが使えるようになったことは確認しません。After=network-online.targetにすることで、ネットワークが使えるようになったことを確認した後にPostfixを起動します。
-
-変更が適用されたことを確認するため、システムを再起動し、Postfixが自動的に起動していることを確認してください。
-
-## SMTP認証（SASL認証連携）の設定
-SMTP認証は、メール送信時に認証を行う仕組みです。Postfix自体は認証の機能を持っていませんので、SASL認証との連携を行います。SASL認証連携を行うには、Postfixへの設定とsaslauthdサービスの起動が必要です。
-
-### Postfixの設定の確認
-Postfixの設定ファイルであるmain.cfでSASL認証を有効にします。既に以下の2つのパラメータを追加で設定しています。
-
-| 項目 | 設定値 |
-|------------|---------------|
-| smtpd_sasl_auth_enable | yes |
-| smtpd_recipient_restrictions | permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination |
-
-SMTP認証の機能を有効にすると、Postfixはsaslauthdに認証を依頼し、認証が成功するとメールを受け取ってリレーを行います。
-
-### saslauthdサービスの設定と起動
-saslauthd用の設定(/etc/postfix/sasl/smtpd.conf)を作成し、SMTP認証用のsaslauthdサービスを起動します。
-
-```
-$ sudo vi /etc/postfix/sasl/smtpd.conf
-
-$ sudo cat /etc/postfix/sasl/smtpd.conf
-pwcheck_method: saslauthd
-mech_list: plain login
-```
-
-```
-$ sudo systemctl start saslauthd
-```
-
-saslauthdの自動起動設定も行っておきます。
-
-```
-$ sudo systemctl enable saslauthd
+ubuntu@host1example1test:~$ systemctl is-enabled postfix
+enabled
 ```
 
 これでPostfixの設定は完了です。
@@ -305,16 +233,17 @@ $ sudo systemctl enable saslauthd
 メールのやり取りを行うためのアカウントを作成します。アカウントはhost1とhost2の双方で行います。
 
 ### host1にuser1を作成
-host1でuser1というアカウントを作成します。このアカウントはuser1@example1.jpというメールアドレスになります。passwdコマンドでパスワードの設定も行っておきます。
+host1でuser1というアカウントを作成します。このアカウントはuser1@example1.testというメールアドレスになります。
 
 ```
-ubuntu@host1example1jp:~$ sudo adduser user1
-info: Adding user 'user1' ...
+ubuntu@host1example1test:~$ sudo adduser user1
+[sudo] password for ubuntu:
+info: Adding user `user1' ...
 info: Selecting UID/GID from range 1000 to 59999 ...
-info: Adding new group 'user1' (1003) ...
-info: Adding new user 'user1' (1003) with group 'user1' (1003)' ...
-info: Creating home directory '/home/user1' ...
-info: Copying files from '/etc/skel' ...
+info: Adding new group `user1' (1001) ...
+info: Adding new user `user1' (1001) with group `user1 (1001)' ...
+info: Creating home directory `/home/user1' ...
+info: Copying files from `/etc/skel' ...
 New password:
 Retype new password:
 passwd: password updated successfully
@@ -326,25 +255,26 @@ Enter the new value, or press ENTER for the default
         Home Phone []:
         Other []:
 Is the information correct? [Y/n]
-info: Adding new user 'user1' to supplemental / extra groups 'users' ...
-info: Adding user 'user1' to group 'users' ...
+info: Adding new user `user1' to supplemental / extra groups `users' ...
+info: Adding user `user1' to group `users' ...
 ```
 
 ### host2にuser2を作成
-host2でuser2というアカウントを作成します。このアカウントはuser2@example2.jpというメールアドレスになります。passwdコマンドでパスワードの設定も行っておきます。
+host2でuser2というアカウントを作成します。このアカウントはuser2@example2.testというメールアドレスになります。
 
 ```
-ubuntu@host2example2jp:~$ sudo adduser user2
-info: Adding user 'user2' ...
+ubuntu@host2example2test:~$ sudo adduser user2
+[sudo] password for ubuntu:
+info: Adding user `user2' ...
 info: Selecting UID/GID from range 1000 to 59999 ...
-info: Adding new group 'user2' (1003) ...
-info: Adding new user 'user2' (1003) with group 'user2' (1003)' ...
-info: Creating home directory '/home/user2' ...
-info: Copying files from '/etc/skel' ...
+info: Adding new group `user2' (1001) ...
+info: Adding new user `user2' (1001) with group `user2 (1001)' ...
+info: Creating home directory `/home/user2' ...
+info: Copying files from `/etc/skel' ...
 New password:
 Retype new password:
 passwd: password updated successfully
-Changing the user information for user1
+Changing the user information for user2
 Enter the new value, or press ENTER for the default
         Full Name []:
         Room Number []:
@@ -352,81 +282,45 @@ Enter the new value, or press ENTER for the default
         Home Phone []:
         Other []:
 Is the information correct? [Y/n]
-info: Adding new user 'user1' to supplemental / extra groups 'users' ...
-info: Adding user 'user2' to group 'users' ...
+info: Adding new user `user2' to supplemental / extra groups `users' ...
+info: Adding user `user2' to group `users' ...
 ```
 
 ### メールエイリアスのデータベース構築
 newaliasesコマンドを実施し、メールエイリアスデータベースを構築します。
 
 ```
-ubuntu@host1examplejp:~$ sudo newaliases
+ubuntu@host1example1test:~$ sudo newaliases
 ```
 
 ## mailコマンドを使ったメール送受信のテスト
-メールの送受信が行えるかテストを行います。メールの送受信は作成したユーザーuser1とuser2で行います。ユーザーで操作できるよう別の端末を起動し、suコマンドを使ってユーザーを切り替えます。メールの送受信にはmailコマンドを使用します。
+メールの送受信が行えるかテストを行います。メールの送受信は作成したユーザーuser1とuser2で行います。ユーザーで操作できるようuser1/user2でリモートアクセス(ssh)を行い、メールの送受信にはmailコマンドを使用します。
+mailコマンドを利用できるようにパッケージ「mailutils」をインストールします。
+
+```
+ubuntu@host1example1test:~$ sudo apt install mailutils
+```
 
 ### ログの確認用端末の設定（任意）
 メールサーバーはバックグラウンドで動作するため、どのように動いているのか確認するためにはログを参照する必要があります。
 
 tailコマンドに-fオプションを付けて実行すると、ログが書き込まれる毎に再読み込みされて最新のログを閲覧できます。
 
-1. 「端末」を起動します。
+1. メールサーバへリモートアクセスします。
 1. tailコマンドを実行して/var/log/maillogを表示します。
 
 ```
-$ sudo tail -f /var/log/maillog
+ubuntu@host1example1test:~$ sudo tail -f /var/log/mail.log
 ```
 
-### メール送受信用端末の起動とユーザー切り替え
-メール送受信用の端末を起動し、suコマンドでユーザーの切り替えを行います。ユーザーを完全に切り替えるために「su - ユーザー名」と「-」（ハイフン）を付けて実行してください。
+ログの確認後は、「ctrl+c」で終了できます
 
-1. 「端末」を起動します。
-1. suコマンドでユーザーを切り替えます。
 
-### host1でuser1に切り替え
-host1はuser1で操作を行います。
+### user1@example1.testからuser2@example2.testへメール送信
+mailコマンドを使って、host1のuser1からuser2@example2.testへメールを送信します。
 
 ```
-ubuntu@host1example1jp:~$ sudo su - user1
-user1@host1example1jp:~$
-```
-
-### host2でuser2に切り替え
-host2はuser2で操作を行います。
-
-```
-ubuntu@host2example2jp:~$ sudo su - user2
-user2@host2example2jp:~$
-```
-
-### mailコマンドをMaildir形式に対応させる
-環境変数MAILを変更します。
-host1のuser1、host2のuser2それぞれで実施します。
-
-```
-user1@host1examplejp:~$ echo $MAIL
-/var/mail/user1
-user1@host1examplejp:~$ MAIL=^~/Maildir
-user1@host1examplejp:~$ MAIL=~/Maildir
-user1@host1examplejp:~$ $MAIL
-/home/user1/Maildir
-```
-
-```
-user2@host2example2jp:~$ echo $MAIL
-/var/mail/user2
-user2@host2example2jp:~$ MAIL=^~/Maildir
-user2@host2example2jp:~$ MAIL=~/Maildir
-user2@host2example2jp:~$ $MAIL
-/home/user2/Maildir
-```
-
-### user1@example1.jpからuser2@example2.jpへメール送信
-mailコマンドを使って、host1のuser1からuser2@example2.jpへメールを送信します。
-
-```
-user1@host1example1jp:~$ mail user2@example2.jp ← mailコマンドの引数に宛先のアドレスを指定
+user1@host1example1test:~$ mail user2@example2.test ← mailコマンドの引数に宛先のアドレスを指定
 Cc:
 Subject: Test mail from user1 ← Subjectを入力
 This is test mail from user1 ← メッセージ本文を入力
@@ -434,39 +328,42 @@ This is test mail from user1 ← メッセージ本文を入力
 ```
 
 ### user2のメール着信確認
-mailコマンドを使って、host2.example2.jpのuser2にメールが届いているかを確認します。
+mailコマンドを使って、host2.example2.testのuser2にメールが届いているかを確認します。
 
 ```
-user2@host2exampl2jp:~$ mail
-"/home/user2/Maildir": 1 messages 1 new
->N   1 user1@host1example Wed Aug 14 11:36  13/415   "Test mail from user1"
+user2@host2example2test:~$ mail
+"/var/mail/user2": 1 message 1 new
+>N   1 user1@host1example Tue May  6 00:09  16/655   Test mail from user1
 & 1	← 1を入力
-Message  1:
-From user1@mail.example1.jp  Wed Aug 14 11:36:31 2024
-Return-Path: <user1@mail.example1.jp>
-X-Original-To: user2@example2.jp
-Delivered-To: user2@example2.jp
-Date: Wed, 14 Aug 2024 11:36:31 +0900
-To: user2@example2.jp
+Return-Path: <user1@host1example1test>
+X-Original-To: user2@example2.test
+Delivered-To: user2@example2.test
+Received: from mail.example1.test (unknown [192.168.1.12])
+        by mail.example2.test (Postfix) with ESMTPS id 8B71822224
+        for <user2@example2.test>; Tue,  6 May 2025 00:09:08 +0000 (UTC)
+Received: by mail.example1.test (Postfix, from userid 1001)
+        id 351E8401B; Tue,  6 May 2025 00:09:08 +0000 (UTC)
+To: <user2@example2.test>
 Subject: Test mail from user1
-User-Agent: Heirloom mailx 12.5 7/5/10
-Content-Type: text/plain; charset=us-ascii
-From: user1@mail.example1.jp
-Status: R
+User-Agent: mail (GNU Mailutils 3.17)
+Date: Tue,  6 May 2025 00:09:08 +0000
+Message-Id: <20250506000908.351E8401B@mail.example1.test>
+From: user1@host1example1test
 
-This is Test Mail from user1
+This is test mail from user1
 
 & q	← qを入力
 ```
 
-このように、host1.example1.jpからhost2.example2.jpにメールが送られていることがわかります。
+このように、host1.example1.testからhost2.example2.testにメールが送られていることがわかります。
 
-反対にuser2@example2.jpからuser1@example1.jpへのメールも送信できることを確認してみましょう。
+反対にuser2@example2.testからuser1@example1.testへのメールも送信できることを確認してみましょう。
 
 ## メールクライアントソフトでのメールの送受信
 通常のメールサーバーの運用では、メールの利用者はメールクライアントを使用してメールの送受信を行います。送信はSMTP、受信はIMAP4やPOP3をプロトコルとして使用します。
 
-IMAPサーバーを利用してメールを受信できるよう、IMAPサーバーであるDovecotと、メールクライアントとしてThunderbirdをインストールして、メールを送受信してみます。
+IMAPサーバーを利用してメールを受信できるよう、POP3/IMAPサーバーであるDovecotを設定し、メールを送受信してみます。
+また、メールクライアントにはVirtualboxを動作させているホストPC上にThunderbirdなどのソフトウェアをインストールしメールの送受信を行います。
 
 以下の作業はhost1で行いますが、host2でも設定して双方向でメールのやり取りができるようにしてもよいでしょう。
 
@@ -503,7 +400,7 @@ $ sudo vi /etc/dovecot/dovecot.conf
 今回はmbox形式のメールボックスを指定します。また、メールボックスへのアクセス権限を設定します。
 
 ```
-$ sudo vi /etc/dovecot/conf.d/10-mail.conf
+ubuntu@host1example1test:~$ sudo vi /etc/dovecot/conf.d/10-mail.conf
 ```
 
 ```
@@ -515,7 +412,7 @@ $ sudo vi /etc/dovecot/conf.d/10-mail.conf
 # <doc/wiki/MailLocation.txt>
 #
 #mail_location =
-mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 上にある2番目の例を参考に追加
+mail_location = mbox:~/mail:INBOX=/var/mail/%u	← postfixでも使われるmbox形式によるメールの保存を行う
 
 （略）
 
@@ -523,7 +420,7 @@ mail_location = mbox:~/mail:INBOX=/var/mail/%u	← 上にある2番目の例を�
 # used only with INBOX when either its initial creation or dotlocking fails.
 # Typically this is set to "mail" to give access to /var/mail.
 #mail_privileged_group =
-mail_privileged_group = mail ← 権限が必要な動作はmailグループとして行うように追加
+mail_privileged_group = mail ← 権限が必要な動作はmailグループとして行う
 
 # Grant access to these supplementary groups for mail processes. Typically
 # these are used to set up access to shared mailboxes. Note that it may be
@@ -541,7 +438,7 @@ mail_access_groups = mail ← mailグループにアクセス権限を与える�
 今回は暗号化していない平文での認証を許可します。
 
 ```
-$ sudo vi /etc/dovecot/conf.d/10-auth.conf
+ubuntu@host1example1test:~$ sudo vi /etc/dovecot/conf.d/10-auth.conf
 ```
 
 ```
@@ -565,7 +462,7 @@ SSL/TLSを設定するファイルです。
 今回はSSL/TLS暗号化をしませんので、SSL/TLS暗号化の利用を停止しておきます。
 
 ```
-$ sudo vi /etc/dovecot/conf.d/10-ssl.conf
+ubuntu@host1example1test:~$ sudo vi /etc/dovecot/conf.d/10-ssl.conf
 ```
 
 ```
@@ -576,56 +473,47 @@ $ sudo vi /etc/dovecot/conf.d/10-ssl.conf
 # SSL/TLS support: yes, no, required. <doc/wiki/SSL.txt>
 # disable plain pop3 and imap, allowed are only pop3+TLS, pop3s, imap+TLS and imaps
 # plain imap and pop3 are still allowed for local connections
-ssl = no	← requiredをnoに変更
+ssl = no	← yesをnoに変更
 ```
 
-## Dovecotの起動
-dovecotサービスを起動します。
+## Dovecotの再起動
+dovecotサービスを再起動します。
 
 ```
-$ sudo systemctl start dovecot
+ubuntu@host1example1test:~$ sudo systemctl restart dovecot
 ```
 
-### 自動起動とファイアウォールの設定
-自動起動の設定や、ファイアウォールの設定を行います。
+### Dovecotの自動起動
+自動起動の設定を確認します。
 
 ```
-$ sudo systemctl enable dovecot
-$ sudo ufw allow 110/tcp
-$ sudo ufw allow 143/tcp
-$ sudo ufw status
+ubuntu@host1example1test:~$ sudo systemctl is-enabled dovecot
+enabled
 ```
 
-## Thunderbirdの設定
-次にメールクライアントとしてThunderbirdの設定を行います。
+## メールクライアントの設定
+次に、ホストPCにてメールクライアントソフトウェアのThunderbirdの設定を行いますが、まずホストPCが利用するDNSサーバの情報を、構築済みのDNSサーバ「192.168.1.11」に変更します。
 
-### ユーザーを切り替えてログイン
-メールの送受信テスト用に作成したユーザーアカウントuser1でログインします。
+![ホストPCのDNS設定変更](image/Ch6/hostPCdnssetting.png){width=70%}
 
-その他のユーザーでログインしている場合にはログアウトします。
-
-パスワードはuserpassです。正しく設定されていない場合には、改めてpasswdコマンドで設定し直してください。このパスワードがThunderbirdの設定にも使用されます。
 
 ### Thunderbirdの起動
 Thunderbirdを起動します。
-
-画面左上にある「アクティビティ」をクリックし、画面下に表示されるアイコンドックから一番右にある「アプリケーションを表示する」をクリックします。表示されるアプリケーションアイコンから「Thunderbird」をクリックします。
-
-![Thunderbirdの起動](image/Ch6/Appli.png){width=70%}
 
 Thunderbirdが起動すると別途Webブラウザが開いてThunderbirdのWebページが表示されますが、Webブラウザごと閉じて構いません。
 
 \pagebreak
 ### Thunderbirdの基本設定
 Thunderbirdのアプリケーションウインドウを表示し、「既存のメールアドレスのセットアップ」タブが表示されていることを確認します。
+もしくは、「メールアカウント操作」の中にある「メールアカウントを追加」を選択します。
 
 各設定項目の値を以下のように入力します。
 
 | 設定項目 | 設定値 |
 |---|---|
 | あなたの名前 |user1 |
-| メールアドレス |user1@example1.jp |
-| パスワード |userpass |
+| メールアドレス |user1@example1.test |
+| パスワード |アカウント作成時に指定したもの |
 | パスワードを記憶する | チェックしておく |
 
 ![メールアドレスとパスワードの設定](image/Ch6/ThunderbirdSetup1.png){width=70%}
@@ -663,6 +551,11 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 ![警告ダイアログ](image/Ch6/Warning.png){width=70%}
 
 最後に「リンクしたサービスへの接続」の「完了」ボタンをクリックします。
+正常に完了出来た場合、
+
+![正常完了ダイアログ1](image/Ch6/CorrectSetting1.png){width=70%}
+![正常完了ダイアログ2](image/Ch6/CorrectSetting2.png){width=70%}
+
 
 \pagebreak
 ## メールの送信
@@ -673,13 +566,44 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 1. 宛先に自分のメールアドレス（user1@example1.jp）を指定して、メールを作成、送信してみます。
 1. 「受信」ボタンをクリックして、メールが受信できることを確認します。
 
+![テストメール1](image/Ch6/testmail1.png){width=70%}
+
 ### 別サーバー宛のメール送信
 1. 「作成」ボタンをクリック
 1. 宛先に他の受講生のメールアドレス（user2@example2.jp）を指定して、メールを作成、送信してみます。
 1. host2でmailコマンドを使ってメールを受信できたことを確認します。
 1. mailコマンドでuser1@example1.jp宛にメールを送信し、host1で受信できることを確認します。
 
-![Thunderbirdのメール送受信画面](image/Ch6/ThunderbirdMailbox.png){width=70%}
+```
+user2@host2example2test:~$ mail
+"/var/mail/user2": 1 message 1 new
+>N   1 user1              Tue May  6 01:05  22/890   テストメール from u
+? 1
+Return-Path: <user1@example1.test>
+X-Original-To: user2@example2.test
+Delivered-To: user2@example2.test
+Received: from mail.example1.test (unknown [192.168.1.12])
+        by mail.example2.test (Postfix) with ESMTPS id 9B1E4220B3
+        for <user2@example2.test>; Tue,  6 May 2025 01:05:40 +0000 (UTC)
+Received: from [192.168.1.122] (unknown [192.168.1.122])
+        by mail.example1.test (Postfix) with ESMTP id 3DF257A3D
+        for <user2@example2.test>; Tue,  6 May 2025 01:05:39 +0000 (UTC)
+Message-ID: <15e595f5-6ea5-4b67-9242-e69458cce8fb@example1.test>
+Date: Tue, 6 May 2025 10:05:37 +0900
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: user2@example2.test
+From: user1 <user1@example1.test>
+Subject: テストメール from user1
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+テストメール(from user1)です
+
+? q
+```
+
 
 ## うまく動作しない場合には
 本章では、電子メールに関する学習を行いました。また、実際にメールサーバーを設定し、mailコマンドやThunderbirdを利用してメールの送受信の確認を行いました。
