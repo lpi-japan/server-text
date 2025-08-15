@@ -147,9 +147,9 @@ example2.testゾーンを管理するDNSコンテンツサーバーとして設�
 
 |ドメイン名|ホスト名|IPアドレス|
 |---|---|---|
-| test. | host0.test. | 192.168.1.11 |
-| example1.test. | host1.example1.test. | 192.168.1.12 |
-| example2.test. | host2.example2.test. | 192.168.1.13 |
+| test | host0.test | 192.168.1.11 |
+| example1.test | host1.example1.test | 192.168.1.12 |
+| example2.test | host2.example2.test | 192.168.1.13 |
 
 ## アドレス解決の流れ
 host1.example1.testのマシン(192.168.1.12)がホストwww.example2.testを解決するときの動きを追ってみましょう。

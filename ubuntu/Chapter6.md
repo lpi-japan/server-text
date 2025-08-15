@@ -106,8 +106,9 @@ Postfixのインストールでは設定のタイプの選択をしますが、�
 $ sudo apt install postfix dovecot-pop3d dovecot-imapd
 ```
 
-![Postfix Configurationのタイプ](image/Ch6/postfixconfiguration.png){width=70%}
-![Postfix Configuration(ドメイン設定)](image/Ch6/postfixconfiguration2.png){width=70%}
+![PostfixConfigurationのタイプ](image/Ch6/postfixconfiguration.png){width=70%}
+
+![PostfixConfiguration(ドメイン設定)](image/Ch6/postfixconfiguration2.png){width=70%}
 
 ## Postfixの設定ファイルmain.cfの設定
 Postfixの設定ファイルは/etc/postfix/main.cfです。次のパラメータを探して設定します。
@@ -496,6 +497,7 @@ enabled
 
 ![ホストPCのDNS設定変更](image/Ch6/hostPCdnssetting.png){width=70%}
 
+\pagebreak
 
 ### Thunderbirdの起動
 Thunderbirdを起動します。
@@ -527,7 +529,7 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 | 設定項目 | 設定値 |
 |---|---|
 | プロトコル | IMAP |
-| ホスト名 | mail.example1.jp |
+| ホスト名 | mail.example1.test |
 | ポート番号 | 143 |
 | 接続の保護 | なし |
 | 認証方式 | 通常のパスワード認証 |
@@ -535,7 +537,7 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 
 | 設定項目 | 設定値 |
 |------------|---------------|
-| ホスト名 | mail.example1.jp |
+| ホスト名 | mail.example1.test |
 | ポート番号 | 25 |
 | 接続の保護 | なし |
 | 認証方式 | 通常のパスワード認証 |
@@ -546,6 +548,7 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 入力を終えたら「完了」ボタンをクリックします。
 
 \pagebreak
+
 「警告！」ダイアログが表示されますが、左下の「接続する上での危険性を理解しました」をチェックし、「確認」ボタンをクリックします。
 
 ![警告ダイアログ](image/Ch6/Warning.png){width=70%}
@@ -554,8 +557,8 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 正常に完了出来た場合、
 
 ![正常完了ダイアログ1](image/Ch6/CorrectSetting1.png){width=70%}
-![正常完了ダイアログ2](image/Ch6/CorrectSetting2.png){width=70%}
 
+![正常完了ダイアログ2](image/Ch6/CorrectSetting2.png){width=70%}
 
 \pagebreak
 ## メールの送信
@@ -563,16 +566,16 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 
 ### 自分宛のメール送信
 1. 「作成」ボタンをクリック
-1. 宛先に自分のメールアドレス（user1@example1.jp）を指定して、メールを作成、送信してみます。
+1. 宛先に自分のメールアドレス（user1@example1.test）を指定して、メールを作成、送信してみます。
 1. 「受信」ボタンをクリックして、メールが受信できることを確認します。
 
 ![テストメール1](image/Ch6/testmail1.png){width=70%}
 
 ### 別サーバー宛のメール送信
 1. 「作成」ボタンをクリック
-1. 宛先に他の受講生のメールアドレス（user2@example2.jp）を指定して、メールを作成、送信してみます。
+1. 宛先に他の受講生のメールアドレス（user2@example2.test）を指定して、メールを作成、送信してみます。
 1. host2でmailコマンドを使ってメールを受信できたことを確認します。
-1. mailコマンドでuser1@example1.jp宛にメールを送信し、host1で受信できることを確認します。
+1. mailコマンドでuser1@example1.test宛にメールを送信し、host1で受信できることを確認します。
 
 ```
 user2@host2example2test:~$ mail
@@ -609,4 +612,5 @@ Content-Transfer-Encoding: 8bit
 本章では、電子メールに関する学習を行いました。また、実際にメールサーバーを設定し、mailコマンドやThunderbirdを利用してメールの送受信の確認を行いました。
 
 メールサーバーの設定は、メールサーバーが正しく設定され起動していたとしても、DNSサーバーが正しく動いていなければ利用できない場合があります。設定ファイルの記述に問題がないのに、メールがどうしても送れない、受信できない場合は、まずDNSが正しく動いているかdigコマンドを実行して確認します。また、ログ（/var/log/maillog）を見て、エラーが出ていないかを確認してみてください。
+
 \pagebreak
