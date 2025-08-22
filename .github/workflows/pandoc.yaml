@@ -13,8 +13,8 @@ jobs:
         shell: sh
         working-directory: ${{ inputs.working-directory }}
     container:
-      image: ghcr.io/kujiraitakahiro/server-text:latest
-#      image: ghcr.io/lpi-japan/server-text:latest
+#      image: ghcr.io/kujiraitakahiro/server-text:latest
+      image: ghcr.io/lpi-japan/server-text:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.github_token }}
