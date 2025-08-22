@@ -13,7 +13,6 @@ jobs:
         shell: sh
         working-directory: ${{ inputs.working-directory }}
     container:
-#      image: ghcr.io/kujiraitakahiro/server-text:latest
       image: ghcr.io/lpi-japan/server-text:latest
       credentials:
         username: ${{ github.actor }}
@@ -21,8 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          chapter=$(ls -1 Chapter*.md | grep -v 'Chapter0.md' | sort -V | tr '\n' ' ' | sed 's/ $//')
-          pandoc Chapter0.md -o preface.tex
+          tlmgr update --self
+          tlmgr install wallpaper && tlmgr install eso-pic
+          chapter=$(ls -1 Chapter*.md | grep -v 'Chapter00.md' | sort -V | tr '\n' ' ' | sed 's/ $//')
+          pandoc Chapter00.md -o preface.tex
           pandoc -d config.yaml --template template.tex -B preface.tex $chapter -o guide.pdf
       - uses: actions/upload-artifact@v4
         with:
@@ -38,13 +39,9 @@ jobs:
       image: pandoc/core:3.1.1.0
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          cat $(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//') | sed 's/^####.*/#& {-}/' > guide.md
-          /usr/bin/awk 'BEGIN{go=0;}{ if (go==1){print;} else {if($$0 ~ /^#/) { go=1;print;}}}' guide.md \
-            | pandoc -t epub3 -F pandoc-crossref -o guide.epub -N -M "crossrefYaml=crossref.yaml" \
-                --metadata-file=../metadata.yaml \
-                --epub-cover-image=image/Cover/cover.png \
-                --css=../epub.css
+      - id: list-items
+        run: cat $(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//') | sed 's/^####.*/#& {-}/' > guide.md
+      - run: /usr/bin/awk 'BEGIN{go=0;}{ if (go==1){print;} else {if($$0 ~ /^#/) { go=1;print;}}}' guide.md | pandoc -t epub3 -F pandoc-crossref -o guide.epub -N -M "crossrefYaml=crossref.yaml" --metadata-file=metadata.yaml --epub-cover-image=image/Cover/cover.png --css=epub.css
       - uses: actions/upload-artifact@v4
         with:
           name: guide.epub
