@@ -79,9 +79,7 @@ DNSやメールの実習では3台の仮想マシンを使って実習を行う�
 ## 利用するLinuxのディストリビューション
 本教科書では、AlmaLinux 9.3のIntel/AMD x86_64アーキテクチャに対応したバージョンを利用します。
 
-```
 https://almalinux.org/ja/
-```
 
 ![AlmaLinuxのWebサイト](image/Ch1/AlmaLinuxOrg.png){width=70%}
 
@@ -93,15 +91,11 @@ AlmaLinuxが配布しているISOイメージを、ダウンロードします�
 #### ダウンロード方法
 ISOイメージをダウンロードするには、以下のURLにアクセスします。
 
-```
 https://mirrors.almalinux.org/isos/x86_64/9.3.html
-```
 
 このURLにアクセスすると、多くのミラーサイトが表示されます。例えば、IIJが提供しているミラーサイトのURLであれば次のようになります。
 
-```
 http://ftp.iij.ad.jp/pub/linux/almalinux/9.3/isos/x86_64/
-```
 
 #### URLが利用できない場合
 URLはサイト構造の変更によって変わっている場合があります。その場合には、AlmaLinuxのWebサイトからリンクを辿ってダウンロードサイトを探してください。
