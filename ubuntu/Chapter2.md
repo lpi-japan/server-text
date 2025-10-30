@@ -94,7 +94,11 @@ https://www.virtualbox.org/
 
 ![VirtualBoxのダウンロードサイト](image/Ch2/VirtualBoxOrgDownload.png){width=70%}
 
+<<<<<<< HEAD
 今回はバージョン7.1.18を使用しています。
+=======
+今回はバージョン7.1.8を使用しています。
+>>>>>>> 54dc51357dffe6767103405ce3ffe1e1f32044ef
 
 \pagebreak
 ### VirtualBoxのインストーラの実行
