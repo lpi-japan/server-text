@@ -63,7 +63,6 @@ OSインストール用のISOイメージを読み込んで起動すると、最
 なお、サーバとして使用するため、enp0s8は固定IPアドレスを設定します。
 
 固定IPアドレスの設定方法
-<<<<<<< HEAD
 1.「enp0s3 eth」を選択肢、Enter押下
 2.「Edit IPv4」を選択後、Enter押下
 3.「IPv4 Method」を選択後、「Manual」に変更
@@ -71,23 +70,6 @@ OSインストール用のISOイメージを読み込んで起動すると、最
 Subnet：192.168.1.0/24
 Address:192.168.1.12
 Gateway:192.168.1.1
-=======
-
-1.「enp0s3 eth」を選択肢、Enter押下
-
-2.「Edit IPv4」を選択後、Enter押下
-
-3.「IPv4 Method」を選択後、「Manual」に変更
-
-4.以下のように各項目を設定
-
-Subnet：192.168.1.0/24
-
-Address:192.168.1.12
-
-Gateway:192.168.1.1
-
->>>>>>> 54dc51357dffe6767103405ce3ffe1e1f32044ef
 Name servers:192.168.1.12
 
 ![ネットワーク設定画面](image/Ch3/05_networksetting.png){width=70%}
