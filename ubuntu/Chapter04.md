@@ -412,15 +412,9 @@ ubuntu@host1example1test:~$ sudo sh -c "echo 'Welcome to My First Web Server' > 
 
 \pagebreak
 ### Webブラウザからのアクセスとログの確認
-<<<<<<< HEAD
-Webブラウザから再度Webサーバーにアクセスしてみます。今度はテストページではなく、「Hello,World」の文字列が表示されたのではないでしょうか。
-
-![「Hello,World」に表示が変わった画面](image/Ch4/Welcome.png){width=70%}
-=======
 Webブラウザから再度Webサーバーにアクセスしてみます。今度はテストページではなく、変更したメッセージが表示されたのではないでしょうか。
 
 ![メッセージ表示が変わった画面](image/Ch4/Welcome.png){width=70%}
->>>>>>> 54dc51357dffe6767103405ce3ffe1e1f32044ef
 
 また、アクセスログにどのように記録されているか、エラーログにエラーが記録されていないことも確認してみてください。
 
