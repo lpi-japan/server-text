@@ -122,10 +122,7 @@ Ubuntu Pro(有償サポート)の選択画面が表示されるので、選択�
 OpenSSHのインストールを選択します。
 
 ![OpenSSHInstall画面](image/Ch3/13_openssh.png){width=70%}
-<<<<<<< HEAD
-=======
 
->>>>>>> 54dc51357dffe6767103405ce3ffe1e1f32044ef
 \pagebreak
 
 
@@ -144,10 +141,7 @@ OpenSSHのインストールを選択します。
 再起動が行われ、ユーザ名を入力するプロンプトが表示されればインストールは完了です。
 
 ![Process画面](image/Ch3/15_installprocess1.png){width=70%}
-<<<<<<< HEAD
-=======
 
->>>>>>> 54dc51357dffe6767103405ce3ffe1e1f32044ef
 \pagebreak
 
 ## ログインとログアウト
