@@ -143,10 +143,13 @@ https://linuc.org/textbooks/server/
 ![https://linuc.org/textbooks/server/](image/Ch0/QRserver.png){width=25%}
 
 ## 本教科書の使用に関するお問合せ先 {.unlisted .unnumbered}
-特定非営利活動法人エルピーアイジャパン（LPI-Japan）事務局  
-〒100-0011 東京都千代田区内幸町2-1-1 飯野ビルディング9階  
-TEL：03-6205-7025  
-E-Mail：info@lpi.or.jp
+特定非営利活動法人エルピーアイジャパン（LPI-Japan）事務局
+
+```
+お問い合わせ：https://lpij.tayori.com/f/textbookinfo/
+```
+
+![https://lpij.tayori.com/f/textbookinfo/](image/Ch0/QR_toiawase.png){width=25%}
 
 \pagebreak
 ## Linux技術者認定「LinuC（リナック）」のご紹介 {.unlisted .unnumbered}
