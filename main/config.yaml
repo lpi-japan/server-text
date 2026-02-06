@@ -10,7 +10,7 @@ variables:
   documentClass: ltjarticle
   mainfont: Harano Aji Gothic
   bookTitle: Linuxサーバー構築標準教科書
-  bookVersion: 2025年4月1日 \, \, Ver.4.0.1
+  bookVersion: 2026年2月6日 \, \, Ver.4.0.2
 
 toc: true
 
