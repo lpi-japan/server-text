@@ -61,31 +61,31 @@ https://linuc.org/textbooks/server/
 ## 全体の流れ {.unlisted .unnumbered}
 本教科書では、以下の通りに実習を進めます。
 
-### 1章 Linuxサーバー構築の概要 {.unlisted .unnumbered}
+### 1章&nbsp;Linuxサーバー構築の概要 {.unlisted .unnumbered}
 本教科書で行う実習の全体像や事前に説明しておくべき事項を解説しています。
 
-### 2章 仮想マシン環境の準備 {.unlisted .unnumbered}
+### 2章&nbsp;仮想マシン環境の準備 {.unlisted .unnumbered}
 仮想マシンについての解説と、VirtualBoxのインストール、仮想マシンの作成を行います。
 
-### 3章 Linuxのインストールと設定 {.unlisted .unnumbered}
+### 3章&nbsp;Linuxのインストールと設定 {.unlisted .unnumbered}
 仮想マシンにLinuxをインストールします。
 
-### 4章 Webサーバーのインストールと設定 {.unlisted .unnumbered}
+### 4章&nbsp;Webサーバーのインストールと設定 {.unlisted .unnumbered}
 LinuxにWebサーバーとしてnginxをインストールします。
 
-### 5章 DNSサーバーのインストールと設定 {.unlisted .unnumbered}
+### 5章&nbsp;DNSサーバーのインストールと設定 {.unlisted .unnumbered}
 LinuxにDNSサーバーとしてBINDをインストールして、ドメインを設定し、名前解決が行えるようにします。複数の仮想マシンを用意し、相互に名前解決で接続できるようにします。
 
-### 6章 メールサーバーのインストールと設定 {.unlisted .unnumbered}
+### 6章&nbsp;メールサーバーのインストールと設定 {.unlisted .unnumbered}
 LinuxにメールサーバーとしてPostfixやDovecotをインストールし、メールの送受信が行えるように設定します。
 
-### 7章 ネットワークとセキュリティの設定 {.unlisted .unnumbered}
+### 7章&nbsp;ネットワークとセキュリティの設定 {.unlisted .unnumbered}
 Linuxのネットワークやセキュリティを設定します。
 
 ## 執筆者・制作者紹介 {.unlisted .unnumbered}
 本教科書は、オープンなプロジェクト形式で開発を行っています。企画段階から意見交換を行い、事前の技術的な調査、執筆、レビューなどをプロジェクトのメンバーで分担して行っています。
 
-### 鯨井 貴博（バージョン1執筆担当、LinuCエヴァンジェリスト/株式会社ゼウス・エンタープライズ） {.unlisted .unnumbered}
+### 鯨井&nbsp;貴博（バージョン1執筆担当、LinuCエヴァンジェリスト/株式会社ゼウス・エンタープライズ） {.unlisted .unnumbered}
 本教科書は、Linux/オープンソースソフトウェアをこれから勉強する皆さんと、熱心に指導に当たられている先生方の一助になればと思い、作成いたしました。
 
 ### 開発にご協力をいただいた方々（50音順） {.unlisted .unnumbered}
@@ -130,9 +130,12 @@ https://linuc.org/textbooks/server/
 
 ## 本教科書の使用に関するお問合せ先 {.unlisted .unnumbered}
 特定非営利活動法人エルピーアイジャパン（LPI-Japan）事務局
-〒100-0011 東京都千代田区内幸町2-1-1 飯野ビルディング9階
-TEL：03-6205-7025
-E-Mail：info@lpi.or.jp
+
+```
+お問い合わせ：https://lpij.tayori.com/f/textbookinfo/
+```
+
+![https://lpij.tayori.com/f/textbookinfo/](image/Ch0/QR_toiawase.png){width=25%}
 
 \pagebreak
 ## Linux技術者認定「LinuC（リナック）」のご紹介 {.unlisted .unnumbered}
@@ -148,11 +151,11 @@ LinuCの出題範囲策定や試験開発は、実際に現場で活躍してい
 ### LinuCレベル２ {.unlisted .unnumbered}
 仮想環境を含むLinuxのシステム設計・ネットワーク構築において、アーキテクチャに基づいた設計・導入・保守・問題解決ができるエンジニアの証明（ITSSレベル2）
 
-### LinuCレベル３ {.unlisted .unnumbered}
-異種混在環境の運用スキル、Linuxベースのセキュアなシステム設計・構築スキル、大規模な仮想化システムや高可用性システムの構築スキルといったスペシャリストの証明（ITSSレベル3）
+### LinuCレベル３&nbsp;プラットフォームスペシャリスト・セキュリティスペシャリスト {.unlisted .unnumbered}
+仮想化・自動化などにより柔軟性と可用性を備えたLinuxプラットフォームの構築運用や、セキュアLinuxシステムのためのOSからミドルウェアまでの各層堅牢化や認証認可基盤の構築および攻撃対策を実現できるスペシャリストの証明（ITSSレベル3）
 
-### LinuCシステムアーキテクト {.unlisted .unnumbered}
-オンプレ／クラウド、物理／仮想化を含むシステムのライフサイクル全体を俯瞰して最適なアーキテクチャを設計・構築ができる上級エンジニアの証明（ITSSレベル4相当のスキルレベル）
+### LinuCレベル４&nbsp;システムアーキテクト {.unlisted .unnumbered}
+オンプレ／クラウド、物理／仮想化を含むシステムのライフサイクル全体を俯瞰して最適なアーキテクチャを設計・構築ができる上級エンジニアの証明（ITSSレベル4）
 
 \pagebreak
 LinuCの詳細については、以下のWebサイトを参照してください。
