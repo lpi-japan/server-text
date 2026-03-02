@@ -68,10 +68,10 @@ OSインストール用のISOイメージを読み込んで起動すると、最
 1. 「Edit IPv4」を選択後、Enter押下 
 1. 「IPv4 Method」を選択後、「Manual」に変更 
 1. 以下のように各項目を設定 
-- Subnet：192.168.1.0/24
-- Address:192.168.1.12
-- Gateway:192.168.1.1
-- Name servers:192.168.1.12
+   - Subnet: 192.168.1.0/24
+   - Address: 192.168.1.12
+   - Gateway: 192.168.1.1
+   - Name servers: 192.168.1.12
 
 ![ネットワーク設定画面](image/Ch3/05_networksetting.png){width=70%}
 
