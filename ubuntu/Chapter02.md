@@ -94,7 +94,7 @@ https://www.virtualbox.org/
 
 ![VirtualBoxのダウンロードサイト](image/Ch2/VirtualBoxOrgDownload.png){width=70%}
 
-今回はバージョン7.1.18を使用しています。
+今回はバージョン7.1.8を使用しています。
 
 \pagebreak
 ### VirtualBoxのインストーラの実行

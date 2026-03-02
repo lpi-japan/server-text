@@ -107,6 +107,7 @@ $ sudo apt install postfix dovecot-pop3d dovecot-imapd
 ```
 
 ![Postfix Configurationのタイプ](image/Ch6/postfixconfiguration.png){width=70%}
+
 ![Postfix Configuration(ドメイン設定)](image/Ch6/postfixconfiguration2.png){width=70%}
 
 ## Postfixの設定ファイルmain.cfの設定
