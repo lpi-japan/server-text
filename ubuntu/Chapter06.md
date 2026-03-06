@@ -107,6 +107,7 @@ $ sudo apt install postfix dovecot-pop3d dovecot-imapd
 ```
 
 ![Postfix Configurationのタイプ](image/Ch6/postfixconfiguration.png){width=70%}
+
 ![Postfix Configuration(ドメイン設定)](image/Ch6/postfixconfiguration2.png){width=70%}
 
 ## Postfixの設定ファイルmain.cfの設定
@@ -527,7 +528,7 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 | 設定項目 | 設定値 |
 |---|---|
 | プロトコル | IMAP |
-| ホスト名 | mail.example1.jp |
+| ホスト名 | mail.example1.test |
 | ポート番号 | 143 |
 | 接続の保護 | なし |
 | 認証方式 | 通常のパスワード認証 |
@@ -535,7 +536,7 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 
 | 設定項目 | 設定値 |
 |------------|---------------|
-| ホスト名 | mail.example1.jp |
+| ホスト名 | mail.example1.test |
 | ポート番号 | 25 |
 | 接続の保護 | なし |
 | 認証方式 | 通常のパスワード認証 |
@@ -563,16 +564,16 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 
 ### 自分宛のメール送信
 1. 「作成」ボタンをクリック
-1. 宛先に自分のメールアドレス（user1@example1.jp）を指定して、メールを作成、送信してみます。
+1. 宛先に自分のメールアドレス（user1@example1.test）を指定して、メールを作成、送信してみます。
 1. 「受信」ボタンをクリックして、メールが受信できることを確認します。
 
 ![テストメール1](image/Ch6/testmail1.png){width=70%}
 
 ### 別サーバー宛のメール送信
 1. 「作成」ボタンをクリック
-1. 宛先に他の受講生のメールアドレス（user2@example2.jp）を指定して、メールを作成、送信してみます。
+1. 宛先に他の受講生のメールアドレス（user2@example2.test）を指定して、メールを作成、送信してみます。
 1. host2でmailコマンドを使ってメールを受信できたことを確認します。
-1. mailコマンドでuser1@example1.jp宛にメールを送信し、host1で受信できることを確認します。
+1. mailコマンドでuser1@example1.test宛にメールを送信し、host1で受信できることを確認します。
 
 ```
 user2@host2example2test:~$ mail

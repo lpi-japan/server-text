@@ -9,6 +9,8 @@ filters:
 variables:
   documentClass: ltjarticle
   mainfont: Harano Aji Gothic
+  bookTitle: Linuxサーバー構築標準教科書 (Ubuntu版)
+  bookVersion: 2025年12月9日 \, \, Ver.1.0.0
 
 toc: true
 

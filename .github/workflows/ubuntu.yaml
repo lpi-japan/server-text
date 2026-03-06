@@ -8,6 +8,8 @@ on:
     paths:
       - ubuntu/Chapter*.md
       - ubuntu/image/**
+      - ubuntu/config-pdf.yaml
+      - ubuntu/config-epub.yaml
       - listing.tex
       - .github/workflows/pandoc.yaml
       - .github/workflows/ubuntu.yaml
