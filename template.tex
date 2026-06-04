@@ -279,6 +279,10 @@ $if(multirow)$
 \usepackage{multirow}
 $endif$
 \usepackage{calc} % for calculating minipage widths
+% Compatibility with recent pandoc longtable output that may set \LTcaptype{none}
+\makeatletter
+\@ifundefined{c@none}{\newcounter{none}}{}
+\makeatother
 $if(beamer)$
 \usepackage{caption}
 % Make caption package work with longtable
