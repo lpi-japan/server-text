@@ -1,0 +1,23 @@
+name: main-en build
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+    paths:
+      - main-en/Chapter*.md
+      - main-en/image/**
+      - main-en/config-pdf.yaml
+      - main-en/config-epub.yaml
+      - listing.tex
+      - template-en.tex
+      - crossref-en.yaml
+      - .github/workflows/pandoc.yaml
+      - .github/workflows/main-en.yaml
+
+jobs:
+  build:
+    uses: ./.github/workflows/pandoc.yaml
+    with:
+      working-directory: ./main-en
