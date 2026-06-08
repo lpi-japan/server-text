@@ -18,8 +18,21 @@ jobs:
         run: |
           PDF_VER=$(grep -oP 'Ver\.\d+\.\d+\.\d+' config-pdf.yaml)
           EPUB_VER=$(grep -oP 'Ver\.\d+\.\d+\.\d+' config-epub.yaml)
-          PDF_DATE_JP=$(grep bookVersion config-pdf.yaml | grep -oP '\d+年\d+月\d+日')
-          PDF_DATE=$(echo "$PDF_DATE_JP" | sed 's/年/-/g;s/月/-/g;s/日//' | awk -F'-' '{printf "%04d-%02d-%02d", $1, $2, $3}')
+           if [ "${{ inputs.working-directory }}" = "main-en" ]; then
+             # English format: February 18, 2026
+             PDF_DATE_EN=$(grep bookVersion config-pdf.yaml | grep -oP '[A-Z][a-z]+ \d+, \d{4}')
+             PDF_DATE=$(echo "$PDF_DATE_EN" | awk '{
+               months["January"]=1; months["February"]=2; months["March"]=3; months["April"]=4;
+               months["May"]=5; months["June"]=6; months["July"]=7; months["August"]=8;
+               months["September"]=9; months["October"]=10; months["November"]=11; months["December"]=12;
+               month = $1; day = $2; sub(",", "", day); year = $3;
+               printf "%04d-%02d-%02d", year, months[month], day
+             }')
+           else
+             # Japanese format: 2026年2月18日
+             PDF_DATE_JP=$(grep bookVersion config-pdf.yaml | grep -oP '\d+年\d+月\d+日')
+             PDF_DATE=$(echo "$PDF_DATE_JP" | sed 's/年/-/g;s/月/-/g;s/日//' | awk -F'-' '{printf "%04d-%02d-%02d", $1, $2, $3}')
+           fi
           EPUB_DATE=$(grep -oP '(?<=date: )\d{4}-\d{2}-\d{2}' config-epub.yaml)
           ERROR=0
           if [ "$PDF_VER" != "$EPUB_VER" ]; then
