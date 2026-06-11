@@ -358,11 +358,11 @@ internet.
 ```
 $ ping lpi.or.jp
 PING lpi.or.jp (219.94.215.12) 56(84) bytes of data.
-# bytes from 12.215.94.219.static.www232b.sakura.ne.jp (219.94.215.12):
+64 bytes from 12.215.94.219.static.www232b.sakura.ne.jp (219.94.215.12):
 icmp_seq=1 ttl=128 time=15.8 ms
 ^C
 --- lpi.or.jp ping statistics ---
-# packets transmitted, 1 received, 0% packet loss, time 0ms
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
 ```
 
 To stop the execution of the **ping** command, press **Ctrl + c**. This
@@ -384,10 +384,10 @@ the VirtualBox network settings.
 ```
 $ ping 192.168.56.1
 PING 192.168.56.1 (192.168.56.1) 56(84) bytes of data.
-# bytes from 192.168.56.1: icmp_seq=1 ttl=64 time=6.59 ms
+64 bytes from 192.168.56.1: icmp_seq=1 ttl=64 time=6.59 ms
 ^C
 --- 192.168.56.1 ping statistics ---
-# packets transmitted, 1 received, 0% packet loss, time 0ms
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
 rtt min/avg/max/mdev = 6.592/6.592/6.592/0.000 ms
 ```
 
