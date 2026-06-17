@@ -53,7 +53,7 @@ The practical examples use the version corresponding to the **Intel/AMD x86_64**
 
 The network environment for these practical exercises assumes that **Internet access** is available.
 
-If you are unable to connect to the Internet, you can still proceed with the exercises by pre-installing the necessary software during the **OS installation** phase. Please follow the instructions provided in the \"OS Installation Procedure Guide\" to ensure the software is installed in advance.
+If you are unable to connect to the Internet, you can still proceed with the exercises by pre-installing the necessary software during the **OS installation** phase. 
 
 ### Classroom Training {.unlisted .unnumbered}
 
@@ -127,7 +127,7 @@ This textbook is being developed using an **open project format**. From the plan
 
 ## Copyright {.unlisted .unnumbered}
 
-The copyright of this textbook belongs to the **LPI-Japan** (Linux Professional Institute Japan), a Non-Profit Organization.
+The copyright of this textbook belongs to the **LPI-Japan**, a Non-Profit Organization.
 
 Copyright© LPI-Japan. All Rights Reserved.
 
@@ -139,15 +139,15 @@ This textbook is licensed under the **Creative Commons Attribution-NonCommercial
 
 ### Attribution {.unlisted .unnumbered}
 
-Please indicate that the copyright of this textbook belongs to the **LPI-Japan** (Linux Professional Institute Japan), a Non-Profit Organization.
+Please indicate that the copyright of this textbook belongs to the **LPI-Japan**, a Non-Profit Organization.
 
 ### Non-Commercial {.unlisted .unnumbered}
 
-This textbook may be used freely as teaching material for non-commercial purposes. Use for commercial purposes, primarily aimed at commercial gain or monetary compensation, requires permission from LPI-Japan (Linux Professional Institute Japan), a Non-Profit Organization. However, in education where this textbook is used, if no fee is charged for the textbook itself, it can basically be used even in commercial education. In such cases, and for any other inquiries, please feel free to contact the LPI-Japan Secretariat.
+This textbook may be used freely as teaching material for non-commercial purposes. Use for commercial purposes, primarily aimed at commercial gain or monetary compensation, requires permission from LPI-Japan, a Non-Profit Organization. However, in education where this textbook is used, if no fee is charged for the textbook itself, it can basically be used even in commercial education. In such cases, and for any other inquiries, please feel free to contact the LPI-Japan Secretariat.
 
 ### NoDerivatives (No Alteration) {.unlisted .unnumbered}
 
-Please use this textbook without making any alterations. Any modifications to this textbook are carried out by the **LPI-Japan** (Linux Professional Institute Japan), a Non-Profit Organization, or by organizations authorized by LPI-Japan.
+Please use this textbook without making any alterations. Any modifications to this textbook are carried out by the **LPI-Japan**, a Non-Profit Organization, or by organizations authorized by LPI-Japan.
 
 ## Feedback {.unlisted .unnumbered}
 
