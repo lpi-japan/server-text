@@ -172,7 +172,7 @@ The Linux Engineer Certification \"LinuC\" is a technical certification that pro
 
 The formulation of LinuC's exam topics and exam development is carried out by a community of high-level IT engineers who are active in the field. Therefore, it covers technical areas used as industry standards globally, and the content tests the knowledge and practical skills truly needed at the front lines of system development and operation management. As a result, unlike traditional technical certifications that remain confined to legacy Linux domains, it has become a certification that is sufficiently useful for IT engineers aiming to be active both domestically and internationally.
 
-![LinuC Certification Roadmap](image/Ch0/100000000000016F00000137A04FE56A.png){width=50%}
+![LinuC Certification Roadmap](image/Ch0/LinuC_TestSystem_Diagram_202505_ENG_UP.png){width=50%}
 
 ### LinuC Level 1 {.unlisted .unnumbered}
 
