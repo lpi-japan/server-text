@@ -10,7 +10,7 @@ variables:
   documentClass: ltjarticle
   mainfont: Harano Aji Gothic
   bookTitle: Linux\\Standard Textbook for Server Construction
-  bookVersion: February 18, 2026 \, \, Ver.4.0.2
+  bookVersion: July 1, 2026 \, \, Ver.4.0.2
   publisher-suffix: Publication
   publisher-prefix: Publisher
 
