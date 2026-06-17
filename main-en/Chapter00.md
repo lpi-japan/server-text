@@ -184,11 +184,11 @@ Proof of an engineer who can perform design, introduction, maintenance, and prob
 
 ### LinuC Level 3 Platform Specialist and Security Specialist {.unlisted .unnumbered}
 
-Proof of a specialist with skills such as operating mixed environments, designing and building secure Linux-based systems, and building large-scale virtualization or high-availability systems (ITSS Level 3).
+Proof of a specialist who can build and operate Linux platforms with flexibility and high availability through technologies such as virtualization and automation, and who can also implement layer-by-layer hardening from OS to middleware, build authentication and authorization infrastructure, and execute countermeasures against attacks for secure Linux systems (ITSS Level 3).
 
-### LinuC System Architect {.unlisted .unnumbered}
+### LinuC Level 4 System Architect {.unlisted .unnumbered}
 
-Proof of an advanced engineer who can oversee the entire system lifecycle including on-premises/cloud and physical/virtualization to design and build the optimal architecture (Skill level equivalent to ITSS Level 4).
+Proof of an advanced engineer who can oversee the entire system lifecycle, including on-premises/cloud and physical/virtualized environments, and design and build the optimal architecture (ITSS Level 4).
 
 For more details about LinuC, please refer to the following website:
 
