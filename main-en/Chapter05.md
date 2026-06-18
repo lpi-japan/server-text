@@ -806,7 +806,7 @@ Once you have confirmed that your internet connection is restored,
 [admin@host1 ~]$ sudo nmcli connection down enp0s3
 ```
 
-[!CAUTION] **Warning:** Please keep in mind that this deactivation is
+**Warning:** Please keep in mind that this deactivation is
 temporary. When the OS is rebooted, the NAT network will automatically
 become active again, and settings will revert to their original state.
 

@@ -69,10 +69,7 @@ already selected, simply press the **Enter** key.
 
 ### Language Selection
 
-The language selection screen will be displayed. Select **"Japanese
-**日本語**"** from the menu on the left. **"Japanese (Japan) **日本語
-**(**日本**)"** will then appear in the menu on the right side of the
-screen. Click the **"Continue"** button
+The language selection screen will be displayed. Select **"English"** from the menu on the left. **"English (United States)"** will then appear in the menu on the right side of the screen. Click the **"Continue"** button
 
 ![Language Selector Screen](image/Ch3/100000000000064E000003DB298C6D85.png){width=70%}
 
@@ -347,8 +344,10 @@ $ dig lpi.or.jp
 ;; ANSWER SECTION :
 lpi.or.jp. 5 IN A 219.94.215.12
 (Omitted)
-You can see that DNS name resolution is working properly.
 ```
+
+You can see that DNS name resolution is working properly.
+
 
 ### Verifying Internet Connectivity
 
@@ -411,6 +410,8 @@ Ping statistics for 192.168.56.101:
 Packets: Sent = 1, Received = 1, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
 Minimum = 0ms, Maximum = 0ms, Average = 0ms
-Once you have confirmed, press Ctrl+C to stop the operation.
-\pagebreak
 ```
+
+Once you have confirmed, press Ctrl+C to stop the operation.
+
+\pagebreak
