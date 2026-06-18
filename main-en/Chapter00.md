@@ -125,6 +125,14 @@ This textbook is being developed using an **open project format**. From the plan
 
 \"We have received a great deal of feedback from numerous authors, reviewers, and users from Version 1 through Version 3. We would like to express our deepest gratitude.\"
 
+### Contributors to the English Translation {.unlisted .unnumbered}
+
+- Tommy McGee (mintarc Co LTD.)
+- Ryo McGee (mintarc Co LTD.)
+- Mine McGee (mintarc Co LTD.)
+
+\"It was a pleasure to translate this essential resource, and we hope it serves as a valuable tool for the global FOSS community\"
+
 ## Copyright {.unlisted .unnumbered}
 
 The copyright of this textbook belongs to the **LPI-Japan**, a Non-Profit Organization.
@@ -151,19 +159,11 @@ Please use this textbook without making any alterations. Any modifications to th
 
 ## Feedback {.unlisted .unnumbered}
 
-We accept feedback on Slack, where anyone can participate, so please feel free to join in actively. For details on how to join Slack, please refer to the following web page for this textbook:
-
-<https://linuc.org/textbooks/server/>
-
-![Textbook Page QR Code](image/Ch0/1000000000000095000000924835B859.png){width=25%}
-
-## Contact Information Regarding the Use of This Textbook {.unlisted .unnumbered}
+For feedback on this textbook or inquiries about its use, please contact:
 
 LPI-Japan Secretariat (Specified Non-Profit Organization)
 
-<https://lpij.tayori.com/f/textbookinfo/>
-
-![Contact Information QR Code](image/Ch0/QR_toiawase.png){width=25%}
+<info@lpi.or.jp>
 
 \pagebreak
 ## Introduction to the Linux Engineer Certification \"LinuC\" {.unlisted .unnumbered}
@@ -189,6 +189,8 @@ Proof of a specialist who can build and operate Linux platforms with flexibility
 ### LinuC Level 4 System Architect {.unlisted .unnumbered}
 
 Proof of an advanced engineer who can oversee the entire system lifecycle, including on-premises/cloud and physical/virtualized environments, and design and build the optimal architecture (ITSS Level 4).
+
+\pagebreak
 
 For more details about LinuC, please refer to the following website:
 
