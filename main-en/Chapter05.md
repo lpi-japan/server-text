@@ -1,4 +1,4 @@
-# Construction of a DNS Server
+# Building a DNS Server
 In Chapter 5, we will set up the Domain Name System (DNS), which serves
 as the foundation for using network services through name resolution. We
 will configure your DNS server so that it can be referenced by other
