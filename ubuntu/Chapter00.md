@@ -70,13 +70,13 @@ https://linuc.org/textbooks/server/
 ### 3章&nbsp;Linuxのインストールと設定 {.unlisted .unnumbered}
 仮想マシンにLinuxをインストールします。
 
-### 4章&nbsp;Webサーバーのインストールと設定 {.unlisted .unnumbered}
+### 4章&nbsp;Webサーバーの構築 {.unlisted .unnumbered}
 LinuxにWebサーバーとしてnginxをインストールします。
 
-### 5章&nbsp;DNSサーバーのインストールと設定 {.unlisted .unnumbered}
+### 5章&nbsp;DNSサーバーの構築 {.unlisted .unnumbered}
 LinuxにDNSサーバーとしてBINDをインストールして、ドメインを設定し、名前解決が行えるようにします。複数の仮想マシンを用意し、相互に名前解決で接続できるようにします。
 
-### 6章&nbsp;メールサーバーのインストールと設定 {.unlisted .unnumbered}
+### 6章&nbsp;メールサーバーの構築 {.unlisted .unnumbered}
 LinuxにメールサーバーとしてPostfixやDovecotをインストールし、メールの送受信が行えるように設定します。
 
 ### 7章&nbsp;ネットワークとセキュリティの設定 {.unlisted .unnumbered}
