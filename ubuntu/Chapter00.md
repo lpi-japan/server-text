@@ -61,10 +61,10 @@ https://linuc.org/textbooks/server/
 ## 全体の流れ {.unlisted .unnumbered}
 本教科書では、以下の通りに実習を進めます。
 
-### 1章&nbsp;Linuxサーバー構築の概要 {.unlisted .unnumbered}
+### 1章&nbsp;Linuxサーバーの概要 {.unlisted .unnumbered}
 本教科書で行う実習の全体像や事前に説明しておくべき事項を解説しています。
 
-### 2章&nbsp;仮想マシン環境の準備 {.unlisted .unnumbered}
+### 2章&nbsp;VirtualBoxのインストールと仮想マシンの作成 {.unlisted .unnumbered}
 仮想マシンについての解説と、VirtualBoxのインストール、仮想マシンの作成を行います。
 
 ### 3章&nbsp;Linuxのインストールと設定 {.unlisted .unnumbered}
