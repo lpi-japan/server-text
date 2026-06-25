@@ -69,31 +69,31 @@ If you wish to perform exercises where students connect to each other via a netw
 
 The practical exercises in this textbook will proceed according to the following structure:
 
-### Chapter 1: Overview of Linux Server Construction {.unlisted .unnumbered}
+### Chapter 1: Linux Server Overview {.unlisted .unnumbered}
 
 This chapter explains the overall scope of the exercises and covers essential preliminary information.
 
-### Chapter 2: Preparing the Virtual Machine Environment {.unlisted .unnumbered}
+### Chapter 2: Install VirtualBox and Create The Virtual Machines {.unlisted .unnumbered}
 
 Includes an explanation of virtual machines, the installation of VirtualBox, and the creation of virtual machines.
 
-### Chapter 3: Linux Installation and Configuration {.unlisted .unnumbered}
+### Chapter 3: Installing and Configuring Linux {.unlisted .unnumbered}
 
 You will install Linux onto the virtual machine created in the previous chapter.
 
-### Chapter 4: Web Server Installation and Configuration {.unlisted .unnumbered}
+### Chapter 4: Building a Web Server {.unlisted .unnumbered}
 
 You will install the Apache HTTP Server as the web server on your Linux system.
 
-### Chapter 5: DNS Server Installation and Configuration {.unlisted .unnumbered}
+### Chapter 5: Building a DNS Server {.unlisted .unnumbered}
 
 You will install BIND as a DNS server, configure domains, and enable name resolution. Multiple virtual machines will be used to enable interconnected communication via name resolution.
 
-### Chapter 6: Mail Server Installation and Configuration {.unlisted .unnumbered}
+### Chapter 6: Building a Mail Server {.unlisted .unnumbered}
 
 You will install Postfix and Dovecot as mail servers and configure them to enable the sending and receiving of emails.
 
-### Chapter 7: Network and Security Configuration {.unlisted .unnumbered}
+### Chapter 7: Network and Security Settings {.unlisted .unnumbered}
 
 This chapter covers the configuration of Linux network settings and security protocols.
 
