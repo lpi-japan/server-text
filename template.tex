@@ -275,6 +275,7 @@ $highlighting-macros$
 $endif$
 $if(tables)$
 \usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables (Pandoc 3.8+)
 $if(multirow)$
 \usepackage{multirow}
 $endif$
