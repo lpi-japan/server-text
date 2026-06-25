@@ -1,6 +1,6 @@
 # Preface {.unlisted .unnumbered}
 
-The Non-Profit Organization LPI-Japan is pleased to announce the development and public release of the **\"Linux Server Construction Standard Textbook\"** (hereafter referred to as \"this textbook\") on the internet, intended for use in the education of Linux engineers.
+The Non-Profit Organization LPI-Japan is pleased to announce the development and public release of the **\"Standard Textbook for Building Linux Servers\"** (hereafter referred to as \"this textbook\") on the internet, intended for use in the education of Linux engineers.
 
 This textbook was developed in response to numerous requests from educational institutions for teaching materials and learning environments that allow students to learn server construction using Linux starting from the **\"basics.\"**
 
