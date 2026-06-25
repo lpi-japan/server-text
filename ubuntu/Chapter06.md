@@ -555,6 +555,7 @@ Thunderbirdのアプリケーションウインドウを表示し、「既存の
 正常に完了出来た場合、
 
 ![正常完了ダイアログ1](image/Ch6/CorrectSetting1.png){width=70%}
+
 ![正常完了ダイアログ2](image/Ch6/CorrectSetting2.png){width=70%}
 
 
