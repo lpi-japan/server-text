@@ -62,22 +62,22 @@ https://linuc.org/textbooks/server/
 ## 全体の流れ {.unlisted .unnumbered}
 本教科書では、以下の通りに実習を進めます。
 
-### 1章&nbsp;Linuxサーバー構築の概要 {.unlisted .unnumbered}
+### 1章&nbsp;Linuxサーバーの概要 {.unlisted .unnumbered}
 本教科書で行う実習の全体像や事前に説明しておくべき事項を解説しています。
 
-### 2章&nbsp;仮想マシン環境の準備 {.unlisted .unnumbered}
+### 2章&nbsp;VirtualBoxのインストールと仮想マシンの作成 {.unlisted .unnumbered}
 仮想マシンについての解説と、VirtualBoxのインストール、仮想マシンの作成を行います。
 
 ### 3章&nbsp;Linuxのインストールと設定 {.unlisted .unnumbered}
 仮想マシンにLinuxをインストールします。
 
-### 4章&nbsp;Webサーバーのインストールと設定 {.unlisted .unnumbered}
+### 4章&nbsp;Webサーバーの構築 {.unlisted .unnumbered}
 LinuxにWebサーバーとしてApache HTTPサーバーをインストールします。
 
-### 5章&nbsp;DNSサーバーのインストールと設定 {.unlisted .unnumbered}
+### 5章&nbsp;DNSサーバーの構築 {.unlisted .unnumbered}
 LinuxにDNSサーバーとしてBINDをインストールして、ドメインを設定し、名前解決が行えるようにします。複数の仮想マシンを用意し、相互に名前解決で接続できるようにします。
 
-### 6章&nbsp;メールサーバーのインストールと設定 {.unlisted .unnumbered}
+### 6章&nbsp;メールサーバーの構築 {.unlisted .unnumbered}
 LinuxにメールサーバーとしてPostfixやDovecotをインストールし、メールの送受信が行えるように設定します。
 
 ### 7章&nbsp;ネットワークとセキュリティの設定 {.unlisted .unnumbered}
