@@ -1,8 +1,8 @@
 # Preface {.unlisted .unnumbered}
 
-The Non-Profit Organization LPI-Japan is pleased to announce the development and public release of the **\"Standard Textbook for Building Linux Servers\"** (hereafter referred to as \"this textbook\") on the internet, intended for use in the education of Linux engineers.
+The Non-Profit Organization LPI-Japan is pleased to announce the development and public release of the **"Standard Textbook for Building Linux Servers"** (hereafter referred to as "this textbook") on the internet, intended for use in the education of Linux engineers.
 
-This textbook was developed in response to numerous requests from educational institutions for teaching materials and learning environments that allow students to learn server construction using Linux starting from the **\"basics.\"**
+This textbook was developed in response to numerous requests from educational institutions for teaching materials and learning environments that allow students to learn server construction using Linux starting from the **"basics."**
 
 The textbook is published under the license attached to it (Creative Commons License).
 
@@ -61,7 +61,7 @@ Even in a classroom setting with multiple students, this textbook assumes that e
 
 If you wish to perform exercises where students connect to each other via a network, the instructor should provide specific instructions for modifying the VM and OS settings. Alternatively, students can attempt interconnected exercises after completing the standard textbook curriculum. In such cases, please pay particular attention to the following points:
 
--   **Configure the VirtualBox network settings to \"Bridged Adapter\"** to allow the virtual machines to communicate with each other.
+-   **Configure the VirtualBox network settings to "Bridged Adapter"** to allow the virtual machines to communicate with each other.
 -   **Assign unique IP addresses, hostnames, and domain names** to each student.
 -   **Modify DNS name resolution settings** to ensure proper communication across the network
 
@@ -103,11 +103,11 @@ This textbook is being developed using an **open project format**. From the plan
 
 ### Toru Miyahara (Author in charge of Version 4) {.unlisted .unnumbered}
 
-\"This textbook was created with the hope that it will help all of you who are about to start studying Linux/Open Source Software, as well as to the teachers who are providing guidance. In the revision for Version 4, I have not only updated it for compatibility with new distributions but also made adjustments to ensure the practical exercises are even easier to understand.\"
+"This textbook was created with the hope that it will help all of you who are about to start studying Linux/Open Source Software, as well as to the teachers who are providing guidance. In the revision for Version 4, I have not only updated it for compatibility with new distributions but also made adjustments to ensure the practical exercises are even easier to understand."
 
 ### Mika Tsukada (Author in charge of Version 4) {.unlisted .unnumbered}
 
-\"On this occasion, I was in charge of the practical exercise sections from Chapter 2 to Chapter 4. This was my first time being involved in a project like this, and it was a very good experience. I would be happy if this textbook helps many of you who are about to learn Linux.\"
+"On this occasion, I was in charge of the practical exercise sections from Chapter 2 to Chapter 4. This was my first time being involved in a project like this, and it was a very good experience. I would be happy if this textbook helps many of you who are about to learn Linux."
 
 ### Contributors to the development of Version 4 {.unlisted .unnumbered}
 
@@ -123,7 +123,7 @@ This textbook is being developed using an **open project format**. From the plan
 -   Akiomi Fukunaga (Bold Co., Ltd.)
 -   Yasutaka Mizusawa
 
-\"We have received a great deal of feedback from numerous authors, reviewers, and users from Version 1 through Version 3. We would like to express our deepest gratitude.\"
+"We have received a great deal of feedback from numerous authors, reviewers, and users from Version 1 through Version 3. We would like to express our deepest gratitude."
 
 ### Contributors to the English Translation {.unlisted .unnumbered}
 
@@ -131,7 +131,7 @@ This textbook is being developed using an **open project format**. From the plan
 - Ryo McGee (mintarc Co LTD.)
 - Mine McGee (mintarc Co LTD.)
 
-\"It was a pleasure to translate this essential resource, and we hope it serves as a valuable tool for the global FOSS community\"
+"It was a pleasure to translate this essential resource, and we hope it serves as a valuable tool for the global FOSS community."
 
 ## Copyright {.unlisted .unnumbered}
 
@@ -166,9 +166,9 @@ LPI-Japan Secretariat (Specified Non-Profit Organization)
 <info@lpi.or.jp>
 
 \pagebreak
-## Introduction to the Linux Engineer Certification \"LinuC\" {.unlisted .unnumbered}
+## Introduction to the Linux Engineer Certification "LinuC" {.unlisted .unnumbered}
 
-The Linux Engineer Certification \"LinuC\" is a technical certification that proves the skills necessary for everything from system construction to operation and management required of IT engineers in the Cloud/DX (Digital Transformation) era. It broadly covers technical domains from architectural design to system construction and operation management. Through the acquisition of four certification levels, you can step-by-step and reliably acquire and prove the skills that are in demand.
+The Linux Engineer Certification "LinuC" is a technical certification that proves the skills necessary for everything from system construction to operation and management required of IT engineers in the Cloud/DX (Digital Transformation) era. It broadly covers technical domains from architectural design to system construction and operation management. Through the acquisition of four certification levels, you can step-by-step and reliably acquire and prove the skills that are in demand.
 
 The formulation of LinuC's exam topics and exam development is carried out by a community of high-level IT engineers who are active in the field. Therefore, it covers technical areas used as industry standards globally, and the content tests the knowledge and practical skills truly needed at the front lines of system development and operation management. As a result, unlike traditional technical certifications that remain confined to legacy Linux domains, it has become a certification that is sufficiently useful for IT engineers aiming to be active both domestically and internationally.
 
@@ -176,7 +176,7 @@ The formulation of LinuC's exam topics and exam development is carried out by a 
 
 ### LinuC Level 1 {.unlisted .unnumbered}
 
-Proof of a \"job-ready\" engineer who understands computer systems and can perform basic operations and system management of Linux systems, including virtual environments (ITSS Level 1).
+Proof of a "job-ready" engineer who understands computer systems and can perform basic operations and system management of Linux systems, including virtual environments (ITSS Level 1).
 
 ### LinuC Level 2 {.unlisted .unnumbered}
 
