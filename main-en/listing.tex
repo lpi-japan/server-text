@@ -43,8 +43,12 @@
     \fancyfoot[RO,LE]{https://linuc.org}
     \fancyfoot[CE,CO]{\thepage}
 
-\renewcommand\contentsname{目次}
+\renewcommand\contentsname{Table of Contents}
 
+\AtBeginDocument{%
+  \renewcommand{\figurename}{Figure}%
+  \renewcommand{\tablename}{Table}%
+}
 
 % 目次
 \usepackage{tocloft}
