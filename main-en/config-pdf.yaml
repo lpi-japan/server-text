@@ -9,7 +9,7 @@ filters:
 variables:
   documentClass: ltjarticle
   mainfont: Harano Aji Gothic
-  bookTitle: Linux\\Standard Textbook for Server Construction
+  bookTitle: Standard Textbook for Building Linux Servers
   bookVersion: July 1, 2026 \, \, Ver.4.0.2
   publisher-suffix: Publication
   publisher-prefix: Publisher
