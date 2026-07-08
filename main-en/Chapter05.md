@@ -129,7 +129,7 @@ It would be extremely cumbersome if a user's terminal had to locate and
 query the specific DNS content server every time it needed name
 resolution. Instead, the terminal requests name resolution from a **DNS
 Cache Server**. The DNS cache server then queries the DNS content
-servers using a method called **recursive querying** (described later).
+servers using a method called **iterative querying** (described later).
 Once name resolution is complete, it returns only the final result to
 the terminal.
 
@@ -243,7 +243,7 @@ This process, where the DNS cache server queries from the root server
 downward in sequence until it reaches the DNS content server managing
 the target domain, is called an **"Iterative Query."**
 
-![Name Resolution and Recursive Queries](image/Ch5/1000000000000345000002829420CFCF.png){width=70%}
+![Name Resolution and Iterative Queries](image/Ch5/1000000000000345000002829420CFCF.png){width=70%}
 
 ## Overview of the DNS Construction Exercise
 We will build DNS content servers by setting up two domain names,
@@ -323,7 +323,7 @@ displayed, here is a brief explanation of how DNS operates:
 8.  The **web browser** accesses *www.example2.jp* via **HTTP**,
     receives the web page, and displays it.
 
-In actual internet DNS name resolution, recursive queries are performed
+In actual internet DNS name resolution, iterative queries are performed
 starting from the root zone in order. However, in this exercise
 environment, it is different because the **DNS cache server itself is
 also the DNS content server for the jp zone**, so it can immediately
