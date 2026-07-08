@@ -200,7 +200,7 @@ lpi.or.jp.              300     IN      A       219.94.215.12
 
 \pagebreak
 ### インターネットへの接続の確認
-Pingコマンドを使って、インターネット上のサーバーへの接続を確認します。
+pingコマンドを使って、インターネット上のサーバーへの接続を確認します。
 
 ```
 ubuntu@host1example1test:~$ ping lpi.or.jp
