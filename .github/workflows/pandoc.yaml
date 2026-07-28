@@ -90,16 +90,26 @@ jobs:
       image: pandoc/core:3.1.1.0
     steps:
       - uses: actions/checkout@v5
-      - id: list-items
-        run: cat $(ls -1 Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//') | sed 's/^####.*/#& {-}/' > guide.md
-      - run: |
+      # cat 結合だと章末と次章 H1 のあいだに空行が無く、blank_before_header で
+      # 章見出しが本文化する（Ubuntu 1.0.0 で第7章が 6.19 以降に吸収された件）。
+      # PDF と同様に複数入力で渡し、ファイル間の区切りは pandoc に任せる。
+      - name: Prepare chapter inputs
+        run: |
+          mkdir -p .epub-build
+          rm -rf .epub-build/*
+          for f in $(ls -1 Chapter*.md | sort -V); do
+            sed 's/^####.*/#& {-}/' "$f" > ".epub-build/$f"
+          done
+      - name: Build EPUB
+        run: |
           wd="${{ inputs.working-directory }}"
           wd="${wd#./}"
           crossref_file="crossref.yaml"
           if [ "$wd" = "main-en" ]; then
             crossref_file="../crossref-en.yaml"
           fi
-          /usr/bin/awk 'BEGIN{go=0;}{ if (go==1){print;} else {if($$0 ~ /^#/) { go=1;print;}}}' guide.md | pandoc -t epub3 -F pandoc-crossref -o guide.epub -N -M "crossrefYaml=${crossref_file}" --metadata-file=config-epub.yaml --epub-cover-image=image/Cover/電子版表紙_300dpi_2480x3508.png --css=../epub.css
+          chapters=$(ls -1 .epub-build/Chapter*.md | sort -V | tr '\n' ' ' | sed 's/ $//')
+          pandoc ${chapters} -t epub3 -F pandoc-crossref -o guide.epub -N -M "crossrefYaml=${crossref_file}" --metadata-file=config-epub.yaml --epub-cover-image=image/Cover/電子版表紙_300dpi_2480x3508.png --css=../epub.css
       - uses: actions/upload-artifact@v6
         with:
           name: guide.epub
