@@ -115,12 +115,12 @@ This textbook is being developed using an **open project format**. From the plan
 -   Yasutomo Kawanishi (RIKEN)
 -   Takahiro Kujirai (Zeus Enterprise Co., Ltd.)
 -   Mitsuo Kobayashi (Crotech Co., Ltd.)
--   Takashi Sakamoto (Tokyo Denki University)
--   Toshifumi Takemoto (Internous Co., Ltd.)
+-   Naoshi Sakamoto (Tokyo Denki University)
+-   Tokifumi Takemoto (INTERNOUS, Inc.)
 -   Atsushi Taniguchi (Members Co., Ltd.)
 -   Akira Togashi (Kanagawa Prefectural Western General Vocational Technical School)
 -   Ayumi Hataya
--   Akiomi Fukunaga (Bold Co., Ltd.)
+-   Akihito Fukunaga (BOLD Inc.)
 -   Yasutaka Mizusawa
 
 "We have received a great deal of feedback from numerous authors, reviewers, and users from Version 1 through Version 3. We would like to express our deepest gratitude."
