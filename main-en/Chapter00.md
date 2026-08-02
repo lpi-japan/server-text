@@ -119,7 +119,7 @@ This textbook is being developed using an **open project format**. From the plan
 -   Tokifumi Takemoto (INTERNOUS, Inc.)
 -   Atsushi Taniguchi (Members Co., Ltd.)
 -   Akira Togashi (Kanagawa Prefectural Western General Vocational Technical School)
--   Ayumi Hataya
+-   Ayumi Hataya (Tokyo IT School)
 -   Akihito Fukunaga (BOLD Inc.)
 -   Yasutaka Mizusawa
 
