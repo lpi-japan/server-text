@@ -1,0 +1,73 @@
+name: root build
+
+on:
+  workflow_dispatch:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      editions: ${{ steps.set.outputs.editions }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dorny/paths-filter@v4
+        id: filter
+        if: github.event_name == 'push'
+        with:
+          filters: |
+            main:
+              - 'main/**'
+              - 'template.tex'
+              - 'epub.css'
+              - 'crossref.yaml'
+              - 'build/**'
+              - '.github/workflows/**'
+            ubuntu:
+              - 'ubuntu/**'
+              - 'template.tex'
+              - 'epub.css'
+              - 'crossref.yaml'
+              - 'build/**'
+              - '.github/workflows/**'
+            main-en:
+              - 'main-en/**'
+              - 'template-en.tex'
+              - 'crossref-en.yaml'
+              - 'build/**'
+              - '.github/workflows/**'
+      - id: set
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo 'editions=["main","ubuntu","main-en"]' >> "$GITHUB_OUTPUT"
+          else
+            echo "editions=${{ steps.filter.outputs.changes }}" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-container:
+    needs: detect
+    if: needs.detect.outputs.editions != '[]'
+    permissions:
+      contents: read
+      packages: write
+    secrets: inherit
+    uses: ./.github/workflows/build-container.yaml
+
+  build-manuscript:
+    needs: [detect, build-container]
+    if: needs.detect.outputs.editions != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        edition: ${{ fromJSON(needs.detect.outputs.editions) }}
+    permissions:
+      contents: read
+      packages: read
+    secrets: inherit
+    uses: ./.github/workflows/pandoc.yaml
+    with:
+      working-directory: ./${{ matrix.edition }}
+      image_ref: ${{ needs.build-container.outputs.image_ref }}
