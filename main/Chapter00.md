@@ -171,6 +171,8 @@ LinuCの出題範囲策定や試験開発は、実際に現場で活躍してい
 ### LinuCレベル４&nbsp;システムアーキテクト {.unlisted .unnumbered}
 オンプレ／クラウド、物理／仮想化を含むシステムのライフサイクル全体を俯瞰して最適なアーキテクチャを設計・構築ができる上級エンジニアの証明（ITSSレベル4）
 
+\pagebreak
+
 LinuCの詳細については、以下のWebサイトを参照してください。
 
 ```
@@ -178,9 +180,6 @@ https://linuc.org/about/01.html
 ```
 
 ![https://linuc.org/about/01.html](image/Ch0/QRaboutLinuC.png){width=25%}
-
-\pagebreak
-
 
 ### LinuCの認定取得に向けた学習方法 {.unlisted .unnumbered}
 LinuCの特徴の１つは学習環境が充実していることです。LinuCの認定取得に必要となるスキルや知識を身につけるには　体系的な学習として技術解説書を読むだけではなく、実際に手を動かして確認し問題集を繰り返し解いて理解を定着させる方法を推奨しています。
